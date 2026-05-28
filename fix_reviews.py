@@ -1,0 +1,7 @@
+content = open('index.html').read()
+content = content.replace('3 güne düştü', '1 güne düştü')
+content = content.replace('İstanbul Antalya Diş Kliniği', 'İstanbul Diş Kliniği')
+content = content.replace('Antalya Diş Kliniği', 'Antalya Diş Kliniği')
+content = content.replace('İzmir Sağlık Grubu', 'İzmir Estetik Cerrahi')
+open('index.html', 'w').write(content)
+print('OK')
