@@ -415,10 +415,10 @@
   .plan-col li { font-size: 0.86rem; color: rgba(250,250,248,0.82); padding: 0.35rem 0; display: flex; gap: 0.55rem; align-items: flex-start; }
   .plan-col li::before { content: '\2192'; color: var(--accent); flex-shrink: 0; }
   @media (max-width: 768px) { .cart-fab { bottom: 16px; right: 16px; } .plan-compare { grid-template-columns: 1fr; } }
-  .shots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; max-width: 980px; margin: 3rem auto 0; }
-  .shot { background: rgba(250,250,248,0.04); border: 1px solid rgba(250,250,248,0.12); border-radius: 12px; overflow: hidden; }
-  .shot img { width: 100%; display: block; background: #fff; }
-  .shot .cap { font-size: 0.82rem; color: rgba(250,250,248,0.7); padding: 0.7rem 1rem; }
+  .shots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; max-width: 980px; margin: 3rem auto 0; align-items: start; }
+  .shot { background: #fff; border: 1px solid rgba(14,14,12,0.1); border-radius: 12px; overflow: hidden; }
+  .shot img { width: 100%; display: block; }
+  .shot .cap { font-size: 0.82rem; color: #888780; padding: 0.7rem 1rem; }
   @media (max-width: 768px) { .shots { grid-template-columns: 1fr; } }
   .co-overlay { position: fixed; inset: 0; background: rgba(14,14,12,0.55); z-index: 1100; opacity: 0; visibility: hidden; transition: opacity 0.25s; }
   .co-overlay.open { opacity: 1; visibility: visible; }
@@ -714,9 +714,12 @@
   </a>
   <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;font-size:0.82rem;">
     <a href="/hakkimizda" style="color:#888780;text-decoration:none;">Hakkımızda</a>
-    <a href="/gizlilik" style="color:#888780;text-decoration:none;">Gizlilik Sözleşmesi</a>
+    <a href="/gizlilik" style="color:#888780;text-decoration:none;">KVKK / Gizlilik</a>
     <a href="/teslimat" style="color:#888780;text-decoration:none;">Teslimat ve İade</a>
     <a href="/mesafeli-satis" style="color:#888780;text-decoration:none;">Mesafeli Satış Sözleşmesi</a>
+    <a href="/sss" style="color:#888780;text-decoration:none;">Sıkça Sorulan Sorular</a>
+    <a href="/kullanim-kosullari" style="color:#888780;text-decoration:none;">Kullanım Koşulları</a>
+    <a href="/etk" style="color:#888780;text-decoration:none;">ETK Metni</a>
     <a href="mailto:info@nodustrategy.com" style="color:#888780;text-decoration:none;">Destek: info@nodustrategy.com</a>
   </div>
   <div style="display:flex;justify-content:center;align-items:center;gap:1.5rem;flex-wrap:wrap;">
@@ -724,17 +727,8 @@
     <svg viewBox="0 0 50 32" width="45" height="28"><circle cx="19" cy="16" r="13" fill="#EB001B"/><circle cx="31" cy="16" r="13" fill="#F79E1B"/><path d="M25 6.8a13 13 0 0 1 0 18.4A13 13 0 0 1 25 6.8z" fill="#FF5F00"/></svg>
     <span style="font-size:0.75rem;font-weight:600;color:#1D9E75;border:1.5px solid #1D9E75;padding:0.2rem 0.6rem;border-radius:4px;">iyzico ile öde</span>
   </div>
-  <p style="font-size:0.78rem;color:#888780;">© 2025 CliniPipes. Tüm hakları saklıdır.</p>
-
-  <a href="#" class="logo">
-    <svg class="logo-icon" viewBox="0 0 28 28" fill="none">
-      <rect x="2" y="11" width="18" height="6" rx="3" fill="#1D9E75"/>
-      <rect x="8" y="4" width="6" height="8" rx="2" fill="#1D9E75"/>
-      <rect x="14" y="16" width="6" height="8" rx="2" fill="#1D9E75"/>
-    </svg>
-    clinipipes
-  </a>
-  <p data-tr="© 2025 CliniPipes. Tüm hakları saklıdır." data-en="© 2025 CliniPipes. All rights reserved.">© 2025 CliniPipes. Tüm hakları saklıdır.</p>
+  
+  <p data-tr="© 2026 CliniPipes. Tüm hakları saklıdır." data-en="© 2026 CliniPipes. All rights reserved.">© 2026 CliniPipes. Tüm hakları saklıdır.</p>
 </footer>
 
 <script>
