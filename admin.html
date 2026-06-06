@@ -1,1 +1,147 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>CliniPipes Admin</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;background:#f4f4f2;color:#111}header{background:#0E0E0C;color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:1rem}.logo{color:#1D9E75;font-weight:700;font-size:1.2rem}main{max-width:860px;margin:2rem auto;padding:0 1rem}.card{background:#fff;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}h2{font-size:1rem;margin-bottom:1rem;color:#333;border-bottom:1px solid #eee;padding-bottom:.5rem}label{display:block;font-size:.82rem;color:#666;margin-bottom:.25rem;margin-top:.75rem}input[type=text],input[type=number]{width:100%;padding:.5rem .75rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}.shot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.slot{border:2px dashed #ddd;border-radius:8px;padding:1rem}.slot img{width:100%;height:130px;object-fit:cover;border-radius:4px;margin-bottom:.5rem}.slot .ph{height:130px;background:#f8f8f6;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:.8rem;margin-bottom:.5rem}#saveBtn{background:#1D9E75;color:#fff;border:none;padding:.75rem 2rem;border-radius:8px;font-size:1rem;cursor:pointer;width:100%}#saveBtn:hover{background:#0f7a5a}#status{margin-top:1rem;padding:.75rem;border-radius:6px;text-align:center;display:none}</style></head><body><header><span class="logo">&#9881; CliniPipes Admin</span><span style="color:#888;font-size:.85rem;margin-left:auto">Kaydet → GitHub commit → Railway ~2dk</span></header><main><div class="card"><h2>&#128176; Fiyatlar</h2><div class="row3"><div><label>Başlangıç / ay (€)</label><input type="number" id="p-sm"><label>Başlangıç / yıl (€)</label><input type="number" id="p-sy"></div><div><label>Pro / ay (€)</label><input type="number" id="p-pm"><label>Pro / yıl (€)</label><input type="number" id="p-py"></div><div><label>Kurulum (€)</label><input type="number" id="p-setup"><label>Paket indirimi (€)</label><input type="number" id="p-bundle"></div></div></div><div class="card"><h2>&#128247; Galeri Görselleri <small style="font-weight:400;color:#999">(PNG/JPG yükle → Kaydet)</small></h2><div class="shot-grid" id="grid"></div></div><button id="saveBtn" onclick="doSave()">&#128190; Kaydet &amp; Yayınla</button><div id="status"></div></main><script>var DEFS=[{alt:"Panel Girişi",cap_tr:"Güvenli panel girişi",cap_en:"Secure panel login"},{alt:"Kurulum Paneli",cap_tr:"Klinik kurulum paneli",cap_en:"Clinic setup panel"},{alt:"Form Oluşturucu",cap_tr:"Sürükle-bırak form oluşturucu",cap_en:"Drag-and-drop form builder"},{alt:"Ön Değerlendirme",cap_tr:"Hasta ön değerlendirme formu",cap_en:"Patient pre-assessment form"}];var cur={prices:{sm:45,sy:450,pm:89,py:890,setup:199,bundle:20},gallery:[]};var KEY=new URLSearchParams(location.search).get("key");function build(){var g=document.getElementById("grid");g.innerHTML="";DEFS.forEach(function(d,i){var c=cur.gallery[i]||null;var el=document.createElement("div");el.className="slot";el.innerHTML=(c?"<img id=\"gi"+i+"\" src=\""+c.src+"\">":"<div class=\"ph\" id=\"ph"+i+"\">"+d.cap_tr+"</div><img id=\"gi"+i+"\" style=\"display:none\">" )+"<input type=\"file\" accept=\"image/*\" onchange=\"pick(this,"+i+")\"><input type=\"text\" id=\"ct"+i+"\" value=\""+(c?c.cap_tr:d.cap_tr)+"\" placeholder=\"TR başlık\" style=\"margin-top:.3rem\"><input type=\"text\" id=\"ce"+i+"\" value=\""+(c?c.cap_en:d.cap_en)+"\" placeholder=\"EN caption\" style=\"margin-top:.25rem\">";g.appendChild(el);});}function pick(inp,i){var f=inp.files[0];if(!f)return;new FileReader().onload=function(e){var src=e.target.result;var im=document.getElementById("gi"+i);if(im){im.src=src;im.style.display="block";}var ph=document.getElementById("ph"+i);if(ph)ph.style.display="none";cur.gallery[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById("ct"+i).value,cap_en:document.getElementById("ce"+i).value};};(new FileReader()).onload=function(e){var src=e.target.result;var im=document.getElementById("gi"+i);if(im){im.src=src;im.style.display="block";}var ph=document.getElementById("ph"+i);if(ph)ph.style.display="none";cur.gallery[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById("ct"+i).value,cap_en:document.getElementById("ce"+i).value};}; var r=new FileReader();r.onload=function(e){var src=e.target.result;var im=document.getElementById("gi"+i);if(im){im.src=src;im.style.display="block";}var ph=document.getElementById("ph"+i);if(ph)ph.style.display="none";cur.gallery[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById("ct"+i).value,cap_en:document.getElementById("ce"+i).value};};r.readAsDataURL(f);}function doSave(){DEFS.forEach(function(d,i){if(cur.gallery[i]){cur.gallery[i].cap_tr=document.getElementById("ct"+i).value;cur.gallery[i].cap_en=document.getElementById("ce"+i).value;}});var data={prices:{sm:+document.getElementById("p-sm").value,sy:+document.getElementById("p-sy").value,pm:+document.getElementById("p-pm").value,py:+document.getElementById("p-py").value,setup:+document.getElementById("p-setup").value,bundle:+document.getElementById("p-bundle").value},gallery:cur.gallery.filter(Boolean)};var st=document.getElementById("status");st.style.display="block";st.style.background="#fffbe0";st.textContent="Kaydediliyor...";fetch("/api/save?key="+encodeURIComponent(KEY),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){if(r.ok){st.style.background="#e0fce8";st.textContent=r.github?"✓ Kaydedildi — GitHub commit gönderildi. ~2dk içinde yayında.":"✓ Yerel kaydedildi (GITHUB_TOKEN yoksa deploy sonrası sıfırlanır).";}else{st.style.background="#fee";st.textContent="Hata.";}}).catch(function(e){st.style.background="#fee";st.textContent="Hata: "+e.message;});}fetch("/content.json?t="+Date.now()).then(function(r){return r.json();}).then(function(c){if(c.prices){cur.prices=c.prices;["sm","sy","pm","py","setup","bundle"].forEach(function(k){var el=document.getElementById("p-"+k);if(el)el.value=c.prices[k];});}if(c.gallery)cur.gallery=c.gallery;build();}).catch(function(){build();});</script></body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CliniPipes Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f4f4f2;color:#111}
+header{background:#0E0E0C;color:#fff;padding:.9rem 2rem;display:flex;align-items:center}
+.logo{color:#1D9E75;font-weight:700;font-size:1.1rem}
+.hint{color:#888;font-size:.8rem;margin-left:auto}
+.tabs{background:#fff;border-bottom:2px solid #eee;padding:0 2rem;display:flex}
+.tab{padding:.75rem 1.5rem;cursor:pointer;font-size:.9rem;border-bottom:3px solid transparent;margin-bottom:-2px;color:#666}
+.tab.on{border-bottom-color:#1D9E75;color:#1D9E75;font-weight:600}
+.pane{display:none;max-width:920px;margin:1.5rem auto;padding:0 1rem}
+.pane.on{display:block}
+.card{background:#fff;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+h2{font-size:.95rem;font-weight:600;margin-bottom:1rem;color:#333;padding-bottom:.5rem;border-bottom:1px solid #f0f0f0}
+label{display:block;font-size:.8rem;color:#666;margin:.5rem 0 .2rem}
+input[type=text],input[type=number],select{width:100%;padding:.45rem .7rem;border:1px solid #ddd;border-radius:6px;font-size:.88rem;background:#fff}
+textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;font-size:.8rem;font-family:'Menlo','Consolas',monospace;line-height:1.55;resize:vertical;background:#fafaf8}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.slot{border:2px dashed #e0e0e0;border-radius:8px;padding:1rem;background:#fafaf8}
+.slot img{width:100%;height:120px;object-fit:cover;border-radius:5px;margin-bottom:.4rem;display:block}
+.slot .ph{height:120px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:.78rem;margin-bottom:.4rem;background:#f0f0ee;border-radius:5px}
+.btn{background:#1D9E75;color:#fff;border:none;padding:.55rem 1.2rem;border-radius:7px;font-size:.85rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:#0f7a5a}
+.btn2{background:#fff;color:#444;border:1px solid #ddd;padding:.55rem 1rem;border-radius:7px;font-size:.85rem;cursor:pointer}
+.btn2:hover{background:#f4f4f2}
+.bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.75rem}
+.st{margin-top:1rem;padding:.65rem 1rem;border-radius:6px;font-size:.85rem;display:none}
+.tbar{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;padding:.5rem .75rem;background:#f8f8f6;border:1px solid #e8e8e8;border-bottom:none;border-radius:6px 6px 0 0}
+.tbar button{background:#fff;border:1px solid #ddd;padding:.3rem .65rem;border-radius:4px;font-size:.82rem;cursor:pointer;color:#333}
+.tbar button:hover{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.tbar select{padding:.3rem .5rem;border:1px solid #ddd;border-radius:4px;font-size:.82rem;background:#fff}
+.tbar .sep{width:1px;height:18px;background:#ddd;margin:0 .2rem}
+#ved{min-height:420px;padding:2rem;border:1px solid #ddd;border-radius:0 0 6px 6px;background:#fff;outline:none;line-height:1.75;font-size:.95rem}
+#ved h1{font-size:1.8rem;margin:0 0 .4rem}
+#ved h2{font-size:1.15rem;font-weight:600;margin:1.5rem 0 .4rem;color:#333}
+#ved p{margin-bottom:.75rem;color:#3D3D3A}
+#ved a{color:#1D9E75}
+#ved ul,#ved ol{padding-left:1.5rem;margin-bottom:1rem}
+#ved li{margin-bottom:.4rem;color:#3D3D3A}
+#ved .q{font-weight:600;margin:1.5rem 0 .35rem;display:block}
+#ved .back{color:#1D9E75;text-decoration:none;font-size:.9rem;display:inline-block;margin-bottom:1.5rem}
+#ved .date{color:#888;font-size:.85rem;margin-bottom:1.5rem;display:block}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo">&#9881; CliniPipes Admin</span>
+  <span class="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
+</header>
+<div class="tabs">
+  <div class="tab on" onclick="sw(0)">&#128176; Fiyat &amp; Galeri</div>
+  <div class="tab" onclick="sw(1)">&#9998; Sayfa &amp; &#304;&#231;erik Edit&#246;r&#252;</div>
+</div>
+<div class="pane on" id="pane0">
+  <div class="card">
+    <h2>&#128176; Fiyatlar</h2>
+    <div class="g3">
+      <div>
+        <label>Ba&#351;lang&#305;&#231; / ay (&#8364;)</label><input type="number" id="p-sm">
+        <label>Ba&#351;lang&#305;&#231; / y&#305;l (&#8364;)</label><input type="number" id="p-sy">
+      </div>
+      <div>
+        <label>Pro / ay (&#8364;)</label><input type="number" id="p-pm">
+        <label>Pro / y&#305;l (&#8364;)</label><input type="number" id="p-py">
+      </div>
+      <div>
+        <label>Kurulum (&#8364;)</label><input type="number" id="p-setup">
+        <label>Paket indirimi (&#8364;)</label><input type="number" id="p-bundle">
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>&#128247; Galeri G&#246;rselleri</h2>
+    <div class="g2" id="grid"></div>
+  </div>
+  <button class="btn" onclick="save0()" style="width:100%;padding:.75rem">&#128190; Kaydet</button>
+  <div class="st" id="st0"></div>
+</div>
+<div class="pane" id="pane1">
+  <div class="card">
+    <div class="bar">
+      <label style="margin:0;font-weight:600;color:#333">Dosya:</label>
+      <select id="fname" onchange="loadFile()" style="width:auto;min-width:250px">
+        <option value="hakkimizda.html">Hakk&#305;m&#305;zda</option>
+        <option value="gizlilik.html">Gizlilik / KVKK</option>
+        <option value="teslimat.html">Teslimat ve &#304;ade</option>
+        <option value="mesafeli-satis.html">Mesafeli Sat&#305;&#351; S&#246;zle&#351;mesi</option>
+        <option value="sss.html">S&#305;k&#231;a Sorulan Sorular</option>
+        <option value="kullanim-kosullari.html">Kullan&#305;m Ko&#351;ullar&#305;</option>
+        <option value="etk.html">ETK Metni</option>
+        <option value="index.html">Ana Sayfa (index.html)</option>
+        <option value="content.json">content.json</option>
+      </select>
+      <button class="btn" onclick="saveFile()">&#128190; Kaydet</button>
+      <button class="btn2" onclick="loadFile()">&#8635; Yenile</button>
+      <button class="btn2" id="tbtn" onclick="toggleMode()" style="display:none">Kod G&#246;r&#252;n&#252;m&#252;</button>
+      <span id="fst" style="font-size:.8rem;color:#888"></span>
+    </div>
+    <div id="tbar" style="display:none">
+      <div class="tbar">
+        <button onclick="ex('bold')"><b>K</b></button>
+        <button onclick="ex('italic')"><i>I</i></button>
+        <button onclick="ex('underline')"><u>A</u></button>
+        <div class="sep"></div>
+        <select onchange="blk(this)">
+          <option value="">Stil</option>
+          <option value="h1">Ba&#351;l&#305;k 1</option>
+          <option value="h2">Ba&#351;l&#305;k 2</option>
+          <option value="p">Paragraf</option>
+        </select>
+        <div class="sep"></div>
+        <button onclick="ex('insertUnorderedList')">&#8226; Liste</button>
+        <button onclick="addLink()">&#128279; Link</button>
+        <button onclick="ex('removeFormat')" style="color:#c00">&#10006;</button>
+      </div>
+    </div>
+    <div id="ved" contenteditable="true" style="display:none" oninput="dirty=true" spellcheck="false"></div>
+    <textarea id="ced" rows="28" style="display:none;font-size:.78rem"></textarea>
+  </div>
+</div>
+<script>
+var KEY=new URLSearchParams(location.search).get('key');
+var gal=[],origHead='',isCode=false,codeMode=false,dirty=false;
+var DEFS=[{alt:'Panel',tr:'Guvenli panel girisi',en:'Secure panel login'},{alt:'Kurulum',tr:'Klinik kurulum paneli',en:'Clinic setup panel'},{alt:'Form',tr:'Surukle-birak form',en:'Drag-and-drop form'},{alt:'OnDeg',tr:'On degerlendirme formu',en:'Pre-assessment form'}];
+var CODES=['index.html','content.json'];
+function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});}
+function buildGrid(){var g=document.getElementById('grid');g.innerHTML='';DEFS.forEach(function(d,i){var c=gal[i]||null,el=document.createElement('div');el.className='slot';el.innerHTML=(c?'<img id="gi'+i+'" src="'+c.src+'">'  :'<div class="ph" id="ph'+i+'">'+d.tr+'</div><img id="gi'+i+'" style="display:none">')+'<input type="file" accept="image/*" onchange="pick(this,'+i+')" style="display:block;margin:.35rem 0;font-size:.78rem;width:100%">'+'<input type="text" id="ct'+i+'" value="'+(c?c.cap_tr:d.tr)+'" style="margin-top:.2rem">'+'<input type="text" id="ce'+i+'" value="'+(c?c.cap_en:d.en)+'" style="margin-top:.2rem">';g.appendChild(el);});}
+function pick(inp,i){var r=new FileReader();r.onload=function(e){var src=e.target.result;var im=document.getElementById('gi'+i);if(im){im.src=src;im.style.display='block';}var ph=document.getElementById('ph'+i);if(ph)ph.style.display='none';gal[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById('ct'+i).value,cap_en:document.getElementById('ce'+i).value};};r.readAsDataURL(inp.files[0]);}
+function save0(){DEFS.forEach(function(d,i){if(gal[i]){gal[i].cap_tr=document.getElementById('ct'+i).value;gal[i].cap_en=document.getElementById('ce'+i).value;}});var data={prices:{sm:+document.getElementById('p-sm').value,sy:+document.getElementById('p-sy').value,pm:+document.getElementById('p-pm').value,py:+document.getElementById('p-py').value,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},gallery:gal.filter(Boolean)};var el=document.getElementById('st0');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
+function ex(cmd){document.getElementById('ved').focus();document.execCommand(cmd,false,null);}
+function blk(sel){if(sel.value)document.execCommand('formatBlock',false,sel.value);sel.value='';document.getElementById('ved').focus();}
+function addLink(){var url=prompt('URL:','https://');if(!url)return;document.getElementById('ved').focus();document.execCommand('createLink',false,url);}
+function toggleMode(){codeMode=!codeMode;var v=document.getElementById('ved'),c=document.getElementById('ced'),btn=document.getElementById('tbtn'),tb=document.getElementById('tbar');if(codeMode){c.value=v.innerHTML;v.style.display='none';c.style.display='block';tb.style.display='none';btn.textContent='Gorsel Mod';}else{v.innerHTML=c.value;c.style.display='none';v.style.display='block';tb.style.display='block';btn.textContent='Kod Gorunumu';}}
+function loadFile(){var name=document.getElementById('fname').value;isCode=CODES.includes(name);codeMode=false;var v=document.getElementById('ved'),c=document.getElementById('ced'),tb=document.getElementById('tbar'),btn=document.getElementById('tbtn'),fst=document.getElementById('fst');fst.textContent='Yukleniyor...';dirty=false;if(isCode){v.style.display='none';c.style.display='block';tb.style.display='none';btn.style.display='none';}else{v.style.display='block';c.style.display='none';tb.style.display='block';btn.style.display='inline-block';btn.textContent='Kod Gorunumu';}fetch('/api/file?name='+encodeURIComponent(name)+'&key='+encodeURIComponent(KEY)+'&t='+Date.now()).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(html){if(isCode){c.value=html;fst.textContent='Yuklendi ('+Math.round(html.length/1024)+'KB)';}else{var hm=html.match(/<head>([\s\S]*?)<\/head>/i);origHead=hm?hm[0]:'';var bm=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);v.innerHTML=bm?bm[1].trim():html;fst.textContent='Yuklendi';}}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+function saveFile(){var name=document.getElementById('fname').value,fst=document.getElementById('fst');fst.textContent='Kaydediliyor...';var content;if(isCode||codeMode){content=document.getElementById('ced').value;}else{content='<!DOCTYPE html><html lang="tr">'+origHead+'<body>'+document.getElementById('ved').innerHTML+'</body></html>';}fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:name,content:content})}).then(function(r){return r.json();}).then(function(r){fst.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';dirty=false;}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){if(c.prices){['sm','sy','pm','py','setup','bundle'].forEach(function(k){var el=document.getElementById('p-'+k);if(el)el.value=c.prices[k];});}if(c.gallery)gal=c.gallery;buildGrid();}).catch(function(){buildGrid();});
+window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemis degisiklikler var.';};
+loadFile();
+</script>
+</body>
+</html>
