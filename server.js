@@ -56,6 +56,7 @@ http.createServer(function(req,res){
           }
           commit(data.filename,content,function(ok){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:true,github:ok}));});
         }else{
+          try{var ex=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));var inc=JSON.parse(body);if(inc.prices)ex.prices=inc.prices;if(inc.gallery!==undefined)ex.gallery=inc.gallery;body=JSON.stringify(ex);}catch(e){}
           fs.writeFileSync(path.join(__dirname,'content.json'),body);
           if(GITHUB_TOKEN){githubPut('content.json',body,'Admin: content.json',function(ok){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:true,github:ok}));});}
           else{res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:true,github:false}));}
