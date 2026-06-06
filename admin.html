@@ -62,6 +62,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <header>
   <span class="logo">&#9881; CliniPipes Admin</span>
   <span class="hint" id="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
+  <a href="javascript:void(0)" onclick="logout()" style="margin-left:1.5rem;color:#888;font-size:.82rem;text-decoration:none;border:1px solid #333;padding:.28rem .75rem;border-radius:5px" onmouseover="this.style.color='#fff';this.style.borderColor='#888'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#10005; &#199;&#305;k&#305;&#351;</a>
 </header>
 <div class="tabs">
   <div class="tab on" onclick="sw(0)">&#128200; Dashboard</div>
@@ -279,6 +280,7 @@ fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(fu
   if(c.gallery)gal=c.gallery;buildGrid();
 }).catch(function(){buildGrid();});
 loadDashboard();
+function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){window.location.href="/admin";}}
 window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 loadFile();
 </script>
