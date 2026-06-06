@@ -873,30 +873,41 @@ fetch('/content.json').then(function(r){return r.json();}).then(function(c){
   }
   if(c.prices){
     var p=c.prices;
-    var sm=+p.sm,pm=+p.pm,su=+p.setup,bu=+(p.bundle||20);
-    var sy=sm*10,py=pm*10;
-    if(fdisc>0){sm=Math.round(sm*(1-fdisc));pm=Math.round(pm*(1-fdisc));su=Math.round(su*(1-fdisc));}
-    sy=sm*10;py=pm*10;
-    PRICES.starter.monthly=sm;PRICES.starter.yearly=sy;
-    PRICES.pro.monthly=pm;PRICES.pro.yearly=py;
-    PRICES.setup.oneoff=su;BUNDLE=bu;
+    var smo=+p.sm,syo=+p.sy,pmo=+p.pm,pyo=+p.py,suo=+p.setup,bu=+(p.bundle||20);
+    var sm=smo,sy=syo,pm=pmo,py=pyo,su=suo;
+    if(fdisc>0){sm=Math.round(smo*(1-fdisc));sy=Math.round(syo*(1-fdisc));pm=Math.round(pmo*(1-fdisc));py=Math.round(pyo*(1-fdisc));su=Math.round(suo*(1-fdisc));}
+    STARTER_M=sm;STARTER_Y=sy;PRO_M=pm;PRO_Y=py;SETUP=su;BUNDLE=bu;
     document.querySelectorAll('[data-ck]').forEach(function(el){
       var k=el.getAttribute('data-ck');
-      if(k==='p-sm')el.textContent='€'+sm;
-      if(k==='p-pm')el.textContent='€'+pm;
-      if(k==='p-su')el.textContent='€'+su;
-      if(k==='p-sy-text'){var t='veya €'+sy+'/yıl — 2 ay bedava';el.textContent=t;el.setAttribute('data-tr',t);el.setAttribute('data-en','or €'+sy+'/year — 2 months free');}
-      if(k==='p-py-text'){var t2='veya €'+py+'/yıl — 2 ay bedava';el.textContent=t2;el.setAttribute('data-tr',t2);el.setAttribute('data-en','or €'+py+'/year — 2 months free');}
+      if(fdisc>0){
+        var sTag='<s style="opacity:.45;font-size:1.3rem">';
+        if(k==='p-sm')el.innerHTML=sTag+'€'+smo+'</s><br><span style="color:#1D9E75">€'+sm+'</span>';
+        if(k==='p-pm')el.innerHTML=sTag+'€'+pmo+'</s><br><span>€'+pm+'</span>';
+        if(k==='p-su')el.innerHTML=sTag+'€'+suo+'</s><br><span style="color:#1D9E75">€'+su+'</span>';
+        if(k==='p-sy-text')el.innerHTML='<s style="opacity:.5">veya €'+syo+'/yıl</s> <span style="font-weight:600">€'+sy+'/yıl — 2 ay bedava</span>';
+        if(k==='p-py-text')el.innerHTML='<s style="opacity:.5">veya €'+pyo+'/yıl</s> <span style="font-weight:600">€'+py+'/yıl — 2 ay bedava</span>';
+      }else{
+        if(k==='p-sm')el.textContent='€'+sm;
+        if(k==='p-pm')el.textContent='€'+pm;
+        if(k==='p-su')el.textContent='€'+su;
+        if(k==='p-sy-text'){var t='veya €'+sy+'/yıl — 2 ay bedava';el.textContent=t;el.setAttribute('data-tr',t);el.setAttribute('data-en','or €'+sy+'/year — 2 months free');}
+        if(k==='p-py-text'){var t2='veya €'+py+'/yıl — 2 ay bedava';el.textContent=t2;el.setAttribute('data-tr',t2);el.setAttribute('data-en','or €'+py+'/year — 2 months free');}
+      }
     });
-    document.querySelectorAll('[data-ck-year]').forEach(function(el){
-      var k=el.getAttribute('data-ck-year');
-      var y=(k==='p-sy')?sy:py;
-      var tr='veya €'+y+'/yıl — 2 ay bedava';
-      var en='or €'+y+'/year — 2 months free';
-      el.textContent=currentLang==='en'?en:tr;
-      el.setAttribute('data-tr',tr);el.setAttribute('data-en',en);
-    });
-    renderCart();
+    if(fdisc>0){
+      ['p-sm','p-pm','p-su'].forEach(function(ck){
+        var el=document.querySelector('[data-ck="'+ck+'"]');
+        if(!el)return;
+        var card=el.closest('.price-card');
+        if(!card||card.querySelector('.f-badge'))return;
+        var badge=document.createElement('div');
+        badge.className='f-badge';
+        badge.style.cssText='display:inline-block;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.5);color:inherit;font-size:.72rem;font-weight:700;padding:.22rem .65rem;border-radius:20px;margin-bottom:.5rem;letter-spacing:.02em';
+        badge.textContent='🏆 Kurucu Fiyat';
+        var plan=card.querySelector('.price-plan');
+        if(plan)plan.after(badge);else card.prepend(badge);
+      });
+    }
   }
   if(fdisc>0){
     var fb=document.createElement('div');
