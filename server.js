@@ -63,6 +63,21 @@ http.createServer(function(req,res){
       }catch(e){res.writeHead(400);res.end(e.message);}
     });return;
   }
+  if(url==='/api/claim-slot'&&req.method==='POST'){
+    try{
+      var cd=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));
+      if(!cd.founding)cd.founding={slots_remaining:0,discount:50};
+      if(cd.founding.slots_remaining>0){
+        cd.founding.slots_remaining--;
+        var upd=JSON.stringify(cd);
+        commit('content.json',upd,function(ok){
+          res.writeHead(200,{'Content-Type':'application/json'});
+          res.end(JSON.stringify({ok:true,remaining:cd.founding.slots_remaining}));
+        });
+      }else{res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:false,remaining:0}));}
+    }catch(e){res.writeHead(400);res.end(e.message);}
+    return;
+  }
   const file=PAGES[url]||null;
   if(!file){res.writeHead(404);res.end('Not found');return;}
   if(url==='/admin'&&qs.get('key')!==ADMIN_KEY){

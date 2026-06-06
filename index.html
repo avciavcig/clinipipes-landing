@@ -860,23 +860,39 @@ function confirmPurchase(){
   var subj = (L === 'en') ? 'CliniPipes Order' : 'CliniPipes Sipariş';
   window.location.href = 'mailto:info@nodustrategy.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
   closeCheckout();
+  if(window.foundingActive){fetch('/api/claim-slot',{method:'POST'}).catch(function(){});window.foundingActive=false;}
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', renderCart); } else { renderCart(); }
 
 fetch('/content.json').then(function(r){return r.json();}).then(function(c){
-  if(!c||!c.prices)return;
-  var p=c.prices;
-  if(p.sm!==undefined){STARTER_M=+p.sm;STARTER_Y=+p.sy;PRO_M=+p.pm;PRO_Y=+p.py;SETUP=+p.setup;BUNDLE=+(p.bundle||20);}
-  document.querySelectorAll('[data-ck]').forEach(function(el){
-    var k=el.getAttribute('data-ck');
-    if(k==='p-sm')el.textContent='€'+p.sm;
-    if(k==='p-pm')el.textContent='€'+p.pm;
-    if(k==='p-su')el.textContent='€'+p.setup;
-  });
+  if(!c)return;
+  var fdisc=0,frem=0;
+  if(c.founding&&c.founding.slots_remaining>0){
+    fdisc=(c.founding.discount||50)/100;frem=c.founding.slots_remaining;
+    window.foundingActive=true;
+  }
+  if(c.prices){
+    var p=c.prices;
+    var sm=+p.sm,sy=+p.sy,pm=+p.pm,py=+p.py,su=+p.setup,bu=+(p.bundle||20);
+    if(fdisc>0){sm=Math.round(sm*(1-fdisc));sy=Math.round(sy*(1-fdisc));pm=Math.round(pm*(1-fdisc));py=Math.round(py*(1-fdisc));su=Math.round(su*(1-fdisc));}
+    STARTER_M=sm;STARTER_Y=sy;PRO_M=pm;PRO_Y=py;SETUP=su;BUNDLE=bu;
+    document.querySelectorAll('[data-ck]').forEach(function(el){
+      var k=el.getAttribute('data-ck');
+      if(k==='p-sm')el.textContent='€'+sm;
+      if(k==='p-pm')el.textContent='€'+pm;
+      if(k==='p-su')el.textContent='€'+su;
+    });
+  }
+  if(fdisc>0){
+    var fb=document.createElement('div');
+    fb.style.cssText='background:#1D9E75;color:#fff;text-align:center;padding:.65rem 1rem;font-size:.88rem;font-weight:600;position:sticky;top:0;z-index:1200';
+    fb.textContent='Kurucu Fiyat: %'+Math.round(fdisc*100)+' indirim — '+frem+' slot kaldi!';
+    document.body.insertBefore(fb,document.body.firstChild);
+  }
   if(c.gallery&&c.gallery.length){
-    var s=document.querySelector('.shots');if(!s)return;
-    s.innerHTML='';
-    c.gallery.forEach(function(g){s.innerHTML+='<div class="shot"><img src="'+g.src+'" alt="'+g.alt+'" loading="lazy"><div class="cap" data-tr="'+g.cap_tr+'" data-en="'+g.cap_en+'">'+g.cap_tr+'</div></div>';});
+    var sh=document.querySelector('.shots');if(!sh)return;
+    sh.innerHTML='';
+    c.gallery.forEach(function(g){sh.innerHTML+='<div class="shot"><img src="'+g.src+'" alt="'+g.alt+'" loading="lazy"><div class="cap" data-tr="'+g.cap_tr+'" data-en="'+g.cap_en+'">'+g.cap_tr+'</div></div>';});
   }
 }).catch(function(){});
 </script>
