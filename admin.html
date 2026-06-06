@@ -6,22 +6,23 @@
 <title>CliniPipes Admin</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f4f4f2;color:#111}
+body{font-family:system-ui,sans-serif;background:#f4f4f2;color:#111;min-height:100vh}
 header{background:#0E0E0C;color:#fff;padding:.9rem 2rem;display:flex;align-items:center}
 .logo{color:#1D9E75;font-weight:700;font-size:1.1rem}
 .hint{color:#888;font-size:.8rem;margin-left:auto}
-.tabs{background:#fff;border-bottom:2px solid #eee;padding:0 2rem;display:flex}
-.tab{padding:.75rem 1.5rem;cursor:pointer;font-size:.9rem;border-bottom:3px solid transparent;margin-bottom:-2px;color:#666}
+.tabs{background:#fff;border-bottom:2px solid #eee;padding:0 2rem;display:flex;overflow-x:auto}
+.tab{padding:.75rem 1.4rem;cursor:pointer;font-size:.88rem;border-bottom:3px solid transparent;margin-bottom:-2px;color:#666;white-space:nowrap;flex-shrink:0}
 .tab.on{border-bottom-color:#1D9E75;color:#1D9E75;font-weight:600}
-.pane{display:none;max-width:920px;margin:1.5rem auto;padding:0 1rem}
+.pane{display:none;max-width:980px;margin:1.5rem auto;padding:0 1rem}
 .pane.on{display:block}
 .card{background:#fff;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.07)}
 h2{font-size:.95rem;font-weight:600;margin-bottom:1rem;color:#333;padding-bottom:.5rem;border-bottom:1px solid #f0f0f0}
 label{display:block;font-size:.8rem;color:#666;margin:.5rem 0 .2rem}
-input[type=text],input[type=number],select{width:100%;padding:.45rem .7rem;border:1px solid #ddd;border-radius:6px;font-size:.88rem;background:#fff}
+input[type=text],input[type=number],input[type=password],select{width:100%;padding:.45rem .7rem;border:1px solid #ddd;border-radius:6px;font-size:.88rem;background:#fff}
 textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;font-size:.8rem;font-family:'Menlo','Consolas',monospace;line-height:1.55;resize:vertical;background:#fafaf8}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
 .slot{border:2px dashed #e0e0e0;border-radius:8px;padding:1rem;background:#fafaf8}
 .slot img{width:100%;height:120px;object-fit:cover;border-radius:5px;margin-bottom:.4rem;display:block}
 .slot .ph{height:120px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:.78rem;margin-bottom:.4rem;background:#f0f0ee;border-radius:5px}
@@ -35,29 +36,71 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 .tbar button{background:#fff;border:1px solid #ddd;padding:.3rem .65rem;border-radius:4px;font-size:.82rem;cursor:pointer;color:#333}
 .tbar button:hover{background:#1D9E75;color:#fff;border-color:#1D9E75}
 .tbar select{padding:.3rem .5rem;border:1px solid #ddd;border-radius:4px;font-size:.82rem;background:#fff}
-.tbar .sep{width:1px;height:18px;background:#ddd;margin:0 .2rem}
-#ved{min-height:420px;padding:2rem;border:1px solid #ddd;border-radius:0 0 6px 6px;background:#fff;outline:none;line-height:1.75;font-size:.95rem}
-#ved h1{font-size:1.8rem;margin:0 0 .4rem}
-#ved h2{font-size:1.15rem;font-weight:600;margin:1.5rem 0 .4rem;color:#333}
-#ved p{margin-bottom:.75rem;color:#3D3D3A}
-#ved a{color:#1D9E75}
-#ved ul,#ved ol{padding-left:1.5rem;margin-bottom:1rem}
-#ved li{margin-bottom:.4rem;color:#3D3D3A}
-#ved .q{font-weight:600;margin:1.5rem 0 .35rem;display:block}
-#ved .back{color:#1D9E75;text-decoration:none;font-size:.9rem;display:inline-block;margin-bottom:1.5rem}
-#ved .date{color:#888;font-size:.85rem;margin-bottom:1.5rem;display:block}
+#ved{min-height:400px;padding:1.5rem;border:1px solid #ddd;border-radius:0 0 6px 6px;background:#fff;outline:none;line-height:1.75;font-size:.95rem}
+#ved h1{font-size:1.8rem;margin:0 0 .4rem}#ved h2{font-size:1.15rem;font-weight:600;margin:1.5rem 0 .4rem;color:#333}
+#ved p{margin-bottom:.75rem;color:#3D3D3A}#ved a{color:#1D9E75}#ved ul,#ved ol{padding-left:1.5rem;margin-bottom:1rem}
+/* Dashboard */
+.stat-card{background:#fff;border-radius:10px;padding:1.25rem 1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.stat-val{font-size:2rem;font-weight:700;color:#0E0E0C;margin:.2rem 0}
+.stat-lbl{font-size:.8rem;color:#888}
+.stat-trend{font-size:.78rem;color:#1D9E75;margin-top:.2rem}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.bar-lbl{font-size:.82rem;color:#333;width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-track{flex:1;background:#f0f0ee;border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;background:#1D9E75;border-radius:4px;transition:width .4s}
+.bar-num{font-size:.78rem;color:#888;width:32px;text-align:right;flex-shrink:0}
+.recent-tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.recent-tbl th{text-align:left;color:#888;font-weight:500;padding:.4rem .6rem;border-bottom:1px solid #f0f0f0}
+.recent-tbl td{padding:.4rem .6rem;border-bottom:1px solid #f8f8f6;color:#333}
+.recent-tbl tr:hover td{background:#fafaf8}
+.device-row{display:flex;gap:1rem;align-items:center;margin:.4rem 0}
+.device-lbl{width:90px;font-size:.85rem}
+.warn-box{background:#fffbe0;border:1px solid #ffe58f;padding:.65rem 1rem;border-radius:6px;font-size:.82rem;color:#7a6000}
 </style>
 </head>
 <body>
 <header>
   <span class="logo">&#9881; CliniPipes Admin</span>
-  <span class="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
+  <span class="hint" id="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
 </header>
 <div class="tabs">
-  <div class="tab on" onclick="sw(0)">&#128176; Fiyat &amp; Galeri</div>
-  <div class="tab" onclick="sw(1)">&#9998; Sayfa &amp; &#304;&#231;erik Edit&#246;r&#252;</div>
+  <div class="tab on" onclick="sw(0)">&#128200; Dashboard</div>
+  <div class="tab" onclick="sw(1)">&#128176; Fiyat &amp; Galeri</div>
+  <div class="tab" onclick="sw(2)">&#9998; Sayfa Edit&#246;r&#252;</div>
+  <div class="tab" onclick="sw(3)">&#128100; Profil</div>
 </div>
+
+<!-- PANE 0: DASHBOARD -->
 <div class="pane on" id="pane0">
+  <div class="g4" id="stats" style="margin-bottom:1.5rem">
+    <div class="stat-card"><div class="stat-lbl">Toplam Ziyaret</div><div class="stat-val" id="s-total">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Bug&#252;n</div><div class="stat-val" id="s-today">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Bu Hafta</div><div class="stat-val" id="s-week">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Cihaz (Mobil / Masa&#252;st&#252;)</div><div class="stat-val" id="s-device">—</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <h2>&#128205; &#350;ehir / &#304;l Da&#287;&#305;l&#305;m&#305;</h2>
+      <div id="city-chart"><div style="color:#aaa;font-size:.85rem">Y&#252;kleniyor...</div></div>
+    </div>
+    <div class="card">
+      <h2>&#127758; &#220;lke Da&#287;&#305;l&#305;m&#305;</h2>
+      <div id="country-chart"><div style="color:#aaa;font-size:.85rem">Y&#252;kleniyor...</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>&#128337; Son Ziyaretler</h2>
+    <div style="overflow-x:auto">
+      <table class="recent-tbl">
+        <thead><tr><th>Tarih</th><th>Saat</th><th>&#350;ehir</th><th>&#304;l</th><th>&#220;lke</th><th>Cihaz</th></tr></thead>
+        <tbody id="recent-body"><tr><td colspan="6" style="color:#aaa;padding:1rem">Y&#252;kleniyor...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PANE 1: FİYAT & GALERİ -->
+<div class="pane" id="pane1">
   <div class="card">
     <h2>&#128176; Fiyatlar</h2>
     <div class="g3">
@@ -76,13 +119,22 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     </div>
   </div>
   <div class="card">
-    <h2>&#128247; Galeri G&#246;rselleri</h2>
+    <h2>&#128274; Kurucu &#304;ndirim</h2>
+    <div class="g2">
+      <div><label>Kalan slot (0 = indirim bitti)</label><input type="number" id="f-slots" min="0" max="100"></div>
+      <div><label>&#304;ndirim oranı (%)</label><input type="number" id="f-disc" min="0" max="90"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>&#128247; Galeri G&#246;rselleri &nbsp;<small style="color:#aaa;font-weight:400">PNG/JPG se&#231; &rarr; Kaydet</small></h2>
     <div class="g2" id="grid"></div>
   </div>
-  <button class="btn" onclick="save0()" style="width:100%;padding:.75rem">&#128190; Kaydet</button>
-  <div class="st" id="st0"></div>
+  <button class="btn" onclick="save1()" style="width:100%;padding:.75rem">&#128190; Kaydet</button>
+  <div class="st" id="st1"></div>
 </div>
-<div class="pane" id="pane1">
+
+<!-- PANE 2: SAYFA EDİTÖRÜ -->
+<div class="pane" id="pane2">
   <div class="card">
     <div class="bar">
       <label style="margin:0;font-weight:600;color:#333">Dosya:</label>
@@ -100,51 +152,134 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <button class="btn" onclick="saveFile()">&#128190; Kaydet</button>
       <button class="btn2" onclick="loadFile()">&#8635; Yenile</button>
       <button class="btn2" id="tbtn" onclick="toggleMode()" style="display:none">Kod G&#246;r&#252;n&#252;m&#252;</button>
-      <span id="fst" style="font-size:.8rem;color:#888"></span>
+      <span id="fst" style="font-size:.8rem;color:#888;margin-left:.25rem"></span>
     </div>
     <div id="tbar" style="display:none">
       <div class="tbar">
         <button onclick="ex('bold')"><b>K</b></button>
         <button onclick="ex('italic')"><i>I</i></button>
         <button onclick="ex('underline')"><u>A</u></button>
-        <div class="sep"></div>
+        <div style="width:1px;height:18px;background:#ddd;margin:0 .2rem"></div>
         <select onchange="blk(this)">
           <option value="">Stil</option>
           <option value="h1">Ba&#351;l&#305;k 1</option>
           <option value="h2">Ba&#351;l&#305;k 2</option>
           <option value="p">Paragraf</option>
         </select>
-        <div class="sep"></div>
+        <div style="width:1px;height:18px;background:#ddd;margin:0 .2rem"></div>
         <button onclick="ex('insertUnorderedList')">&#8226; Liste</button>
         <button onclick="addLink()">&#128279; Link</button>
         <button onclick="ex('removeFormat')" style="color:#c00">&#10006;</button>
       </div>
     </div>
     <div id="ved" contenteditable="true" style="display:none" oninput="dirty=true" spellcheck="false"></div>
-    <textarea id="ced" rows="28" style="display:none;font-size:.78rem"></textarea>
+    <textarea id="ced" rows="26" style="display:none;font-size:.78rem"></textarea>
   </div>
 </div>
+
+<!-- PANE 3: PROFİL -->
+<div class="pane" id="pane3">
+  <div class="card">
+    <h2>&#128274; &#350;ifre De&#287;i&#351;tir</h2>
+    <div style="max-width:400px">
+      <label>Yeni &#350;ifre</label>
+      <input type="password" id="pw1" placeholder="Yeni şifre girin" style="margin-bottom:.75rem">
+      <label>&#350;ifre Tekrar</label>
+      <input type="password" id="pw2" placeholder="Tekrar girin" style="margin-bottom:1rem">
+      <button class="btn" onclick="savePw()">&#128274; &#350;ifreyi G&#252;ncelle</button>
+      <div class="st" id="st-pw" style="margin-top:.75rem"></div>
+    </div>
+    <div class="warn-box" style="margin-top:1.5rem">
+      &#9888; Railway yeniden deploy edildi&#287;inde &#351;ifre <strong>ADMIN_KEY</strong> env var'&#305;na d&#246;ner.
+      Kal&#305;c&#305; de&#287;i&#351;iklik i&#231;in: Railway &rarr; Variables &rarr; ADMIN_KEY
+    </div>
+  </div>
+  <div class="card">
+    <h2>&#128101; Oturum Bilgileri</h2>
+    <p style="font-size:.88rem;color:#666;margin-bottom:.5rem">Admin URL: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">clinipipes.com/admin?key=...</code></p>
+    <p style="font-size:.88rem;color:#666">Analytics endpoint: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">/api/analytics?key=...</code></p>
+  </div>
+</div>
+
 <script>
 var KEY=new URLSearchParams(location.search).get('key');
 var gal=[],origHead='',isCode=false,codeMode=false,dirty=false;
-var DEFS=[{alt:'Panel',tr:'Guvenli panel girisi',en:'Secure panel login'},{alt:'Kurulum',tr:'Klinik kurulum paneli',en:'Clinic setup panel'},{alt:'Form',tr:'Surukle-birak form',en:'Drag-and-drop form'},{alt:'OnDeg',tr:'On degerlendirme formu',en:'Pre-assessment form'}];
+var DEFS=[{alt:'Panel',tr:'Guvenli panel girisi',en:'Secure panel login'},{alt:'Kurulum',tr:'Klinik kurulum paneli',en:'Clinic setup panel'},{alt:'Form',tr:'Form olusturucu',en:'Form builder'},{alt:'OnDeg',tr:'On degerlendirme',en:'Pre-assessment'}];
 var CODES=['index.html','content.json'];
-var LEGAL=['hakkimizda.html','gizlilik.html','teslimat.html','mesafeli-satis.html','sss.html','kullanim-kosullari.html','etk.html'];
-var LEGAL_CSS='*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,sans-serif;font-size:.96rem;background:#FAFAF8;color:#0E0E0C;line-height:1.75}.container{max-width:760px;margin:0 auto;padding:4rem 2rem}h1{font-size:1.9rem;margin-bottom:.4rem;font-weight:700}h2{font-size:1.05rem;font-weight:600;margin:1.8rem 0 .5rem;color:#333}p,li{margin-bottom:.75rem;color:#3D3D3A}ul{padding-left:1.4rem;margin-bottom:1rem}a{color:#1D9E75}.back{display:inline-block;margin-bottom:2rem;color:#1D9E75;text-decoration:none;font-size:.88rem}.date{color:#888;font-size:.83rem;margin-bottom:2rem;display:block}.q{font-weight:600;color:#0E0E0C;margin:1.5rem 0 .35rem;display:block}';
-function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+title+' — CliniPipes</title><style>'+LEGAL_CSS+'</style></head><body><div class="container">'+body+'</div></body></html>';}
-function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
-function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});}
+
+function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});if(i===0)loadDashboard();}
+
+/* ── Dashboard ── */
+function loadDashboard(){
+  fetch('/api/analytics?key='+encodeURIComponent(KEY)+'&t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var today=new Date().toISOString().slice(0,10);
+      var weekStart=new Date(Date.now()-6*86400000).toISOString().slice(0,10);
+      var todayV=d.daily&&d.daily[today]?d.daily[today]:0;
+      var weekV=0;if(d.daily){Object.keys(d.daily).forEach(function(k){if(k>=weekStart)weekV+=d.daily[k];});}
+      document.getElementById('s-total').textContent=(d.total||0).toLocaleString('tr-TR');
+      document.getElementById('s-today').textContent=todayV.toLocaleString('tr-TR');
+      document.getElementById('s-week').textContent=weekV.toLocaleString('tr-TR');
+      var mob=(d.devices&&d.devices['Mobil'])||0;var desk=(d.devices&&d.devices['Masaüstü'])||0;
+      document.getElementById('s-device').textContent=mob+' / '+desk;
+      renderBars('city-chart', d.provinces||d.cities||{}, 10);
+      renderBars('country-chart', d.countries||{}, 8);
+      renderRecent(d.recent||[]);
+    }).catch(function(e){document.getElementById('s-total').textContent='Hata';});
+}
+
+function renderBars(id, obj, limit){
+  var el=document.getElementById(id); el.innerHTML='';
+  var sorted=Object.entries(obj).sort(function(a,b){return b[1]-a[1];}).slice(0,limit);
+  if(!sorted.length){el.innerHTML='<div style="color:#aaa;font-size:.82rem">Henüz veri yok</div>';return;}
+  var max=sorted[0][1];
+  sorted.forEach(function(kv){
+    var pct=max?Math.round(kv[1]/max*100):0;
+    el.innerHTML+='<div class="bar-row"><div class="bar-lbl" title="'+kv[0]+'">'+kv[0]+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><div class="bar-num">'+kv[1]+'</div></div>';
+  });
+}
+
+function renderRecent(recent){
+  var tb=document.getElementById('recent-body');
+  if(!recent.length){tb.innerHTML='<tr><td colspan="6" style="color:#aaa;padding:1rem">Henüz ziyaret yok</td></tr>';return;}
+  tb.innerHTML=recent.slice(0,100).map(function(r){
+    var dt=r.date||'';var parts=dt.split(' ');
+    return '<tr><td>'+parts[0]+'</td><td>'+( parts[1]||'')+'</td><td>'+(r.city||'?')+'</td><td>'+(r.province||'?')+'</td><td>'+(r.country||'?')+'</td><td>'+(r.device||'?')+'</td></tr>';
+  }).join('');
+}
+
+/* ── Pane 1: Fiyat & Galeri ── */
 function buildGrid(){var g=document.getElementById('grid');g.innerHTML='';DEFS.forEach(function(d,i){var c=gal[i]||null,el=document.createElement('div');el.className='slot';el.innerHTML=(c?'<img id="gi'+i+'" src="'+c.src+'">'  :'<div class="ph" id="ph'+i+'">'+d.tr+'</div><img id="gi'+i+'" style="display:none">')+'<input type="file" accept="image/*" onchange="pick(this,'+i+')" style="display:block;margin:.35rem 0;font-size:.78rem;width:100%">'+'<input type="text" id="ct'+i+'" value="'+(c?c.cap_tr:d.tr)+'" style="margin-top:.2rem">'+'<input type="text" id="ce'+i+'" value="'+(c?c.cap_en:d.en)+'" style="margin-top:.2rem">';g.appendChild(el);});}
 function pick(inp,i){var r=new FileReader();r.onload=function(e){var src=e.target.result;var im=document.getElementById('gi'+i);if(im){im.src=src;im.style.display='block';}var ph=document.getElementById('ph'+i);if(ph)ph.style.display='none';gal[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById('ct'+i).value,cap_en:document.getElementById('ce'+i).value};};r.readAsDataURL(inp.files[0]);}
-function save0(){DEFS.forEach(function(d,i){if(gal[i]){gal[i].cap_tr=document.getElementById('ct'+i).value;gal[i].cap_en=document.getElementById('ce'+i).value;}});var sm=+document.getElementById('p-sm').value,pm=+document.getElementById('p-pm').value;var data={prices:{sm:sm,sy:sm*10,pm:pm,py:pm*10,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},gallery:gal.filter(Boolean)};var el=document.getElementById('st0');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
+function save1(){
+  DEFS.forEach(function(d,i){if(gal[i]){gal[i].cap_tr=document.getElementById('ct'+i).value;gal[i].cap_en=document.getElementById('ce'+i).value;}});
+  var data={prices:{sm:+document.getElementById('p-sm').value,sy:+document.getElementById('p-sy').value,pm:+document.getElementById('p-pm').value,py:+document.getElementById('p-py').value,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},gallery:gal.filter(Boolean)};
+  var fs2=document.getElementById('f-slots').value;var fd=document.getElementById('f-disc').value;
+  if(fs2!==''||fd!==''){data.founding={slots_remaining:+fs2,discount:+fd};}
+  var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
+  fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+
+/* ── Pane 2: Sayfa Editörü ── */
 function ex(cmd){document.getElementById('ved').focus();document.execCommand(cmd,false,null);}
 function blk(sel){if(sel.value)document.execCommand('formatBlock',false,sel.value);sel.value='';document.getElementById('ved').focus();}
 function addLink(){var url=prompt('URL:','https://');if(!url)return;document.getElementById('ved').focus();document.execCommand('createLink',false,url);}
-function toggleMode(){codeMode=!codeMode;var v=document.getElementById('ved'),c=document.getElementById('ced'),btn=document.getElementById('tbtn'),tb=document.getElementById('tbar');if(codeMode){c.value=v.innerHTML;v.style.display='none';c.style.display='block';tb.style.display='none';btn.textContent='Gorsel Mod';}else{v.innerHTML=c.value;c.style.display='none';v.style.display='block';tb.style.display='block';btn.textContent='Kod Gorunumu';}}
-function loadFile(){var name=document.getElementById('fname').value;isCode=CODES.includes(name);codeMode=false;var v=document.getElementById('ved'),c=document.getElementById('ced'),tb=document.getElementById('tbar'),btn=document.getElementById('tbtn'),fst=document.getElementById('fst');fst.textContent='Yukleniyor...';dirty=false;if(isCode){v.style.display='none';c.style.display='block';tb.style.display='none';btn.style.display='none';}else{v.style.display='block';c.style.display='none';tb.style.display='block';btn.style.display='inline-block';btn.textContent='Kod Gorunumu';}fetch('/api/file?name='+encodeURIComponent(name)+'&key='+encodeURIComponent(KEY)+'&t='+Date.now()).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(html){if(isCode){c.value=html;fst.textContent='Yuklendi ('+Math.round(html.length/1024)+'KB)';}else{var hm=html.match(/<head>([\s\S]*?)<\/head>/i);origHead=hm?hm[0]:'';var bm=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);var inner=bm?bm[1].trim():html;if(LEGAL.includes(name)){var cm=inner.match(/<div class="container">([\s\S]*)<\/div>/i);v.innerHTML=cm?cm[1].trim():inner;}else{v.innerHTML=inner;}fst.textContent='Yuklendi';}}).catch(function(e){fst.textContent='Hata: '+e.message;});}
-function saveFile(){var name=document.getElementById('fname').value,fst=document.getElementById('fst');fst.textContent='Kaydediliyor...';var content;if(isCode||codeMode){content=document.getElementById('ced').value;}else if(LEGAL.includes(name)){content=legalShell(pageTitle(name),document.getElementById('ved').innerHTML);}else{content='<!DOCTYPE html><html lang="tr">'+origHead+'<body>'+document.getElementById('ved').innerHTML+'</body></html>';}fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:name,content:content})}).then(function(r){return r.json();}).then(function(r){fst.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';dirty=false;}).catch(function(e){fst.textContent='Hata: '+e.message;});}
-fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){if(c.prices){var sm=+c.prices.sm,pm=+c.prices.pm;document.getElementById('p-sm').value=sm;document.getElementById('p-sy').value=sm*10;document.getElementById('p-pm').value=pm;document.getElementById('p-py').value=pm*10;document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-bundle').value=c.prices.bundle;}if(c.gallery)gal=c.gallery;buildGrid();}).catch(function(){buildGrid();});
-window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemis degisiklikler var.';};
+function toggleMode(){codeMode=!codeMode;var v=document.getElementById('ved'),c=document.getElementById('ced'),btn=document.getElementById('tbtn'),tb=document.getElementById('tbar');if(codeMode){c.value=v.innerHTML;v.style.display='none';c.style.display='block';tb.style.display='none';btn.textContent='Görsel Mod';}else{v.innerHTML=c.value;c.style.display='none';v.style.display='block';tb.style.display='block';btn.textContent='Kod Görünümü';}}
+function loadFile(){var name=document.getElementById('fname').value;isCode=CODES.includes(name);codeMode=false;var v=document.getElementById('ved'),c=document.getElementById('ced'),tb=document.getElementById('tbar'),btn=document.getElementById('tbtn'),fst=document.getElementById('fst');fst.textContent='Yükleniyor...';dirty=false;if(isCode){v.style.display='none';c.style.display='block';tb.style.display='none';btn.style.display='none';}else{v.style.display='block';c.style.display='none';tb.style.display='block';btn.style.display='inline-block';btn.textContent='Kod Görünümü';}fetch('/api/file?name='+encodeURIComponent(name)+'&key='+encodeURIComponent(KEY)+'&t='+Date.now()).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(html){if(isCode){c.value=html;fst.textContent='Yüklendi ('+Math.round(html.length/1024)+'KB)';}else{var hm=html.match(/<head>([\s\S]*?)<\/head>/i);origHead=hm?hm[0]:'';var bm=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);v.innerHTML=bm?bm[1].trim():html;fst.textContent='Yüklendi';}}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+function saveFile(){var name=document.getElementById('fname').value,fst=document.getElementById('fst');fst.textContent='Kaydediliyor...';var content;if(isCode||codeMode){content=document.getElementById('ced').value;}else{content='<!DOCTYPE html><html lang="tr">'+origHead+'<body>'+document.getElementById('ved').innerHTML+'</body></html>';}fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:name,content:content})}).then(function(r){return r.json();}).then(function(r){fst.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';dirty=false;}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+
+/* ── Pane 3: Profil ── */
+function savePw(){var p1=document.getElementById('pw1').value,p2=document.getElementById('pw2').value,el=document.getElementById('st-pw');el.style.display='block';if(p1!==p2){el.style.background='#fee';el.textContent='Şifreler eşleşmiyor';return;}if(p1.length<4){el.style.background='#fee';el.textContent='En az 4 karakter';return;}el.style.background='#fffbe0';el.textContent='Kaydediliyor...';fetch('/api/update-password?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({newKey:p1})}).then(function(r){return r.json();}).then(function(r){if(r.ok){el.style.background='#e0fce8';el.textContent='Şifre güncellendi. Yeni URL: /admin?key='+p1;document.getElementById('pw1').value='';document.getElementById('pw2').value='';}else{el.style.background='#fee';el.textContent='Hata';}}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
+
+/* ── Init ── */
+fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){
+  if(c.prices){['sm','sy','pm','py','setup','bundle'].forEach(function(k){var el=document.getElementById('p-'+k);if(el)el.value=c.prices[k];});}
+  if(c.founding){var fs=document.getElementById('f-slots');var fd=document.getElementById('f-disc');if(fs)fs.value=c.founding.slots_remaining;if(fd)fd.value=c.founding.discount;}
+  if(c.gallery)gal=c.gallery;buildGrid();
+}).catch(function(){buildGrid();});
+loadDashboard();
+window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 loadFile();
 </script>
 </body>
