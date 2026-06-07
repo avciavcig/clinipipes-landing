@@ -771,7 +771,7 @@ var cart = { starter:false, pro:false, setup:false };
 var period = 'monthly';
 var BUNDLE = 20;
 function t(tr, en){ return currentLang === 'en' ? en : tr; }
-function eur(n){ return '\u20AC' + n; }
+function eur(n){ return '$' + n; }
 function addToCart(key){ cart[key] = true; renderCart(); openCart(); }
 function removeFromCart(key){ cart[key] = false; renderCart(); }
 function setPeriod(p){
@@ -877,6 +877,9 @@ fetch('/content.json').then(function(r){return r.json();}).then(function(c){
     var sm=smo,sy=syo,pm=pmo,py=pyo,su=suo;
     if(fdisc>0){sm=Math.round(smo*(1-fdisc));sy=Math.round(syo*(1-fdisc));pm=Math.round(pmo*(1-fdisc));py=Math.round(pyo*(1-fdisc));su=Math.round(suo*(1-fdisc));}
     STARTER_M=sm;STARTER_Y=sy;PRO_M=pm;PRO_Y=py;SETUP=su;BUNDLE=bu;
+    PRICES.starter.monthly=sm;PRICES.starter.yearly=sy;
+    PRICES.pro.monthly=pm;PRICES.pro.yearly=py;
+    PRICES.setup.oneoff=su;
     document.querySelectorAll('[data-ck]').forEach(function(el){
       var k=el.getAttribute('data-ck');
       if(fdisc>0){
