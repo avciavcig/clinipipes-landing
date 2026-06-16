@@ -146,6 +146,22 @@ http.createServer(function(req,res){
     else{res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:false,remaining:0}));}}
     catch(e){res.writeHead(400);res.end(e.message);}return;
   }
+  if(url==='/cart.js'){
+    try{const d=fs.readFileSync(path.join(__dirname,'cart.js'));res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end(d);}
+    catch(e){res.writeHead(404);res.end('');}return;
+  }
+  if(url.indexOf('/demo/')===0){
+    const rel=url.replace(/^\/demo\//,'').split('?')[0].replace(/^\/+/,'');
+    if(!rel||rel.indexOf('..')>=0){res.writeHead(403);res.end('');return;}
+    const fp=path.join(__dirname,'demo',rel);
+    const ext=path.extname(fp).toLowerCase();
+    const ct={'.html':'text/html; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp'}[ext];
+    if(!ct){res.writeHead(403);res.end('');return;}
+    fs.readFile(fp,function(err,data){
+      if(err){res.writeHead(404);res.end('');return;}
+      res.writeHead(200,{'Content-Type':ct,'Cache-Control':'public, max-age=3600'});res.end(data);
+    });return;
+  }
   const file=PAGES[url]||null;
   if(!file){res.writeHead(404);res.end('Not found');return;}
   if(url==='/admin'&&qs.get('key')!==adminKey){

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Treatment Plan</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#2c2c2c;background:#f3f4f6;padding:24px}
+.document{max-width:794px;margin:0 auto;background:#fff;padding:32px 36px;box-shadow:0 2px 16px rgba(0,0,0,.08);border-radius:4px}
+.header{text-align:center;margin-bottom:28px;padding-bottom:20px;border-bottom:3px solid #2563eb}
+.header h1{font-size:24px;color:#1e40af;letter-spacing:.5px}
+.header p{color:#64748b;font-size:12px;margin-top:4px}
+.badge{display:inline-block;background:#2563eb;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-top:8px}
+.section{margin-bottom:22px}
+.section-title{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;padding:9px 16px;font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;border-radius:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.info-item{display:flex;gap:8px;padding:7px 10px;border-bottom:1px solid #f1f5f9;align-items:flex-start}
+.info-item:nth-child(odd){background:#fafbfc}
+.info-label{color:#64748b;font-size:11px;min-width:110px;flex-shrink:0;font-weight:600}
+.info-value{color:#1e293b;font-weight:500;word-break:break-word}
+.price-box{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;text-align:center;padding:22px;font-size:28px;font-weight:bold;border-radius:6px;letter-spacing:1px}
+.price-sub{font-size:12px;opacity:.8;margin-top:4px}
+.doctor-row{display:flex;gap:16px;align-items:flex-start;margin-top:8px}
+.doctor-row img{width:80px;height:80px;object-fit:cover;border-radius:50%;border:3px solid #2563eb;flex-shrink:0}
+.text-block{font-size:12px;line-height:1.7;color:#475569;padding:2px 10px}
+.footer{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #e2e8f0;font-size:11px;color:#94a3b8}
+</style>
+</head>
+<body>
+<div class="document">
+  <div class="header">
+    <h1>Dentavera Dental Clinic</h1>
+    <p>İzmir, Turkey · +90 530 300 00 00</p>
+    <span class="badge">Treatment Plan &mdash; 06/06/2026</span>
+  </div>
+  <div class="section">
+    <div class="section-title">Patient Information</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">Full Name</span><span class="info-value">James Mitchell</span></div>
+      <div class="info-item"><span class="info-label">Age</span><span class="info-value">42</span></div>
+      <div class="info-item"><span class="info-label">Country</span><span class="info-value">United Kingdom</span></div>
+      <div class="info-item"><span class="info-label">Treatment</span><span class="info-value">Hollywood Smile</span></div>
+      <div class="info-item"><span class="info-label">Preferred Date</span><span class="info-value">September 2026</span></div>
+      <div class="info-item"><span class="info-label">Channel</span><span class="info-value">Instagram</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Doctor Assessment</div>
+    <div class="info-grid">
+      <div class="info-item" style="grid-column:1/-1"><span class="info-label">Clinical Assessment</span><span class="info-value">Patient suitable for full-arch aesthetic rehabilitation.</span></div>
+      <div class="info-item" style="grid-column:1/-1"><span class="info-label">Recommended Treatment</span><span class="info-value">20 zirconium crowns, whitening protocol</span></div>
+      <div class="info-item"><span class="info-label">Duration</span><span class="info-value">5 days in clinic</span></div>
+      <div class="info-item"><span class="info-label">Included</span><span class="info-value">Transfer, hotel, follow-up</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Price Offer</div>
+    <div class="price-box">€6.500<div class="price-sub">All inclusive treatment price</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Accommodation & Travel</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">Hotel</span><span class="info-value">Swissôtel Büyük Efes</span></div>
+      <div class="info-item"><span class="info-label">Language</span><span class="info-value">English</span></div>
+      <div class="info-item"><span class="info-label">Check-In</span><span class="info-value">15 Sep 2026</span></div>
+      <div class="info-item"><span class="info-label">Check-Out</span><span class="info-value">20 Sep 2026</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">About the Clinic</div>
+    <div class="text-block" style="margin-bottom:10px;">Modern dental clinic for international patients.</div>
+  </div>
+  <div class="section">
+    <div class="section-title">Your Doctor</div>
+    <div class="doctor-row">
+      <div style="width:80px;height:80px;border-radius:50%;border:3px solid #2563eb;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">👨‍⚕️</div>
+      <div>
+        <strong style="font-size:14px;color:#1e293b;">Mehmet Kaan ERSOY</strong> <span style="color:#2563eb;font-size:12px;">&mdash; Diş Hekimi</span><br>
+        <span class="text-block" style="padding:0;">Implantology and aesthetic dentistry specialist.</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dentavera Dental Clinic · İzmir</div>
+</div>
+</body>
+</html>

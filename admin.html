@@ -205,7 +205,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <script>
 var KEY=new URLSearchParams(location.search).get('key');
 var gal=[],origHead='',isCode=false,codeMode=false,dirty=false;
-var DEFS=[{alt:'Panel',tr:'Guvenli panel girisi',en:'Secure panel login'},{alt:'Kurulum',tr:'Klinik kurulum paneli',en:'Clinic setup panel'},{alt:'Form',tr:'Form olusturucu',en:'Form builder'},{alt:'OnDeg',tr:'On degerlendirme',en:'Pre-assessment'}];
+var DEFS=[{alt:'Dashboard',tr:'Dashboard (yonetici)',en:'Dashboard (owner)'},{alt:'Sales',tr:'Satis pipeline',en:'Sales pipeline'},{alt:'Form',tr:'Hasta formu',en:'Patient form'},{alt:'PDF',tr:'PDF teklif',en:'PDF quote'}];
 var CODES=['index.html','content.json'];
 
 function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});if(i===0)loadDashboard();}
