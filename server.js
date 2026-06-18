@@ -234,15 +234,18 @@ http.createServer(function(req,res){
   if(url==='/api/admin/2fa/setup'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
     var cfgS=auth.loadConfig();
+    var sessS=auth.findSession(cfgS,auth.parseCookies(req)[auth.SESSION_COOKIE]);
+    if(!sessS){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
     if(cfgS.totpEnabled){return jsonRes(res,400,{ok:false,error:'already_enabled'},req,true);}
     var secret=auth.generateTotpSecret();
-    cfgS.totpPendingSecret=secret;
+    auth.setPendingTotpSecret(cfgS,sessS.token,secret);
     auth.saveConfig(cfgS);
     var uri=auth.getTotpUri(secret);
+    var tail=secret.slice(-4);
     return QRCode.toDataURL(uri,{errorCorrectionLevel:'H',margin:2,width:280}).then(function(qr){
-      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,qr:qr},req,true);
+      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,qr:qr,secretTail:tail},req,true);
     }).catch(function(){
-      return jsonRes(res,200,{ok:true,secret:secret,uri:uri},req,true);
+      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,secretTail:tail},req,true);
     });
   }
   if(url==='/api/admin/2fa/enable'&&req.method==='POST'){
@@ -252,11 +255,16 @@ http.createServer(function(req,res){
       try{
         var data=JSON.parse(body||'{}');
         var cfgE=auth.loadConfig();
-        if(!cfgE.totpPendingSecret){return jsonRes(res,400,{ok:false,error:'setup_required'},req,true);}
-        if(!auth.verifyTotp(cfgE.totpPendingSecret,data.code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);}
-        cfgE.totpSecret=cfgE.totpPendingSecret;
+        var sessE=auth.findSession(cfgE,auth.parseCookies(req)[auth.SESSION_COOKIE]);
+        if(!sessE){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
+        var pending=auth.getPendingTotpSecret(cfgE,sessE.token);
+        if(!pending){return jsonRes(res,400,{ok:false,error:'setup_required',message:'2FA kurulumunu yeniden başlatın (Kurulumu Başlat).'},req,true);}
+        var code=String(data.code||'').replace(/\D/g,'').slice(0,6);
+        if(!/^\d{6}$/.test(code)){return jsonRes(res,400,{ok:false,error:'invalid_format',message:'6 haneli sayısal kod girin.'},req,true);}
+        if(!auth.verifyTotp(pending,code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod eşleşmedi. Authenticator\'daki güncel CliniPipes kaydını kullanın; eski kayıtları silin. Telefon saatinin otomatik olduğundan emin olun.'},req,true);}
+        cfgE.totpSecret=pending;
         cfgE.totpEnabled=true;
-        delete cfgE.totpPendingSecret;
+        auth.clearPendingTotpSecret(cfgE,sessE.token);
         auth.saveConfig(cfgE);
         return jsonRes(res,200,{ok:true},req,true);
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
@@ -273,7 +281,7 @@ http.createServer(function(req,res){
         if(cfgD.totpEnabled&&!auth.verifyTotp(cfgD.totpSecret,data.code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);}
         cfgD.totpEnabled=false;
         cfgD.totpSecret=null;
-        delete cfgD.totpPendingSecret;
+        auth.clearPendingTotpSecret(cfgD,null);
         auth.saveConfig(cfgD);
         return jsonRes(res,200,{ok:true},req,true);
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
