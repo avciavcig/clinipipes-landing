@@ -313,13 +313,15 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <button class="btn2" onclick="setup2fa()">&#128241; 2FA Kurulumunu Ba&#351;lat</button>
     </div>
     <div id="2fa-setup" style="display:none;margin-top:1rem">
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Google Authenticator veya Authy <strong>içinden</strong> &ldquo;+&rdquo; &rarr; &ldquo;QR kod tara&rdquo; ile okutun (kamera uygulaması yeterli olmayabilir). QR g&#246;r&#252;nm&#252;yorsa anahtar&#305; elle girin:</p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>Adım 1 —</strong> Google Authenticator veya Authy <strong>i&#231;inden</strong> &ldquo;+&rdquo; &rarr; &ldquo;QR kod tara&rdquo; ile okutun.</p>
       <img id="2fa-qr" alt="2FA QR" width="280" height="280">
+      <p style="font-size:.78rem;color:#666;margin:.5rem 0 .25rem"><strong>veya elle kurulum anahtar&#305;:</strong> (Authenticator &rarr; Kurulum anahtar&#305; gir)</p>
       <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem;user-select:all"></code>
-      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.75rem;font-size:.78rem">Anahtar&#305; Kopyala</button>
-      <p style="font-size:.78rem;color:#888;margin-bottom:.75rem;display:none" id="2fa-uri"></p>
-      <label>Do&#287;rulama kodu (6 haneli)</label>
-      <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
+      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.5rem;font-size:.78rem">Kurulum Anahtar&#305;n&#305; Kopyala</button>
+      <p style="font-size:.78rem;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.5rem .75rem;margin-bottom:.75rem">&#9888; Kopyalad&#305;&#287;&#305;n&#305;z uzun anahtar&#305; a&#351;a&#287;&#305;daki kutuya <strong>yap&#305;&#351;t&#305;rmay&#305;n</strong>. O anahtar sadece Authenticator uygulamas&#305;na eklenir.</p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.35rem"><strong>Ad&#305;m 2 —</strong> Authenticator&#8217;da <em>CliniPipes:Admin</em> hesab&#305; g&#246;r&#252;nd&#252;kten sonra, uygulaman&#305;n &#252;retti&#287;i 6 haneli kodu yaz&#305;n:</p>
+      <label>Authenticator uygulamas&#305;ndaki kod (6 hane, 30 sn&#8217;de bir yenilenir)</label>
+      <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="&#246;r. 482913" style="margin-bottom:.75rem" autocomplete="one-time-code">
       <button class="btn" onclick="enable2fa()">&#10003; 2FA'y&#305; Etkinle&#351;tir</button>
     </div>
     <div id="2fa-on" style="display:none;margin-top:1rem">
@@ -401,7 +403,7 @@ function copy2faSecret(){
   var s=document.getElementById('2fa-secret');
   if(!s||!s.textContent)return;
   navigator.clipboard.writeText(s.textContent.trim()).then(function(){
-    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Anahtar kopyalandı. Authenticator\'a yapıştırın.';
+    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Kurulum anahtarı kopyalandı. Authenticator uygulamasında "Kurulum anahtarı gir" alanına yapıştırın — doğrulama kutusuna değil.';
   }).catch(function(){});
 }
 function setup2fa(){
@@ -421,12 +423,21 @@ function setup2fa(){
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function enable2fa(){
-  var code=document.getElementById('2fa-enable-code').value.trim();
-  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Etkinleştiriliyor...';
+  var code=document.getElementById('2fa-enable-code').value.replace(/\s/g,'');
+  var el=document.getElementById('st-2fa');el.style.display='block';
+  if(code.length>8){
+    el.style.background='#fffbeb';el.textContent='Bu uzun metin kurulum anahtarı — doğrulama kutusuna değil, Authenticator uygulamasına yapıştırılmalı. Sonra uygulamadaki 6 haneli kodu yazın.';
+    return;
+  }
+  if(!/^\d{6}$/.test(code)){
+    el.style.background='#fee';el.textContent='Authenticator uygulamasındaki 6 haneli sayısal kodu girin (ör. 482913).';
+    return;
+  }
+  el.style.background='#fffbe0';el.textContent='Etkinleştiriliyor...';
   api('/api/admin/2fa/enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
     .then(function(r){return r.json();}).then(function(r){
       if(r.ok){TOTP_ENABLED=true;update2faUI();document.getElementById('2fa-setup').style.display='none';sessionStorage.removeItem('2fa-banner-dismiss');el.style.background='#e0fce8';el.textContent='2FA etkinleştirildi. Bir sonraki girişte Authenticator kodu gerekir.';}
-      else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'geçersiz kod');}
+      else{el.style.background='#fee';el.textContent=r.error==='invalid_2fa'?'Kod hatalı veya süresi doldu. Authenticator\'daki güncel 6 haneli kodu yazın (kurulum anahtarını değil).':'Hata: '+(r.error||'geçersiz kod');}
     }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function disable2fa(){
