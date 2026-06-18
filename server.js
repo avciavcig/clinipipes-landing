@@ -1,5 +1,6 @@
 const http=require('http');const fs=require('fs');const path=require('path');const https=require('https');const{execSync}=require('child_process');
 const{createAdminAuth}=require('./lib/admin-auth');
+const QRCode=require('qrcode');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
@@ -237,7 +238,12 @@ http.createServer(function(req,res){
     var secret=auth.generateTotpSecret();
     cfgS.totpPendingSecret=secret;
     auth.saveConfig(cfgS);
-    return jsonRes(res,200,{ok:true,secret:secret,uri:auth.getTotpUri(secret)},req,true);
+    var uri=auth.getTotpUri(secret);
+    return QRCode.toDataURL(uri,{width:200,margin:1,errorCorrectionLevel:'M'}).then(function(qr){
+      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,qr:qr},req,true);
+    }).catch(function(){
+      return jsonRes(res,200,{ok:true,secret:secret,uri:uri},req,true);
+    });
   }
   if(url==='/api/admin/2fa/enable'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;

@@ -313,10 +313,11 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <button class="btn2" onclick="setup2fa()">&#128241; 2FA Kurulumunu Ba&#351;lat</button>
     </div>
     <div id="2fa-setup" style="display:none;margin-top:1rem">
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Authenticator uygulaman&#305;za QR kodu okutun veya anahtar&#305; elle girin:</p>
-      <img id="2fa-qr" alt="2FA QR" width="180" height="180">
-      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem"></code>
-      <p style="font-size:.78rem;color:#888;margin-bottom:.75rem" id="2fa-uri"></p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Authenticator uygulaman&#305;za QR kodu okutun. QR g&#246;r&#252;nm&#252;yorsa a&#351;a&#287;&#305;daki anahtar&#305; elle girin (bo&#351;luksuz):</p>
+      <img id="2fa-qr" alt="2FA QR" width="200" height="200">
+      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem;user-select:all"></code>
+      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.75rem;font-size:.78rem">Anahtar&#305; Kopyala</button>
+      <p style="font-size:.78rem;color:#888;margin-bottom:.75rem;display:none" id="2fa-uri"></p>
       <label>Do&#287;rulama kodu (6 haneli)</label>
       <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
       <button class="btn" onclick="enable2fa()">&#10003; 2FA'y&#305; Etkinle&#351;tir</button>
@@ -396,16 +397,27 @@ function dismiss2faBanner(){
   var banner=document.getElementById('2fa-banner');
   if(banner)banner.style.display='none';
 }
+function copy2faSecret(){
+  var s=document.getElementById('2fa-secret');
+  if(!s||!s.textContent)return;
+  navigator.clipboard.writeText(s.textContent.trim()).then(function(){
+    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Anahtar kopyalandı. Authenticator\'a yapıştırın.';
+  }).catch(function(){});
+}
 function setup2fa(){
   var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kurulum hazırlanıyor...';
+  var qr=document.getElementById('2fa-qr');
+  if(qr){qr.style.display='none';qr.removeAttribute('src');}
   api('/api/admin/2fa/setup',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
     if(!r.ok){el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');return;}
     document.getElementById('2fa-setup').style.display='block';
-    document.getElementById('2fa-secret').textContent=r.secret;
-    document.getElementById('2fa-uri').textContent=r.uri;
-    var qr=document.getElementById('2fa-qr');
-    if(qr&&r.uri){qr.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(r.uri);qr.style.display='block';}
-    el.style.background='#e0fce8';el.textContent='Authenticator uygulamanıza QR kodu okutun ve kodu doğrulayın.';
+    document.getElementById('2fa-secret').textContent=r.secret||'';
+    if(qr){
+      if(r.qr){qr.src=r.qr;qr.style.display='block';}
+      else if(r.uri){qr.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(r.uri);qr.style.display='block';}
+      qr.onerror=function(){qr.style.display='none';el.style.background='#fffbe0';el.textContent='QR yüklenemedi — anahtarı elle girin veya kopyalayın.';};
+    }
+    el.style.background='#e0fce8';el.textContent='QR kodu okutun veya anahtarı kopyalayıp Authenticator\'a ekleyin. Ardından 6 haneli kodu girin.';
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function enable2fa(){
