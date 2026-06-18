@@ -257,12 +257,16 @@ http.createServer(function(req,res){
         var cfgE=auth.loadConfig();
         var sessE=auth.findSession(cfgE,auth.parseCookies(req)[auth.SESSION_COOKIE]);
         if(!sessE){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
-        var pending=auth.getPendingTotpSecret(cfgE,sessE.token);
-        if(!pending){return jsonRes(res,400,{ok:false,error:'setup_required',message:'2FA kurulumunu yeniden başlatın (Kurulumu Başlat).'},req,true);}
-        var code=String(data.code||'').replace(/\D/g,'').slice(0,6);
+        var serverPending=auth.getPendingTotpSecret(cfgE,sessE.token);
+        var code=String(data.code||'').replace(/\D/g,'');
+        if(code.length>0&&code.length<6)code=code.padStart(6,'0');
+        code=code.slice(0,6);
         if(!/^\d{6}$/.test(code)){return jsonRes(res,400,{ok:false,error:'invalid_format',message:'6 haneli sayısal kod girin.'},req,true);}
-        if(!auth.verifyTotp(pending,code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod eşleşmedi. Authenticator\'daki güncel CliniPipes kaydını kullanın; eski kayıtları silin. Telefon saatinin otomatik olduğundan emin olun.'},req,true);}
-        cfgE.totpSecret=pending;
+        var secrets=auth.resolveTotpSecret(data.setupSecret,serverPending);
+        if(!secrets.length){return jsonRes(res,400,{ok:false,error:'setup_required',message:'2FA kurulumunu yeniden başlatın.'},req,true);}
+        var matched=auth.verifyTotpAny(secrets,code);
+        if(!matched){return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod doğrulanamadı. Kurulumu yeniden başlatın, Authenticator\'a yeni QR ekleyin, kodu elle yazmayı deneyin (yapıştırma).'},req,true);}
+        cfgE.totpSecret=matched;
         cfgE.totpEnabled=true;
         auth.clearPendingTotpSecret(cfgE,sessE.token);
         auth.saveConfig(cfgE);
