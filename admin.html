@@ -313,8 +313,8 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <button class="btn2" onclick="setup2fa()">&#128241; 2FA Kurulumunu Ba&#351;lat</button>
     </div>
     <div id="2fa-setup" style="display:none;margin-top:1rem">
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Authenticator uygulaman&#305;za QR kodu okutun. QR g&#246;r&#252;nm&#252;yorsa a&#351;a&#287;&#305;daki anahtar&#305; elle girin (bo&#351;luksuz):</p>
-      <img id="2fa-qr" alt="2FA QR" width="200" height="200">
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Google Authenticator veya Authy <strong>içinden</strong> &ldquo;+&rdquo; &rarr; &ldquo;QR kod tara&rdquo; ile okutun (kamera uygulaması yeterli olmayabilir). QR g&#246;r&#252;nm&#252;yorsa anahtar&#305; elle girin:</p>
+      <img id="2fa-qr" alt="2FA QR" width="280" height="280">
       <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem;user-select:all"></code>
       <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.75rem;font-size:.78rem">Anahtar&#305; Kopyala</button>
       <p style="font-size:.78rem;color:#888;margin-bottom:.75rem;display:none" id="2fa-uri"></p>
@@ -417,7 +417,7 @@ function setup2fa(){
       else if(r.uri){qr.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(r.uri);qr.style.display='block';}
       qr.onerror=function(){qr.style.display='none';el.style.background='#fffbe0';el.textContent='QR yüklenemedi — anahtarı elle girin veya kopyalayın.';};
     }
-    el.style.background='#e0fce8';el.textContent='QR kodu okutun veya anahtarı kopyalayıp Authenticator\'a ekleyin. Ardından 6 haneli kodu girin.';
+    el.style.background='#e0fce8';el.textContent='QR okutun veya anahtarı kopyalayıp Authenticator\'da "Kurulum anahtarı gir" ile ekleyin (Zaman bazlı). Ardından 6 haneli kodu yazın.';
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function enable2fa(){

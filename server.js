@@ -239,7 +239,7 @@ http.createServer(function(req,res){
     cfgS.totpPendingSecret=secret;
     auth.saveConfig(cfgS);
     var uri=auth.getTotpUri(secret);
-    return QRCode.toDataURL(uri,{width:200,margin:1,errorCorrectionLevel:'M'}).then(function(qr){
+    return QRCode.toDataURL(uri,{errorCorrectionLevel:'H',margin:2,width:280}).then(function(qr){
       return jsonRes(res,200,{ok:true,secret:secret,uri:uri,qr:qr},req,true);
     }).catch(function(){
       return jsonRes(res,200,{ok:true,secret:secret,uri:uri},req,true);
