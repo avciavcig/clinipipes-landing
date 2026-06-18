@@ -1,6 +1,5 @@
 const http=require('http');const fs=require('fs');const path=require('path');const https=require('https');const{execSync}=require('child_process');
 const{createAdminAuth}=require('./lib/admin-auth');
-const QRCode=require('qrcode');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
@@ -30,6 +29,17 @@ function htmlRes(res,status,html,req,admin){
 }
 function requireAdmin(req,res,qs,csrf){
   return auth.authenticateRequest(req,qs,res,csrf!==false);
+}
+function require2faEnabled(res,req,cfg){
+  if(cfg.totpEnabled)return true;
+  jsonRes(res,403,{ok:false,error:'2fa_required',message:'Güvenlik için önce 2FA kurulumu gerekli. Profil sekmesine gidin.'},req,true);
+  return false;
+}
+function requireAdminWith2fa(req,res,qs,csrf){
+  var data=requireAdmin(req,res,qs,csrf);
+  if(!data)return null;
+  if(!require2faEnabled(res,req,data.cfg))return null;
+  return data;
 }
 function setSessionCookies(res,req,session){
   auth.setCookie(res,auth.SESSION_COOKIE,session.token,8*3600,req);
@@ -199,17 +209,18 @@ http.createServer(function(req,res){
           return jsonRes(res,401,{ok:false,error:'invalid_credentials',retryAfter:retry||undefined},req,true);
         }
         if(cfg.totpEnabled){
-          if(pending&&!auth.consumePending2fa(pending,ip)){
-            return jsonRes(res,401,{ok:false,error:'session_expired'},req,true);
-          }
           if(!totp){
             var pToken=auth.createPending2fa(ip);
             return jsonRes(res,200,{ok:false,needs2fa:true,pending:pToken},req,true);
+          }
+          if(pending&&!auth.peekPending2fa(pending,ip)){
+            return jsonRes(res,401,{ok:false,error:'session_expired'},req,true);
           }
           if(!auth.verifyTotp(cfg.totpSecret,totp)){
             var retry2=auth.recordFailedLogin(cfg,ip);
             return jsonRes(res,401,{ok:false,error:'invalid_2fa',retryAfter:retry2||undefined},req,true);
           }
+          if(pending)auth.finishPending2fa(pending);
         }
         auth.clearFailedLogin(cfg,ip);
         var session=auth.createSession(cfg);
@@ -229,7 +240,7 @@ http.createServer(function(req,res){
     var cfgM=auth.loadConfig();
     var sess=auth.findSession(cfgM,auth.parseCookies(req)[auth.SESSION_COOKIE]);
     if(!sess){return jsonRes(res,401,{ok:false},req,true);}
-    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled},req,true);
+    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled,require2faSetup:!cfgM.totpEnabled},req,true);
   }
   if(url==='/api/admin/2fa/setup'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
@@ -238,16 +249,7 @@ http.createServer(function(req,res){
     if(!sessS){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
     if(cfgS.totpEnabled){return jsonRes(res,400,{ok:false,error:'already_enabled'},req,true);}
     var setup=auth.createTotpSetup();
-    var secret=setup.secret;
-    auth.setPendingTotpSecret(cfgS,sessS.token,secret);
-    auth.saveConfig(cfgS);
-    var uri=setup.uri;
-    var tail=secret.slice(-4);
-    return QRCode.toDataURL(uri,{errorCorrectionLevel:'H',margin:2,width:280}).then(function(qr){
-      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,qr:qr,secretTail:tail},req,true);
-    }).catch(function(){
-      return jsonRes(res,200,{ok:true,secret:secret,uri:uri,secretTail:tail},req,true);
-    });
+    return jsonRes(res,200,{ok:true,secret:setup.secret,secretDisplay:setup.secretDisplay,secretTail:setup.secretTail},req,true);
   }
   if(url==='/api/admin/2fa/preview'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
@@ -273,26 +275,19 @@ http.createServer(function(req,res){
         var cfgE=auth.loadConfig();
         var sessE=auth.findSession(cfgE,auth.parseCookies(req)[auth.SESSION_COOKIE]);
         if(!sessE){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
-        var serverPending=auth.getPendingTotpSecret(cfgE,sessE.token);
-        var clientSecret=auth.normalizeTotpSecret(data.setupSecret);
-        var code=String(data.code||'').replace(/\D/g,'');
-        if(code.length>0&&code.length<6)code=code.padStart(6,'0');
-        code=code.slice(0,6);
+        var code=auth.normalizeOtpCode(data.code);
         if(!/^\d{6}$/.test(code)){return jsonRes(res,400,{ok:false,error:'invalid_format',message:'6 haneli sayısal kod girin.'},req,true);}
-        if(!clientSecret){return jsonRes(res,400,{ok:false,error:'missing_setup_secret',message:'Kurulum oturumu kayboldu. 2FA Kurulumunu Başlat\'a tekrar basın ve QR\'ı yeniden tarayın.'},req,true);}
-        var matched=auth.verifyTotp(clientSecret,code);
-        if(!matched&&serverPending&&clientSecret!==auth.normalizeTotpSecret(serverPending)){
-          matched=auth.verifyTotp(serverPending,code);
-          if(matched)clientSecret=auth.normalizeTotpSecret(serverPending);
-        }
-        if(!matched){
-          return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod doğrulanamadı.',serverCode:auth.currentTotpCode(clientSecret),hint:'Sunucu kodu ile Authenticator aynı olmalı. Farklıysa QR\'ı yeniden tarayın.'},req,true);
+        var clientSecret=auth.normalizeTotpSecret(data.setupSecret);
+        if(!clientSecret){return jsonRes(res,400,{ok:false,error:'missing_setup_secret',message:'Kurulumu yeniden başlatın.'},req,true);}
+        if(!auth.verifyTotp(clientSecret,code)){
+          return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod eşleşmedi.',serverCode:auth.currentTotpCode(clientSecret),hint:'Sunucu kodu ile Authenticator aynı olmalı. Eski CliniPipes kayıtlarını silip anahtarı yeniden yapıştırın.'},req,true);
         }
         cfgE.totpSecret=clientSecret;
         cfgE.totpEnabled=true;
+        cfgE.twoFactorMethod='totp';
         auth.clearPendingTotpSecret(cfgE,sessE.token);
         auth.saveConfig(cfgE);
-        return jsonRes(res,200,{ok:true},req,true);
+        return jsonRes(res,200,{ok:true,backupHint:'Kalıcılık için Railway\'e ADMIN_TOTP_SECRET ortam değişkeni olarak bu kurulum anahtarını kaydedin.'},req,true);
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
     });
   }
@@ -303,10 +298,15 @@ http.createServer(function(req,res){
       try{
         var data=JSON.parse(body||'{}');
         var cfgD=auth.loadConfig();
+        var sessD=auth.findSession(cfgD,auth.parseCookies(req)[auth.SESSION_COOKIE]);
+        if(!sessD){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
         if(!auth.verifyPassword(String(data.password||''),auth.getStoredPasswordHash(cfgD))){return jsonRes(res,401,{ok:false,error:'invalid_credentials'},req,true);}
-        if(cfgD.totpEnabled&&!auth.verifyTotp(cfgD.totpSecret,data.code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);}
+        if(cfgD.totpEnabled&&!auth.verifyTotp(cfgD.totpSecret,data.code)){
+          return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);
+        }
         cfgD.totpEnabled=false;
         cfgD.totpSecret=null;
+        cfgD.twoFactorMethod=null;
         auth.clearPendingTotpSecret(cfgD,null);
         auth.saveConfig(cfgD);
         return jsonRes(res,200,{ok:true},req,true);
@@ -400,13 +400,13 @@ http.createServer(function(req,res){
     return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:isPortalIntegrationEnabled()},req,true);
   }
   if(url==='/api/rebuild-legal'&&req.method==='POST'){
-    if(!requireAdmin(req,res,qs))return;
+    if(!requireAdminWith2fa(req,res,qs))return;
     rebuildLegalPages(function(ok,err){
       jsonRes(res,200,{ok:ok,error:err||null},req,true);
     });return;
   }
   if(url==='/api/save-demo-image'&&req.method==='POST'){
-    if(!requireAdmin(req,res,qs))return;
+    if(!requireAdminWith2fa(req,res,qs))return;
     auth.readBody(req,function(err,body){
       if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,true);}
       try{var data=JSON.parse(body);
@@ -416,7 +416,7 @@ http.createServer(function(req,res){
     });return;
   }
   if(url==='/api/capture-demo'&&req.method==='POST'){
-    if(!requireAdmin(req,res,qs))return;
+    if(!requireAdminWith2fa(req,res,qs))return;
     captureDemoScreens(function(ok,err){
       jsonRes(res,200,{ok:ok,error:err||null},req,true);
     });return;
@@ -455,7 +455,7 @@ http.createServer(function(req,res){
     catch(e){res.writeHead(404);auth.setSecurityHeaders(res,{admin:true});res.end('Not found');}return;
   }
   if(url==='/api/save'&&req.method==='POST'){
-    if(!requireAdmin(req,res,qs))return;
+    if(!requireAdminWith2fa(req,res,qs))return;
     auth.readBody(req,function(err,body){
       if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,true);}
       try{const data=JSON.parse(body);

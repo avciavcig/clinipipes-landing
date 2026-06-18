@@ -72,10 +72,9 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   <a href="javascript:void(0)" onclick="logout()" style="margin-left:1.5rem;color:#888;font-size:.82rem;text-decoration:none;border:1px solid #333;padding:.28rem .75rem;border-radius:5px" onmouseover="this.style.color='#fff';this.style.borderColor='#888'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#10005; &#199;&#305;k&#305;&#351;</a>
 </header>
 <div class="sec-banner" id="2fa-banner">
-  <span><strong>G&#252;venlik:</strong> 2FA hen&#252;z etkin de&#287;il. Admin panelini korumak i&#231;in Profil sekmesinden Authenticator kurulumu yap&#305;n.</span>
+  <span><strong>Güvenlik zorunlu:</strong> Admin paneline tam erişim için Google Authenticator ile 2FA kurun.</span>
   <div class="sec-actions">
-    <button class="btn2" onclick="sw(6)">2FA Kur</button>
-    <button class="btn2" onclick="dismiss2faBanner()">Sonra hat&#305;rlat</button>
+    <button class="btn2" onclick="sw(6);setup2fa()">2FA Kur</button>
   </div>
 </div>
 <div class="tabs">
@@ -310,28 +309,26 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128272; &#304;ki Fakt&#246;rl&#252; Do&#287;rulama (2FA)</h2>
     <p id="2fa-status" style="font-size:.88rem;color:#666;margin-bottom:1rem">Durum kontrol ediliyor...</p>
     <div id="2fa-off">
-      <button class="btn2" onclick="setup2fa()">&#128241; 2FA Kurulumunu Ba&#351;lat</button>
+      <button class="btn2" onclick="setup2fa()">Google Authenticator ile 2FA Kur</button>
     </div>
     <div id="2fa-setup" style="display:none;margin-top:1rem">
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>Adım 1 —</strong> Google Authenticator veya Authy <strong>i&#231;inden</strong> &ldquo;+&rdquo; &rarr; &ldquo;QR kod tara&rdquo; ile okutun.</p>
-      <img id="2fa-qr" alt="2FA QR" width="280" height="280">
-      <p style="font-size:.78rem;color:#666;margin:.5rem 0 .25rem"><strong>veya elle kurulum anahtar&#305;:</strong> (Authenticator &rarr; Kurulum anahtar&#305; gir)</p>
-      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem;user-select:all"></code>
-      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.5rem;font-size:.78rem">Kurulum Anahtar&#305;n&#305; Kopyala</button>
+      <p style="font-size:.82rem;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem"><strong>Önce:</strong> Google Authenticator&#8217;da tüm <em>CliniPipes</em> kayıtlarını silin. QR kullanmayın.</p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>1.</strong> Authenticator &rarr; <strong>+</strong> &rarr; <strong>Kurulum anahtarı gir</strong></p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>2.</strong> Hesap: <em>CliniPipes</em> &middot; Tür: <strong>Zaman bazlı</strong> &middot; Anahtar:</p>
+      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.6rem .75rem;border-radius:6px;font-size:1rem;letter-spacing:.1em;word-break:break-all;margin-bottom:.35rem;user-select:all"></code>
       <p id="2fa-secret-tail" style="font-size:.78rem;color:#666;margin-bottom:.5rem"></p>
-      <p style="font-size:.78rem;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.5rem .75rem;margin-bottom:.75rem">&#9888; Kopyalad&#305;&#287;&#305;n&#305;z uzun anahtar&#305; a&#351;a&#287;&#305;daki kutuya <strong>yap&#305;&#351;t&#305;rmay&#305;n</strong>. O anahtar sadece Authenticator uygulamas&#305;na eklenir.</p>
-      <p style="font-size:.82rem;color:#666;margin-bottom:.35rem"><strong>Ad&#305;m 2 —</strong> Authenticator&#8217;da <em>CliniPipes</em> hesab&#305; g&#246;r&#252;nd&#252;kten sonra kodu yaz&#305;n:</p>
-      <p style="font-size:.82rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem">Kontrol: Sunucunun bekledi&#287;i kod <strong id="2fa-preview-code" style="font-size:1.1rem;letter-spacing:.12em">—</strong><br><span style="font-size:.78rem;color:#666">Bu kod Google Authenticator&#8217;daki CliniPipes kodu ile <strong>ayn&#305;</strong> olmal&#305;. Farkl&#305;ysa QR&#8217;&#305; yeniden taray&#305;n.</span></p>
-      <label>Authenticator uygulamas&#305;ndaki kod (6 hane — <strong>elle yaz&#305;n</strong>, yap&#305;&#351;t&#305;rma sorun &#231;&#305;karabilir)</label>
-      <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="&#246;r. 482913" style="margin-bottom:.75rem" autocomplete="one-time-code">
-      <button class="btn" onclick="enable2fa()">&#10003; 2FA'y&#305; Etkinle&#351;tir</button>
+      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.75rem;font-size:.78rem">Anahtarı Kopyala ve Authenticator&#8217;a Yapıştır</button>
+      <p style="font-size:.82rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem">Kontrol &mdash; Sunucu: <strong id="2fa-preview-code" style="font-size:1.15rem;letter-spacing:.12em">—</strong> &middot; Authenticator ile <strong>aynı</strong> olmalı.</p>
+      <p style="font-size:.82rem;color:#666;margin-bottom:.35rem"><strong>3.</strong> Kodlar eşleşince 6 haneyi yazın:</p>
+      <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="482913" style="margin-bottom:.75rem" autocomplete="one-time-code">
+      <button class="btn" id="2fa-enable-btn" onclick="enable2fa()">2FA&#8217;y&#305; Etkinle&#351;tir</button>
     </div>
     <div id="2fa-on" style="display:none;margin-top:1rem">
-      <label>Mevcut &#351;ifre</label>
+      <label>Mevcut şifre</label>
       <input type="password" id="2fa-disable-pw" style="margin-bottom:.5rem">
-      <label>2FA kodu</label>
+      <label>Authenticator kodu</label>
       <input type="text" id="2fa-disable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
-      <button class="btn2" onclick="disable2fa()" style="background:#fee;color:#b91c1c;border:1px solid #fecaca">2FA'y&#305; Devre D&#305;&#351;&#305; B&#305;rak</button>
+      <button class="btn2" onclick="disable2fa()" style="background:#fee;color:#b91c1c;border:1px solid #fecaca">2FA&#8217;y&#305; Kapat</button>
     </div>
     <div class="st" id="st-2fa" style="margin-top:.75rem"></div>
   </div>
@@ -344,7 +341,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <input type="password" id="pw1" placeholder="Yeni şifre girin" style="margin-bottom:.75rem">
       <label>&#350;ifre Tekrar</label>
       <input type="password" id="pw2" placeholder="Tekrar girin" style="margin-bottom:.75rem">
-      <label id="pw-totp-label" style="display:none">2FA Kodu</label>
+      <label id="pw-totp-label" style="display:none">Authenticator Kodu</label>
       <input type="text" id="pw-totp" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:1rem;display:none">
       <button class="btn" onclick="savePw()">&#128274; &#350;ifreyi G&#252;ncelle</button>
       <div class="st" id="st-pw" style="margin-top:.75rem"></div>
@@ -383,23 +380,30 @@ function update2faUI(){
   var pwLbl=document.getElementById('pw-totp-label');
   var banner=document.getElementById('2fa-banner');
   if(TOTP_ENABLED){
-    st.textContent='2FA etkin — girişte Authenticator kodu gerekir.';
+    st.textContent='2FA etkin — girişte Authenticator kodu zorunlu.';
     st.style.color='#166534';
     off.style.display='none';on.style.display='block';
     pwTotp.style.display='block';pwLbl.style.display='block';
     if(banner)banner.style.display='none';
+    unlockAdminTabs();
   }else{
-    st.textContent='2FA kapalı — güvenlik için etkinleştirmeniz önerilir.';
+    st.textContent='2FA kurulmadı — panel kilitli, önce kurulum yapın.';
     st.style.color='#b45309';
     off.style.display='block';on.style.display='none';
     pwTotp.style.display='none';pwLbl.style.display='none';
-    if(banner&&sessionStorage.getItem('2fa-banner-dismiss')!=='1')banner.style.display='flex';
+    if(banner)banner.style.display='flex';
+    lockAdminTabs();
   }
 }
-function dismiss2faBanner(){
-  sessionStorage.setItem('2fa-banner-dismiss','1');
-  var banner=document.getElementById('2fa-banner');
-  if(banner)banner.style.display='none';
+function lockAdminTabs(){
+  document.querySelectorAll('.tab').forEach(function(t,i){if(i<6){t.style.opacity='0.45';t.style.pointerEvents='none';}});
+}
+function unlockAdminTabs(){
+  document.querySelectorAll('.tab').forEach(function(t){t.style.opacity='';t.style.pointerEvents='';});
+}
+function open2faSetup(){
+  sw(6);
+  if(!TOTP_ENABLED)setup2fa();
 }
 function stop2faPreview(){
   if(window._2faPreviewIv){clearInterval(window._2faPreviewIv);window._2faPreviewIv=null;}
@@ -417,58 +421,52 @@ function refresh2faPreview(){
 function start2faPreview(){
   stop2faPreview();
   refresh2faPreview();
-  window._2faPreviewIv=setInterval(refresh2faPreview,4000);
+  window._2faPreviewIv=setInterval(refresh2faPreview,2000);
+}
+function getSetupSecret(){
+  return (sessionStorage.getItem('cp_2fa_setup_secret')||'').replace(/\s/g,'').trim();
 }
 function copy2faSecret(){
-  var s=document.getElementById('2fa-secret');
-  if(!s||!s.textContent)return;
-  navigator.clipboard.writeText(s.textContent.trim()).then(function(){
-    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Kurulum anahtarı kopyalandı. Authenticator uygulamasında "Kurulum anahtarı gir" alanına yapıştırın — doğrulama kutusuna değil.';
+  var sec=getSetupSecret();
+  if(!sec)return;
+  navigator.clipboard.writeText(sec).then(function(){
+    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Anahtar kopyalandı. Authenticator → Kurulum anahtarı gir → yapıştır → Zaman bazlı.';
   }).catch(function(){});
 }
 function setup2fa(){
   stop2faPreview();
   var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kurulum hazırlanıyor...';
-  var qr=document.getElementById('2fa-qr');
-  if(qr){qr.style.display='none';qr.removeAttribute('src');}
   api('/api/admin/2fa/setup',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
     if(!r.ok){el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');return;}
     document.getElementById('2fa-setup').style.display='block';
-    document.getElementById('2fa-secret').textContent=r.secret||'';
+    document.getElementById('2fa-off').style.display='none';
+    var secret=r.secret||'';
+    document.getElementById('2fa-secret').textContent=r.secretDisplay||secret;
     var tailEl=document.getElementById('2fa-secret-tail');
-    if(tailEl&&r.secretTail)tailEl.textContent='Doğrulama: Authenticator kaydı bu kuruluma ait olmalı (anahtar …'+r.secretTail+'). Eski CliniPipes kayıtlarını silin.';
-    if(r.secret)sessionStorage.setItem('cp_2fa_setup_secret',r.secret);
+    if(tailEl&&r.secretTail)tailEl.textContent='Doğrulama: Authenticator kaydı …'+r.secretTail+' ile bitmeli.';
+    if(secret)sessionStorage.setItem('cp_2fa_setup_secret',secret);
     document.getElementById('2fa-enable-code').value='';
-    if(qr){
-      if(r.qr){qr.src=r.qr;qr.style.display='block';}
-      else if(r.uri){qr.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(r.uri);qr.style.display='block';}
-      qr.onerror=function(){qr.style.display='none';el.style.background='#fffbe0';el.textContent='QR yüklenemedi — anahtarı elle girin veya kopyalayın.';};
-    }
-    el.style.background='#e0fce8';el.textContent='QR okutun veya anahtarı kopyalayıp Authenticator\'da "Kurulum anahtarı gir" ile ekleyin (Zaman bazlı). Ardından 6 haneli kodu yazın.';
+    el.style.background='#e0fce8';el.textContent='Anahtarı kopyalayıp Authenticator\'a ekleyin. Sunucu kodu ile eşleştiğini kontrol edin.';
     start2faPreview();
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function enable2fa(){
   var code=document.getElementById('2fa-enable-code').value.replace(/\s/g,'');
   var el=document.getElementById('st-2fa');el.style.display='block';
-  if(code.length>8){
-    el.style.background='#fffbeb';el.textContent='Bu uzun metin kurulum anahtarı — doğrulama kutusuna değil, Authenticator uygulamasına yapıştırılmalı. Sonra uygulamadaki 6 haneli kodu yazın.';
-    return;
-  }
-  if(!/^\d{6}$/.test(code)){
-    el.style.background='#fee';el.textContent='Authenticator uygulamasındaki 6 haneli sayısal kodu girin (ör. 482913).';
-    return;
-  }
+  if(!/^\d{6}$/.test(code)){el.style.background='#fee';el.textContent='Authenticator\'daki 6 haneli kodu girin.';return;}
+  var setupSecret=getSetupSecret();
+  if(!setupSecret){el.style.background='#fee';el.textContent='Kurulumu yeniden başlatın.';return;}
   el.style.background='#fffbe0';el.textContent='Etkinleştiriliyor...';
-  var setupSecret=sessionStorage.getItem('cp_2fa_setup_secret')||(document.getElementById('2fa-secret')||{}).textContent||'';
-  setupSecret=setupSecret.trim();
-  if(!setupSecret){el.style.background='#fee';el.textContent='Kurulum anahtarı bulunamadı. 2FA Kurulumunu Başlat\'a tekrar basın.';return;}
   api('/api/admin/2fa/enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,setupSecret:setupSecret})})
     .then(function(r){return r.json();}).then(function(r){
-      if(r.ok){TOTP_ENABLED=true;update2faUI();document.getElementById('2fa-setup').style.display='none';sessionStorage.removeItem('2fa-banner-dismiss');sessionStorage.removeItem('cp_2fa_setup_secret');stop2faPreview();el.style.background='#e0fce8';el.textContent='2FA etkinleştirildi. Bir sonraki girişte Authenticator kodu gerekir.';}
-      else{
+      if(r.ok){
+        TOTP_ENABLED=true;update2faUI();document.getElementById('2fa-setup').style.display='none';
+        sessionStorage.removeItem('cp_2fa_setup_secret');stop2faPreview();
+        el.style.background='#e0fce8';
+        el.textContent='2FA etkin.'+(r.backupHint?' '+r.backupHint:'');
+      }else{
         var msg=r.message||'';
-        if(r.serverCode)msg+=' Sunucu kodu: '+r.serverCode+'.';
+        if(r.serverCode)msg+=' Sunucu: '+r.serverCode+'.';
         if(r.hint)msg+=' '+r.hint;
         el.style.background='#fee';el.textContent=msg||('Hata: '+(r.error||'geçersiz kod'));
         refresh2faPreview();
@@ -479,7 +477,7 @@ function disable2fa(){
   var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Devre dışı bırakılıyor...';
   api('/api/admin/2fa/disable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('2fa-disable-pw').value,code:document.getElementById('2fa-disable-code').value.trim()})})
     .then(function(r){return r.json();}).then(function(r){
-      if(r.ok){TOTP_ENABLED=false;update2faUI();el.style.background='#e0fce8';el.textContent='2FA devre dışı.';}
+      if(r.ok){TOTP_ENABLED=false;update2faUI();el.style.background='#e0fce8';el.textContent='2FA kapatıldı.';}
       else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');}
     }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
@@ -487,7 +485,12 @@ function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><me
 function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
 function syncYearly(){var sm=+document.getElementById('p-sm').value||0,pm=+document.getElementById('p-pm').value||0;document.getElementById('p-sy').value=sm*10;document.getElementById('p-py').value=pm*10;}
 
-function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});if(i===0)loadDashboard();}
+function sw(i){
+  if(!TOTP_ENABLED&&i<6){open2faSetup();return;}
+  document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});
+  document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});
+  if(i===0)loadDashboard();
+}
 
 /* ── Dashboard ── */
 function loadDashboard(){
@@ -716,7 +719,7 @@ window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler
 api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';return null;}return r.json();}).then(function(me){
   if(!me)return;
   CSRF=me.csrf;TOTP_ENABLED=!!me.totpEnabled;update2faUI();
-  if(!TOTP_ENABLED&&!sessionStorage.getItem('2fa-banner-dismiss')){sw(6);}
+  if(!TOTP_ENABLED){sw(6);setup2fa();}
   bootAdmin();
 });
 </script>

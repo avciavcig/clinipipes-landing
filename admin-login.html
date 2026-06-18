@@ -41,7 +41,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
   </form>
   <div class="msg" id="msg"></div>
   <div class="shield">&#128274; Oturum çerezi · CSRF koruması · Brute-force engeli</div>
-  <p class="hint">Google Authenticator, Authy veya benzeri bir uygulama ile 2FA kodunuzu alın.</p>
+  <p class="hint">2FA açıksa Google Authenticator kodu zorunludur.</p>
 </div>
 <script>
 var twoFactorRequired = false;
@@ -89,7 +89,7 @@ document.getElementById('login-form').addEventListener('submit', function(e){
         msg.style.background='#2a2a20';
         msg.style.color='#fbbf24';
         msg.style.border='1px solid #854d0e';
-        msg.textContent='2FA kodu gerekli. Authenticator uygulamanızdaki 6 haneli kodu girin.';
+        msg.textContent='Authenticator uygulamanızdaki 6 haneli kodu girin.';
         btn.disabled=false;
         return;
       }
