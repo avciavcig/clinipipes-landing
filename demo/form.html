@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Form — CliniPipes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--font:'Inter',-apple-system,sans-serif;--text:#111827;--muted:#6B7280;--border:#E5E7EB;--bg:#F8FAFC;--accent:#2563EB}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;padding:32px 20px}
+.wrap{max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.06);overflow:hidden}
+.form-header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:28px 32px}
+.form-header h1{margin:0 0 6px;font-size:18px;font-weight:600;opacity:.95}
+.form-header h2{margin:0 0 8px;font-size:22px;font-weight:700}
+.form-header p{margin:0;font-size:13px;opacity:.85}
+.form-body{padding:28px 32px 36px}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:16px 0 6px}
+label.req::after{content:' *';color:#dc2626}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:var(--font)}
+textarea{min-height:72px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.upload{border:2px dashed #CBD5E1;border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px;background:#F8FAFC}
+.check{display:flex;align-items:flex-start;gap:10px;margin-top:20px;font-size:12px;color:var(--muted)}
+.check input{width:auto;margin-top:3px}
+.btn{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;margin-top:24px;width:100%;cursor:default}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="form-header">
+    <h1>Dentavera Dental Clinic</h1>
+    <h2>Patient Pre-Assessment Form</h2>
+    <p>Please complete all sections. Fields marked * are required.</p>
+  </div>
+  <div class="form-body">
+    <div class="row">
+      <div><label class="req">Full Name</label><input value="James Mitchell" readonly></div>
+      <div><label class="req">Email</label><input value="james.mitchell@email.com" readonly></div>
+    </div>
+    <div class="row">
+      <div><label class="req">Phone</label><input value="+44 7700 900123" readonly></div>
+      <div><label class="req">Country</label><select><option>United Kingdom</option></select></div>
+    </div>
+    <label class="req">Treatment Interest</label>
+    <select><option>Hollywood Smile / Veneers</option></select>
+    <label>Medical History</label>
+    <textarea readonly>No known allergies. Previous dental work in 2022.</textarea>
+    <label class="req">Upload Photos (front smile, mouth open)</label>
+    <div class="upload">📷 Drag & drop or click to upload — PNG, JPG up to 10MB</div>
+    <label class="req">X-Ray / Panoramic (optional)</label>
+    <div class="upload">📎 Upload dental imaging files</div>
+    <label class="check"><input type="checkbox" checked disabled><span>I consent to the processing of my personal and health data under GDPR/KVKK.</span></label>
+    <button type="button" class="btn">Submit Assessment</button>
+  </div>
+</div>
+<script>window.DEMO_PAGE='form';</script>
+<script src="/demo/render.js"></script>
+</body>
+</html>

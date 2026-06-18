@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doktor Paneli — CliniPipes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--font:'Inter',-apple-system,sans-serif;--text:#111827;--muted:#6B7280;--border:#E5E7EB;--bg:#F8FAFC;--header:#111827}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px}
+.topbar{background:var(--header);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{margin:0;font-size:15px;font-weight:600}
+.topbar-user{font-size:13px;color:#D1D5DB}
+.page{max-width:1100px;margin:0 auto;padding:24px 28px 40px}
+.card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card h2{margin:0 0 16px;font-size:16px;font-weight:700;border-bottom:1px solid var(--border);padding-bottom:12px}
+.patient-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px}
+.patient-name{font-size:20px;font-weight:700;margin:0 0 4px}
+.patient-treatment{color:var(--muted);font-size:13px}
+.status-badge{display:inline-block;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;background:#DBEAFE;color:#2563EB}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px}
+textarea{width:100%;min-height:100px;padding:10px 12px;border:1px solid #D1D5DB;border-radius:8px;font-family:var(--font);font-size:13px;resize:vertical}
+.photo-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.photo{aspect-ratio:1;background:#F1F5F9;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+.actions{display:flex;gap:10px;margin-top:20px}
+.btn{background:#2563EB;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600}
+.btn2{background:#fff;color:#374151;border:1px solid var(--border);padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>CliniPipes — Doktor Paneli</h1>
+  <span class="topbar-user">Dr. Mehmet Yılmaz</span>
+</div>
+<div class="page">
+  <div class="card">
+    <h2>Hasta Değerlendirmesi</h2>
+    <div class="patient-head">
+      <div>
+        <p class="patient-name">Thomas Weber</p>
+        <p class="patient-treatment">Zirconium Crowns · Germany</p>
+      </div>
+      <span class="status-badge">Plan Hazır</span>
+    </div>
+    <div class="grid">
+      <div>
+        <label>Klinik Değerlendirme</label>
+        <textarea readonly>Uygun aday. Üst çene 10, alt çene 8 zirkonyum kron önerilir. Periodontal durum stabil.</textarea>
+      </div>
+      <div>
+        <label>Tedavi Planı</label>
+        <textarea readonly>2 seanslı tedavi. 1. seans: hazırlık ve geçici protez. 2. seans: final zirkonyum uygulaması.</textarea>
+      </div>
+    </div>
+    <label style="margin-top:16px">Hasta Görselleri</label>
+    <div class="photo-row">
+      <div class="photo">Ön gülüş</div>
+      <div class="photo">Ağız açık</div>
+      <div class="photo">Üst çene</div>
+      <div class="photo">Alt çene</div>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn">Planı Onayla</button>
+      <button type="button" class="btn2">Ek Görsel İste</button>
+    </div>
+  </div>
+</div>
+<script>window.DEMO_PAGE='doctor';</script>
+<script src="/demo/render.js"></script>
+</body>
+</html>

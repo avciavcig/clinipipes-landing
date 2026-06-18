@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Capture demo PNGs from live clinic-portal production (v3). */
+/** Capture demo PNGs from live clinic-portal production. */
 import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
@@ -7,26 +7,56 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEMO = path.join(__dirname, '..', 'demo');
-const BASE = process.env.PORTAL_URL || 'https://clinic-portal-production-3068.up.railway.app';
-const USER = process.env.DEMO_USER || 'owner';
-const PASS = process.env.DEMO_PASS || 'DemoOwner123!';
-const FORM_PATH = '/form/54d115ed98192cda23a85c1f413618fd';
+const BASE = (process.env.PORTAL_URL || 'https://clinic-portal-production-3068.up.railway.app').replace(/\/$/, '');
+const OWNER_USER = process.env.DEMO_USER || 'owner';
+const OWNER_PASS = process.env.DEMO_PASS || 'DemoOwner123!';
+const DOCTOR_USER = process.env.DEMO_DOCTOR_USER || 'doctor';
+const DOCTOR_PASS = process.env.DEMO_DOCTOR_PASS || OWNER_PASS;
+const FORM_PATH = process.env.DEMO_FORM_PATH || '/form/54d115ed98192cda23a85c1f413618fd';
 
-async function login(page) {
-  await page.goto(`${BASE}/login`, { waitUntil: 'networkidle' });
-  await page.fill('input[name="username"]', USER);
-  await page.fill('input[name="password"]', PASS);
-  await page.click('button[type="submit"]');
-  await page.waitForLoadState('networkidle');
+async function login(page, username, password) {
+  await page.goto(`${BASE}/login`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('input[name="username"]');
+  await page.locator('input[name="username"]').evaluate(function (el) { el.type = 'text'; });
+  await page.fill('input[name="username"]', username);
+  await page.fill('input[name="password"]', password);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'networkidle' }).catch(function () {}),
+    page.click('button[type="submit"]')
+  ]);
+  await page.waitForTimeout(400);
   if (page.url().includes('change-password')) {
-    await page.fill('input[name="newPassword"]', PASS);
-    await page.fill('input[name="newPassword2"]', PASS);
-    await page.click('button[type="submit"]');
-    await page.waitForLoadState('networkidle');
+    await page.fill('input[name="newPassword"]', password);
+    await page.fill('input[name="newPassword2"]', password);
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'networkidle' }).catch(function () {}),
+      page.click('button[type="submit"]')
+    ]);
   }
   if (page.url().includes('/login')) {
-    const err = await page.locator('.error, [role="alert"], .alert').first().textContent().catch(() => '');
-    throw new Error(`Login failed at ${page.url()} ${err || ''}`);
+    const err = await page.locator('.error').first().textContent().catch(function () { return ''; });
+    throw new Error(`Login failed for ${username} at ${page.url()} ${(err || '').trim()}`);
+  }
+}
+
+async function captureDoctor(browser) {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  try {
+    await login(page, DOCTOR_USER, DOCTOR_PASS);
+    await page.goto(`${BASE}/doctor`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(600);
+
+    const patientLink = page.locator('a[href*="/doctor/patient/"]').first();
+    if (await patientLink.count()) {
+      await patientLink.click();
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(500);
+    }
+
+    await page.screenshot({ path: path.join(DEMO, 'doctor.png'), type: 'png' });
+    console.log('saved doctor.png');
+  } finally {
+    await page.close();
   }
 }
 
@@ -36,8 +66,8 @@ async function main() {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 
   try {
-    await login(page);
-    console.log('Logged in as', USER);
+    await login(page, OWNER_USER, OWNER_PASS);
+    console.log('Logged in as', OWNER_USER);
 
     await page.goto(`${BASE}/dashboard`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
@@ -61,8 +91,8 @@ async function main() {
     await page.screenshot({ path: path.join(DEMO, 'pdf.png'), type: 'png', fullPage: true });
     console.log('saved pdf.png from', pdfUrl);
   } catch (e) {
-    console.warn('Auth capture failed:', e.message);
-    console.warn('Will still capture public form page.');
+    console.warn('Owner capture failed:', e.message);
+    console.warn('Continuing with public pages only.');
   }
 
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -79,9 +109,18 @@ async function main() {
       });
     } else await page.screenshot({ path: path.join(DEMO, 'form.png'), type: 'png' });
   } else await page.screenshot({ path: path.join(DEMO, 'form.png'), type: 'png' });
-
   console.log('saved form.png');
+
+  try {
+    await captureDoctor(browser);
+  } catch (e) {
+    console.warn('Doctor capture failed:', e.message);
+    console.warn('Keeping existing doctor.png if present.');
+  }
+
+  await page.close();
   await browser.close();
+  console.log('Done — demo/*.png from', BASE);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

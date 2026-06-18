@@ -55,7 +55,14 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 .recent-tbl tr:hover td{background:#fafaf8}
 .device-row{display:flex;gap:1rem;align-items:center;margin:.4rem 0}
 .device-lbl{width:90px;font-size:.85rem}
-.warn-box{background:#fffbe0;border:1px solid #ffe58f;padding:.65rem 1rem;border-radius:6px;font-size:.82rem;color:#7a6000}
+.slot .links{margin-top:.4rem;font-size:.75rem}
+.slot .links a{color:#1D9E75;margin-right:.6rem}
+.faq-edit{border:1px solid #eee;border-radius:8px;padding:1rem;margin-bottom:.75rem;background:#fafaf8}
+.faq-edit h4{font-size:.82rem;margin:0 0 .5rem;color:#555}
+.sec-banner{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:.75rem 1.25rem;font-size:.85rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.sec-banner strong{color:#c2410c}
+.sec-banner .sec-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+#2fa-qr{display:none;margin:.75rem 0;border:1px solid #eee;border-radius:8px;padding:8px;background:#fff}
 </style>
 </head>
 <body>
@@ -64,11 +71,21 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   <span class="hint" id="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
   <a href="javascript:void(0)" onclick="logout()" style="margin-left:1.5rem;color:#888;font-size:.82rem;text-decoration:none;border:1px solid #333;padding:.28rem .75rem;border-radius:5px" onmouseover="this.style.color='#fff';this.style.borderColor='#888'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#10005; &#199;&#305;k&#305;&#351;</a>
 </header>
+<div class="sec-banner" id="2fa-banner">
+  <span><strong>G&#252;venlik:</strong> 2FA hen&#252;z etkin de&#287;il. Admin panelini korumak i&#231;in Profil sekmesinden Authenticator kurulumu yap&#305;n.</span>
+  <div class="sec-actions">
+    <button class="btn2" onclick="sw(6)">2FA Kur</button>
+    <button class="btn2" onclick="dismiss2faBanner()">Sonra hat&#305;rlat</button>
+  </div>
+</div>
 <div class="tabs">
   <div class="tab on" onclick="sw(0)">&#128200; Dashboard</div>
-  <div class="tab" onclick="sw(1)">&#128176; Fiyat &amp; Galeri</div>
-  <div class="tab" onclick="sw(2)">&#9998; Sayfa Edit&#246;r&#252;</div>
-  <div class="tab" onclick="sw(3)">&#128100; Profil</div>
+  <div class="tab" onclick="sw(1)">&#128187; Demo</div>
+  <div class="tab" onclick="sw(2)">&#128196; &#304;&#231;erik</div>
+  <div class="tab" onclick="sw(3)">&#128176; Fiyat</div>
+  <div class="tab" onclick="sw(4)">&#9998; Edit&#246;r</div>
+  <div class="tab" onclick="sw(5)">&#127970; Sat&#305;c&#305;</div>
+  <div class="tab" onclick="sw(6)">&#128100; Profil</div>
 </div>
 
 <!-- PANE 0: DASHBOARD -->
@@ -98,20 +115,99 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       </table>
     </div>
   </div>
+  <div class="card">
+    <h2>&#128230; Son Sipari&#351;ler <span id="orders-mode" style="font-size:.72rem;font-weight:500;color:#888;margin-left:.5rem"></span></h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">&#304;yzico ve clinic-portal entegrasyonu tamamlanana kadar sipari&#351;ler manuel i&#351;lenir.</p>
+    <div style="overflow-x:auto">
+      <table class="recent-tbl">
+        <thead><tr><th>Tarih</th><th>Klinik</th><th>E-posta</th><th>Plan</th><th>D&#246;nem</th><th>Durum</th></tr></thead>
+        <tbody id="orders-body"><tr><td colspan="6" style="color:#aaa;padding:1rem">Y&#252;kleniyor...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- PANE 1: FİYAT & GALERİ -->
+<!-- PANE 1: DEMO -->
 <div class="pane" id="pane1">
+  <div class="card">
+    <h2>&#128187; Demo B&#246;l&#252;m&#252; Metinleri</h2>
+    <div class="g2">
+      <div><label>Ba&#351;l&#305;k &#252;st etiket (TR)</label><input type="text" id="d-ey-tr"></div>
+      <div><label>Ba&#351;l&#305;k &#252;st etiket (EN)</label><input type="text" id="d-ey-en"></div>
+    </div>
+    <label>Ana ba&#351;l&#305;k (TR) &mdash; &lt;br&gt; kullan&#305;labilir</label><input type="text" id="d-ti-tr">
+    <label>Ana ba&#351;l&#305;k (EN)</label><input type="text" id="d-ti-en">
+    <label>Alt a&#231;&#305;klama (TR)</label><input type="text" id="d-su-tr">
+    <label>Alt a&#231;&#305;klama (EN)</label><input type="text" id="d-su-en">
+  </div>
+  <div class="card">
+    <h2>&#128247; Demo Ekran G&#246;r&#252;nt&#252;leri &nbsp;<small style="color:#aaa;font-weight:400">PNG y&#252;kle veya HTML'den &#252;ret</small></h2>
+    <div class="bar" style="margin-bottom:1rem">
+      <button class="btn2" onclick="captureDemo()">&#128248; Canl&#305; Panelden G&#246;r&#252;nt&#252; Al</button>
+      <span style="font-size:.78rem;color:#888">PORTAL_URL + DEMO_USER/DEMO_PASS (sunucu env)</span>
+    </div>
+    <div class="g2" id="demo-grid"></div>
+  </div>
+  <div class="card">
+    <h2>&#9881; Demo Mock Verileri</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Hero widget, dashboard KPI, sat&#305;&#351; form linki, PDF/hasta formu metinleri. JSON kaydettikten sonra demo HTML sayfalar&#305; ve ana sayfa hero g&#252;ncellenir.</p>
+    <textarea id="demo-data-json" rows="18" style="font-size:.75rem"></textarea>
+    <button class="btn2" onclick="saveDemoData()" style="margin-top:.5rem">&#128190; Mock Verileri Kaydet</button>
+  </div>
+  <button class="btn" onclick="saveDemo()" style="width:100%;padding:.75rem">&#128190; Demo Metinleri Kaydet</button>
+  <div class="st" id="st-demo"></div>
+</div>
+
+<!-- PANE 2: İÇERİK -->
+<div class="pane" id="pane2">
+  <div class="card">
+    <h2>&#127968; Hero (Ana Banner)</h2>
+    <div class="g2">
+      <div><label>&#220;st etiket (TR)</label><input type="text" id="h-ey-tr"></div>
+      <div><label>&#220;st etiket (EN)</label><input type="text" id="h-ey-en"></div>
+    </div>
+    <label>Ba&#351;l&#305;k (TR)</label><input type="text" id="h-ti-tr">
+    <label>Ba&#351;l&#305;k (EN)</label><input type="text" id="h-ti-en">
+    <label>A&#231;&#305;klama (TR)</label><textarea id="h-de-tr" rows="2"></textarea>
+    <label>A&#231;&#305;klama (EN)</label><textarea id="h-de-en" rows="2"></textarea>
+  </div>
+  <div class="card">
+    <h2>&#127942; Kurucu M&#252;&#351;teri Metinleri</h2>
+    <label>&#220;st &#351;erit (TR)</label><input type="text" id="f-st-tr">
+    <label>&#220;st &#351;erit (EN)</label><input type="text" id="f-st-en">
+    <div class="g2" style="margin-top:.5rem">
+      <div><label>Banner ba&#351;l&#305;k (TR)</label><input type="text" id="f-bt-tr"></div>
+      <div><label>Banner ba&#351;l&#305;k (EN)</label><input type="text" id="f-bt-en"></div>
+    </div>
+    <label>Banner a&#231;&#305;klama (TR)</label><input type="text" id="f-bd-tr">
+    <label>Banner a&#231;&#305;klama (EN)</label><input type="text" id="f-bd-en">
+  </div>
+  <div class="card">
+    <h2>&#128203; Landing B&#246;l&#252;mleri</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">G&#252;ven rozetleri, kar&#351;&#305;la&#351;t&#305;rma, hasta yolculu&#287;u, &#246;zellikler ve CTA. JSON kaydettikten sonra ana sayfa g&#252;ncellenir.</p>
+    <textarea id="landing-sections-json" rows="14" style="font-size:.72rem"></textarea>
+  </div>
+  <div class="card">
+    <h2>&#10067; SSS (Ana Sayfa FAQ)</h2>
+    <div id="faq-box"></div>
+    <button class="btn2" onclick="addFaq()" style="margin-top:.5rem">+ Soru Ekle</button>
+  </div>
+  <button class="btn" onclick="saveContent()" style="width:100%;padding:.75rem;margin-top:.5rem">&#128190; &#304;&#231;erik Kaydet</button>
+  <div class="st" id="st-content"></div>
+</div>
+
+<!-- PANE 3: FİYAT -->
+<div class="pane" id="pane3">
   <div class="card">
     <h2>&#128176; Fiyatlar</h2>
     <div class="g3">
       <div>
         <label>Ba&#351;lang&#305;&#231; / ay ($)</label><input type="number" id="p-sm">
-        <label>Ba&#351;lang&#305;&#231; / y&#305;l ($)</label><input type="number" id="p-sy">
+        <label>Ba&#351;lang&#305;&#231; / y&#305;l (otomatik &#215;10)</label><input type="number" id="p-sy" readonly style="background:#f4f4f2">
       </div>
       <div>
         <label>Pro / ay ($)</label><input type="number" id="p-pm">
-        <label>Pro / y&#305;l ($)</label><input type="number" id="p-py">
+        <label>Pro / y&#305;l (otomatik &#215;10)</label><input type="number" id="p-py" readonly style="background:#f4f4f2">
       </div>
       <div>
         <label>Kurulum ($)</label><input type="number" id="p-setup">
@@ -123,19 +219,15 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128274; Kurucu &#304;ndirim</h2>
     <div class="g2">
       <div><label>Kalan slot (0 = indirim bitti)</label><input type="number" id="f-slots" min="0" max="100"></div>
-      <div><label>&#304;ndirim oranı (%)</label><input type="number" id="f-disc" min="0" max="90"></div>
+      <div><label>&#304;ndirim oran&#305; (%)</label><input type="number" id="f-disc" min="0" max="90"></div>
     </div>
   </div>
-  <div class="card">
-    <h2>&#128247; Galeri G&#246;rselleri &nbsp;<small style="color:#aaa;font-weight:400">PNG/JPG se&#231; &rarr; Kaydet</small></h2>
-    <div class="g2" id="grid"></div>
-  </div>
-  <button class="btn" onclick="save1()" style="width:100%;padding:.75rem">&#128190; Kaydet</button>
+  <button class="btn" onclick="savePrices()" style="width:100%;padding:.75rem">&#128190; Fiyat Kaydet</button>
   <div class="st" id="st1"></div>
 </div>
 
-<!-- PANE 2: SAYFA EDİTÖRÜ -->
-<div class="pane" id="pane2">
+<!-- PANE 4: SAYFA EDİTÖRÜ -->
+<div class="pane" id="pane4">
   <div class="card">
     <div class="bar">
       <label style="margin:0;font-weight:600;color:#333">Dosya:</label>
@@ -144,11 +236,21 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
         <option value="gizlilik.html">Gizlilik / KVKK</option>
         <option value="teslimat.html">Teslimat ve &#304;ade</option>
         <option value="mesafeli-satis.html">Mesafeli Sat&#305;&#351; S&#246;zle&#351;mesi</option>
+        <option value="on-bilgilendirme.html">&#214;n Bilgilendirme Formu</option>
         <option value="sss.html">S&#305;k&#231;a Sorulan Sorular</option>
         <option value="kullanim-kosullari.html">Kullan&#305;m Ko&#351;ullar&#305;</option>
         <option value="etk.html">ETK Metni</option>
         <option value="index.html">Ana Sayfa (index.html)</option>
         <option value="content.json">content.json</option>
+        <option value="legal-seller.json">legal-seller.json (sat&#305;c&#305;)</option>
+        <optgroup label="Demo HTML">
+          <option value="demo/dashboard.html">demo/dashboard.html</option>
+          <option value="demo/sales.html">demo/sales.html</option>
+          <option value="demo/form.html">demo/form.html</option>
+          <option value="demo/doctor.html">demo/doctor.html</option>
+          <option value="demo/pdf.html">demo/pdf.html</option>
+        </optgroup>
+        <option value="demo-data.json">demo-data.json (mock veriler)</option>
       </select>
       <button class="btn" onclick="saveFile()">&#128190; Kaydet</button>
       <button class="btn2" onclick="loadFile()">&#8635; Yenile</button>
@@ -178,41 +280,160 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   </div>
 </div>
 
-<!-- PANE 3: PROFİL -->
-<div class="pane" id="pane3">
+<!-- PANE 5: SATICI BİLGİLERİ -->
+<div class="pane" id="pane5">
+  <div class="card">
+    <h2>&#127970; Sat&#305;c&#305; / Veri Sorumlusu</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Bu bilgiler Gizlilik, Mesafeli Sat&#305;&#351;, &#214;n Bilgilendirme ve di&#287;er yasal sayfalarda kullan&#305;l&#305;r. Kaydetti&#287;inizde yasal sayfalar otomatik yeniden olu&#351;turulur.</p>
+    <div class="g2">
+      <div><label>Sat&#305;c&#305; ad&#305;</label><input type="text" id="s-name"></div>
+      <div><label>&#350;irket t&#252;r&#252;</label><input type="text" id="s-type" placeholder="&#350;ah&#305;s firmas&#305;"></div>
+      <div><label>Marka</label><input type="text" id="s-brand" value="CliniPipes"></div>
+      <div><label>E-posta</label><input type="text" id="s-email"></div>
+      <div><label>Telefon</label><input type="text" id="s-phone" placeholder="opsiyonel"></div>
+      <div><label>Son g&#252;ncelleme</label><input type="text" id="s-updated" placeholder="Haziran 2026"></div>
+    </div>
+    <label>Adres</label><input type="text" id="s-addr">
+    <div class="g3" style="margin-top:.5rem">
+      <div><label>Vergi dairesi</label><input type="text" id="s-taxoff"></div>
+      <div><label>Vergi no</label><input type="text" id="s-taxno"></div>
+      <div><label>MERS&#304;S</label><input type="text" id="s-mersis"></div>
+    </div>
+    <button class="btn" onclick="saveSeller()" style="margin-top:1rem">&#128190; Kaydet &amp; Yasal Sayfalar&#305; G&#252;ncelle</button>
+    <div class="st" id="st-seller"></div>
+  </div>
+</div>
+
+<!-- PANE 6: PROFİL -->
+<div class="pane" id="pane6">
+  <div class="card">
+    <h2>&#128272; &#304;ki Fakt&#246;rl&#252; Do&#287;rulama (2FA)</h2>
+    <p id="2fa-status" style="font-size:.88rem;color:#666;margin-bottom:1rem">Durum kontrol ediliyor...</p>
+    <div id="2fa-off">
+      <button class="btn2" onclick="setup2fa()">&#128241; 2FA Kurulumunu Ba&#351;lat</button>
+    </div>
+    <div id="2fa-setup" style="display:none;margin-top:1rem">
+      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem">Authenticator uygulaman&#305;za QR kodu okutun veya anahtar&#305; elle girin:</p>
+      <img id="2fa-qr" alt="2FA QR" width="180" height="180">
+      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;word-break:break-all;margin-bottom:.5rem"></code>
+      <p style="font-size:.78rem;color:#888;margin-bottom:.75rem" id="2fa-uri"></p>
+      <label>Do&#287;rulama kodu (6 haneli)</label>
+      <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
+      <button class="btn" onclick="enable2fa()">&#10003; 2FA'y&#305; Etkinle&#351;tir</button>
+    </div>
+    <div id="2fa-on" style="display:none;margin-top:1rem">
+      <label>Mevcut &#351;ifre</label>
+      <input type="password" id="2fa-disable-pw" style="margin-bottom:.5rem">
+      <label>2FA kodu</label>
+      <input type="text" id="2fa-disable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
+      <button class="btn2" onclick="disable2fa()" style="background:#fee;color:#b91c1c;border:1px solid #fecaca">2FA'y&#305; Devre D&#305;&#351;&#305; B&#305;rak</button>
+    </div>
+    <div class="st" id="st-2fa" style="margin-top:.75rem"></div>
+  </div>
   <div class="card">
     <h2>&#128274; &#350;ifre De&#287;i&#351;tir</h2>
     <div style="max-width:400px">
-      <label>Yeni &#350;ifre</label>
+      <label>Mevcut &#350;ifre</label>
+      <input type="password" id="pw0" placeholder="Mevcut şifre" style="margin-bottom:.75rem">
+      <label>Yeni &#350;ifre (en az 8 karakter)</label>
       <input type="password" id="pw1" placeholder="Yeni şifre girin" style="margin-bottom:.75rem">
       <label>&#350;ifre Tekrar</label>
-      <input type="password" id="pw2" placeholder="Tekrar girin" style="margin-bottom:1rem">
+      <input type="password" id="pw2" placeholder="Tekrar girin" style="margin-bottom:.75rem">
+      <label id="pw-totp-label" style="display:none">2FA Kodu</label>
+      <input type="text" id="pw-totp" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:1rem;display:none">
       <button class="btn" onclick="savePw()">&#128274; &#350;ifreyi G&#252;ncelle</button>
       <div class="st" id="st-pw" style="margin-top:.75rem"></div>
     </div>
     <div class="warn-box" style="margin-top:1.5rem">
-      &#9888; Railway yeniden deploy edildi&#287;inde &#351;ifre <strong>ADMIN_KEY</strong> env var'&#305;na d&#246;ner.
-      Kal&#305;c&#305; de&#287;i&#351;iklik i&#231;in: Railway &rarr; Variables &rarr; ADMIN_KEY
+      &#9888; <code>admin_local.json</code> dosyas&#305; &#351;ifreyi g&#252;venli bi&#231;imde saklar. Railway'de varsay&#305;lan &#351;ifre <strong>ADMIN_KEY</strong> env de&#287;i&#351;kenidir.
     </div>
   </div>
   <div class="card">
     <h2>&#128101; Oturum Bilgileri</h2>
-    <p style="font-size:.88rem;color:#666;margin-bottom:.5rem">Admin URL: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">clinipipes.com/admin?key=...</code></p>
-    <p style="font-size:.88rem;color:#666">Analytics endpoint: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">/api/analytics?key=...</code></p>
+    <p style="font-size:.88rem;color:#666;margin-bottom:.5rem">Admin URL: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">clinipipes.com/admin</code></p>
+    <p style="font-size:.88rem;color:#666">G&#252;venlik: HttpOnly oturum &#231;erezi, CSRF korumas&#305;, brute-force engeli, PNG do&#287;rulama</p>
   </div>
 </div>
 
 <script>
-var KEY=new URLSearchParams(location.search).get('key');
-var gal=[],origHead='',isCode=false,codeMode=false,dirty=false;
-var DEFS=[{alt:'Dashboard',tr:'Dashboard (yonetici)',en:'Dashboard (owner)'},{alt:'Sales',tr:'Satis pipeline',en:'Sales pipeline'},{alt:'Form',tr:'Hasta formu',en:'Patient form'},{alt:'PDF',tr:'PDF teklif',en:'PDF quote'}];
-var CODES=['index.html','content.json'];
+var CSRF='',TOTP_ENABLED=false;
+var origHead='',isCode=false,codeMode=false,dirty=false;
+var demoData={items:[]},faqList=[],contentVer=1;
+var DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
+var CODES=['index.html','content.json','legal-seller.json','demo-data.json','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
+var LEGAL=['hakkimizda.html','gizlilik.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
+var LEGAL_CSS='*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,sans-serif;font-size:.96rem;background:#FAFAF8;color:#0E0E0C;line-height:1.75}.container{max-width:760px;margin:0 auto;padding:4rem 2rem}h1{font-size:1.9rem;margin-bottom:.4rem;font-weight:700}h2{font-size:1.05rem;font-weight:600;margin:1.8rem 0 .5rem;color:#333}p,li{margin-bottom:.75rem;color:#3D3D3A}ul{padding-left:1.4rem;margin-bottom:1rem}a{color:#1D9E75}.back{display:inline-block;margin-bottom:2rem;color:#1D9E75;text-decoration:none;font-size:.88rem}.date{color:#888;font-size:.83rem;margin-bottom:2rem;display:block}.seller-box{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin:1rem 0 1.5rem;font-size:.92rem}.q{font-weight:600;color:#0E0E0C;margin:1.5rem 0 .35rem;display:block}';
+function api(url,opts){
+  opts=opts||{};opts.credentials='include';
+  var h=opts.headers||{};
+  if(opts.method&&opts.method!=='GET')h['X-CSRF-Token']=CSRF;
+  opts.headers=h;
+  return fetch(url,opts);
+}
+function update2faUI(){
+  var st=document.getElementById('2fa-status');
+  var off=document.getElementById('2fa-off');
+  var on=document.getElementById('2fa-on');
+  var pwTotp=document.getElementById('pw-totp');
+  var pwLbl=document.getElementById('pw-totp-label');
+  var banner=document.getElementById('2fa-banner');
+  if(TOTP_ENABLED){
+    st.textContent='2FA etkin — girişte Authenticator kodu gerekir.';
+    st.style.color='#166534';
+    off.style.display='none';on.style.display='block';
+    pwTotp.style.display='block';pwLbl.style.display='block';
+    if(banner)banner.style.display='none';
+  }else{
+    st.textContent='2FA kapalı — güvenlik için etkinleştirmeniz önerilir.';
+    st.style.color='#b45309';
+    off.style.display='block';on.style.display='none';
+    pwTotp.style.display='none';pwLbl.style.display='none';
+    if(banner&&sessionStorage.getItem('2fa-banner-dismiss')!=='1')banner.style.display='flex';
+  }
+}
+function dismiss2faBanner(){
+  sessionStorage.setItem('2fa-banner-dismiss','1');
+  var banner=document.getElementById('2fa-banner');
+  if(banner)banner.style.display='none';
+}
+function setup2fa(){
+  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kurulum hazırlanıyor...';
+  api('/api/admin/2fa/setup',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
+    if(!r.ok){el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');return;}
+    document.getElementById('2fa-setup').style.display='block';
+    document.getElementById('2fa-secret').textContent=r.secret;
+    document.getElementById('2fa-uri').textContent=r.uri;
+    var qr=document.getElementById('2fa-qr');
+    if(qr&&r.uri){qr.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(r.uri);qr.style.display='block';}
+    el.style.background='#e0fce8';el.textContent='Authenticator uygulamanıza QR kodu okutun ve kodu doğrulayın.';
+  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function enable2fa(){
+  var code=document.getElementById('2fa-enable-code').value.trim();
+  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Etkinleştiriliyor...';
+  api('/api/admin/2fa/enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
+    .then(function(r){return r.json();}).then(function(r){
+      if(r.ok){TOTP_ENABLED=true;update2faUI();document.getElementById('2fa-setup').style.display='none';sessionStorage.removeItem('2fa-banner-dismiss');el.style.background='#e0fce8';el.textContent='2FA etkinleştirildi. Bir sonraki girişte Authenticator kodu gerekir.';}
+      else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'geçersiz kod');}
+    }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function disable2fa(){
+  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Devre dışı bırakılıyor...';
+  api('/api/admin/2fa/disable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('2fa-disable-pw').value,code:document.getElementById('2fa-disable-code').value.trim()})})
+    .then(function(r){return r.json();}).then(function(r){
+      if(r.ok){TOTP_ENABLED=false;update2faUI();el.style.background='#e0fce8';el.textContent='2FA devre dışı.';}
+      else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');}
+    }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+title+' — CliniPipes</title><style>'+LEGAL_CSS+'</style></head><body><div class="container">'+body+'</div></body></html>';}
+function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
+function syncYearly(){var sm=+document.getElementById('p-sm').value||0,pm=+document.getElementById('p-pm').value||0;document.getElementById('p-sy').value=sm*10;document.getElementById('p-py').value=pm*10;}
 
 function sw(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});if(i===0)loadDashboard();}
 
 /* ── Dashboard ── */
 function loadDashboard(){
-  fetch('/api/analytics?key='+encodeURIComponent(KEY)+'&t='+Date.now())
+  api('/api/analytics?t='+Date.now())
     .then(function(r){return r.json();})
     .then(function(d){
       var today=new Date().toISOString().slice(0,10);
@@ -228,6 +449,24 @@ function loadDashboard(){
       renderBars('country-chart', d.countries||{}, 8);
       renderRecent(d.recent||[]);
     }).catch(function(e){document.getElementById('s-total').textContent='Hata';});
+  api('/api/orders?t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(d){renderOrders(d.orders||[], d.integrationEnabled);})
+    .catch(function(){renderOrders([], false);});
+}
+
+function renderOrders(orders, integrationEnabled){
+  var modeEl=document.getElementById('orders-mode');
+  if(modeEl)modeEl.textContent=integrationEnabled?'(portal bağlı)':'(manuel mod)';
+  var tb=document.getElementById('orders-body');
+  if(!tb)return;
+  if(!orders.length){tb.innerHTML='<tr><td colspan="6" style="color:#aaa;padding:1rem">Henüz sipariş yok</td></tr>';return;}
+  var statusLbl={pending_payment:'Ödeme bekliyor',paid:'Ödendi',provisioned:'Hesap açıldı'};
+  tb.innerHTML=orders.slice(0,50).map(function(o){
+    var dt=(o.createdAt||'').replace('T',' ').slice(0,16);
+    var st=statusLbl[o.status]||o.status||'?';
+    return '<tr><td>'+dt+'</td><td>'+(o.clinicName||'?')+'</td><td>'+(o.ownerEmail||'?')+'</td><td>'+(o.plan||'?')+'</td><td>'+(o.period||'?')+'</td><td>'+st+'</td></tr>';
+  }).join('');
 }
 
 function renderBars(id, obj, limit){
@@ -250,16 +489,92 @@ function renderRecent(recent){
   }).join('');
 }
 
-/* ── Pane 1: Fiyat & Galeri ── */
-function buildGrid(){var g=document.getElementById('grid');g.innerHTML='';DEFS.forEach(function(d,i){var c=gal[i]||null,el=document.createElement('div');el.className='slot';el.innerHTML=(c?'<img id="gi'+i+'" src="'+c.src+'">'  :'<div class="ph" id="ph'+i+'">'+d.tr+'</div><img id="gi'+i+'" style="display:none">')+'<input type="file" accept="image/*" onchange="pick(this,'+i+')" style="display:block;margin:.35rem 0;font-size:.78rem;width:100%">'+'<input type="text" id="ct'+i+'" value="'+(c?c.cap_tr:d.tr)+'" style="margin-top:.2rem">'+'<input type="text" id="ce'+i+'" value="'+(c?c.cap_en:d.en)+'" style="margin-top:.2rem">';g.appendChild(el);});}
-function pick(inp,i){var r=new FileReader();r.onload=function(e){var src=e.target.result;var im=document.getElementById('gi'+i);if(im){im.src=src;im.style.display='block';}var ph=document.getElementById('ph'+i);if(ph)ph.style.display='none';gal[i]={src:src,alt:DEFS[i].alt,cap_tr:document.getElementById('ct'+i).value,cap_en:document.getElementById('ce'+i).value};};r.readAsDataURL(inp.files[0]);}
-function save1(){
-  DEFS.forEach(function(d,i){if(gal[i]){gal[i].cap_tr=document.getElementById('ct'+i).value;gal[i].cap_en=document.getElementById('ce'+i).value;}});
-  var data={prices:{sm:+document.getElementById('p-sm').value,sy:+document.getElementById('p-sy').value,pm:+document.getElementById('p-pm').value,py:+document.getElementById('p-py').value,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},gallery:gal.filter(Boolean)};
-  var fs2=document.getElementById('f-slots').value;var fd=document.getElementById('f-disc').value;
-  if(fs2!==''||fd!==''){data.founding={slots_remaining:+fs2,discount:+fd};}
+/* ── Pane 1: Demo ── */
+function buildDemoGrid(){
+  var g=document.getElementById('demo-grid');g.innerHTML='';
+  var v=demoData.version||1;
+  (demoData.items||[]).forEach(function(item,i){
+    var el=document.createElement('div');el.className='slot';
+    var links=item.html?'<div class="links"><a href="/'+item.html+'" target="_blank">&#214;nizle</a><a href="javascript:void(0)" onclick="editDemoHtml(\''+item.html+'\')">HTML d&#252;zenle</a></div>':'';
+    el.innerHTML='<img src="/demo/'+item.id+'.png?v='+v+'" onerror="this.style.display=\'none\'"><strong style="font-size:.85rem">'+item.id+'</strong>'+links+
+      '<label style="margin-top:.5rem">Sekme (TR)</label><input type="text" id="dt'+i+'" value="'+(item.tab_tr||'')+'">'+
+      '<label>Sekme (EN)</label><input type="text" id="de'+i+'" value="'+(item.tab_en||'')+'">'+
+      '<label>A&#231;&#305;klama (TR)</label><input type="text" id="dct'+i+'" value="'+(item.cap_tr||'')+'">'+
+      '<label>A&#231;&#305;klama (EN)</label><input type="text" id="dce'+i+'" value="'+(item.cap_en||'')+'">'+
+      '<input type="file" accept="image/png,image/jpeg,image/webp" onchange="pickDemo(this,\''+item.id+'\')" style="display:block;margin-top:.5rem;font-size:.78rem;width:100%">';
+    g.appendChild(el);
+  });
+}
+function pickDemo(inp,id){
+  if(!inp.files[0])return;
+  var r=new FileReader();r.onload=function(e){
+    var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Gorsel yukleniyor...';
+    api('/api/save-demo-image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,image:e.target.result})})
+      .then(function(r){return r.json();}).then(function(r){
+        el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Gorsel kaydedildi':'Hata: '+(r.error||'?');
+        if(r.ok){demoData.version=(demoData.version||1)+1;buildDemoGrid();}
+      }).catch(function(err){el.style.background='#fee';el.textContent='Hata: '+err.message;});
+  };r.readAsDataURL(inp.files[0]);
+}
+function editDemoHtml(path){sw(4);document.getElementById('fname').value=path;loadFile();}
+function captureDemo(){
+  var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Ekran goruntuleri aliniyor (sunucu acik olmali, 30-60sn)...';
+  api('/api/capture-demo',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
+    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'5 gorsel canli panelden guncellendi':'Hata: '+(r.error||'DEMO_PASS env veya Playwright gerekli');
+    if(r.ok){demoData.version=(demoData.version||1)+1;buildDemoGrid();}
+  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function loadDemoDataAdmin(){
+  api('/api/file?name=demo-data.json&t='+Date.now())
+    .then(function(r){return r.text();})
+    .then(function(t){document.getElementById('demo-data-json').value=t;})
+    .catch(function(){});
+}
+function saveDemoData(){
+  var raw=document.getElementById('demo-data-json').value;
+  try{JSON.parse(raw);}catch(e){var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fee';el.textContent='Gecersiz JSON: '+e.message;return;}
+  var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Mock veriler kaydediliyor...';
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:'demo-data.json',content:raw})})
+    .then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Mock veriler kaydedildi':'Hata';})
+    .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function saveDemo(){
+  (demoData.items||[]).forEach(function(item,i){
+    item.tab_tr=document.getElementById('dt'+i).value;item.tab_en=document.getElementById('de'+i).value;
+    item.cap_tr=document.getElementById('dct'+i).value;item.cap_en=document.getElementById('dce'+i).value;
+  });
+  var payload={demo:{version:demoData.version||1,eyebrow_tr:document.getElementById('d-ey-tr').value,eyebrow_en:document.getElementById('d-ey-en').value,title_tr:document.getElementById('d-ti-tr').value,title_en:document.getElementById('d-ti-en').value,sub_tr:document.getElementById('d-su-tr').value,sub_en:document.getElementById('d-su-en').value,items:demoData.items}};
+  var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+
+/* ── Pane 2: İçerik ── */
+function renderFaq(){
+  var box=document.getElementById('faq-box');box.innerHTML='';
+  faqList.forEach(function(f,i){
+    box.innerHTML+='<div class="faq-edit"><h4>Soru '+(i+1)+' <button class="btn2" style="float:right;padding:.2rem .5rem;font-size:.75rem" onclick="rmFaq('+i+')">Sil</button></h4><label>Soru TR</label><input type="text" id="fq'+i+'" value="'+(f.q_tr||'').replace(/"/g,'&quot;')+'"><label>Soru EN</label><input type="text" id="fqe'+i+'" value="'+(f.q_en||'').replace(/"/g,'&quot;')+'"><label>Cevap TR</label><textarea id="fa'+i+'" rows="2">'+(f.a_tr||'')+'</textarea><label>Cevap EN</label><textarea id="fae'+i+'" rows="2">'+(f.a_en||'')+'</textarea></div>';
+  });
+}
+function addFaq(){faqList.push({q_tr:'',q_en:'',a_tr:'',a_en:''});renderFaq();}
+function rmFaq(i){faqList.splice(i,1);renderFaq();}
+function saveContent(){
+  faqList.forEach(function(f,i){f.q_tr=document.getElementById('fq'+i).value;f.q_en=document.getElementById('fqe'+i).value;f.a_tr=document.getElementById('fa'+i).value;f.a_en=document.getElementById('fae'+i).value;});
+  var sections=null;
+  try{sections=JSON.parse(document.getElementById('landing-sections-json').value);}catch(e){var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fee';el.textContent='Landing JSON gecersiz: '+e.message;return;}
+  var payload={
+    founding:{strip_tr:document.getElementById('f-st-tr').value,strip_en:document.getElementById('f-st-en').value,banner_title_tr:document.getElementById('f-bt-tr').value,banner_title_en:document.getElementById('f-bt-en').value,banner_desc_tr:document.getElementById('f-bd-tr').value,banner_desc_en:document.getElementById('f-bd-en').value},
+    landing:{hero:{eyebrow_tr:document.getElementById('h-ey-tr').value,eyebrow_en:document.getElementById('h-ey-en').value,title_tr:document.getElementById('h-ti-tr').value,title_en:document.getElementById('h-ti-en').value,desc_tr:document.getElementById('h-de-tr').value,desc_en:document.getElementById('h-de-en').value},faq:faqList,sections:sections}
+  };
+  var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+
+/* ── Pane 3: Fiyat ── */
+function savePrices(){
+  var sm=+document.getElementById('p-sm').value,pm=+document.getElementById('p-pm').value;
+  var payload={prices:{sm:sm,sy:sm*10,pm:pm,py:pm*10,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},founding:{slots_remaining:+document.getElementById('f-slots').value,discount:+document.getElementById('f-disc').value}};
   var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
-  fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 
 /* ── Pane 2: Sayfa Editörü ── */
@@ -267,22 +582,85 @@ function ex(cmd){document.getElementById('ved').focus();document.execCommand(cmd
 function blk(sel){if(sel.value)document.execCommand('formatBlock',false,sel.value);sel.value='';document.getElementById('ved').focus();}
 function addLink(){var url=prompt('URL:','https://');if(!url)return;document.getElementById('ved').focus();document.execCommand('createLink',false,url);}
 function toggleMode(){codeMode=!codeMode;var v=document.getElementById('ved'),c=document.getElementById('ced'),btn=document.getElementById('tbtn'),tb=document.getElementById('tbar');if(codeMode){c.value=v.innerHTML;v.style.display='none';c.style.display='block';tb.style.display='none';btn.textContent='Görsel Mod';}else{v.innerHTML=c.value;c.style.display='none';v.style.display='block';tb.style.display='block';btn.textContent='Kod Görünümü';}}
-function loadFile(){var name=document.getElementById('fname').value;isCode=CODES.includes(name);codeMode=false;var v=document.getElementById('ved'),c=document.getElementById('ced'),tb=document.getElementById('tbar'),btn=document.getElementById('tbtn'),fst=document.getElementById('fst');fst.textContent='Yükleniyor...';dirty=false;if(isCode){v.style.display='none';c.style.display='block';tb.style.display='none';btn.style.display='none';}else{v.style.display='block';c.style.display='none';tb.style.display='block';btn.style.display='inline-block';btn.textContent='Kod Görünümü';}fetch('/api/file?name='+encodeURIComponent(name)+'&key='+encodeURIComponent(KEY)+'&t='+Date.now()).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(html){if(isCode){c.value=html;fst.textContent='Yüklendi ('+Math.round(html.length/1024)+'KB)';}else{var hm=html.match(/<head>([\s\S]*?)<\/head>/i);origHead=hm?hm[0]:'';var bm=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);v.innerHTML=bm?bm[1].trim():html;fst.textContent='Yüklendi';}}).catch(function(e){fst.textContent='Hata: '+e.message;});}
-function saveFile(){var name=document.getElementById('fname').value,fst=document.getElementById('fst');fst.textContent='Kaydediliyor...';var content;if(isCode||codeMode){content=document.getElementById('ced').value;}else{content='<!DOCTYPE html><html lang="tr">'+origHead+'<body>'+document.getElementById('ved').innerHTML+'</body></html>';}fetch('/api/save?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:name,content:content})}).then(function(r){return r.json();}).then(function(r){fst.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';dirty=false;}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+function loadFile(){var name=document.getElementById('fname').value;isCode=CODES.includes(name);codeMode=false;var v=document.getElementById('ved'),c=document.getElementById('ced'),tb=document.getElementById('tbar'),btn=document.getElementById('tbtn'),fst=document.getElementById('fst');fst.textContent='Yükleniyor...';dirty=false;if(isCode){v.style.display='none';c.style.display='block';tb.style.display='none';btn.style.display='none';}else{v.style.display='block';c.style.display='none';tb.style.display='block';btn.style.display='inline-block';btn.textContent='Kod Görünümü';}api('/api/file?name='+encodeURIComponent(name)+'&t='+Date.now()).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();}).then(function(html){if(isCode){c.value=html;fst.textContent='Yüklendi ('+Math.round(html.length/1024)+'KB)';}else{var hm=html.match(/<head>([\s\S]*?)<\/head>/i);origHead=hm?hm[0]:'';var bm=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);var inner=bm?bm[1].trim():html;if(LEGAL.includes(name)){var cm=inner.match(/<div class="container">([\s\S]*)<\/div>/i);v.innerHTML=cm?cm[1].trim():inner;}else{v.innerHTML=inner;}fst.textContent='Yuklendi';}}).catch(function(e){fst.textContent='Hata: '+e.message;});}
+function saveFile(){var name=document.getElementById('fname').value,fst=document.getElementById('fst');fst.textContent='Kaydediliyor...';var content;if(isCode||codeMode){content=document.getElementById('ced').value;}else if(LEGAL.includes(name)){content=legalShell(pageTitle(name),document.getElementById('ved').innerHTML);}else{content='<!DOCTYPE html><html lang="tr">'+origHead+'<body>'+document.getElementById('ved').innerHTML+'</body></html>';}api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:name,content:content})}).then(function(r){return r.json();}).then(function(r){fst.textContent=r.github?'Kaydedildi + GitHub commit (~2dk)':'Yerel kaydedildi';dirty=false;}).catch(function(e){fst.textContent='Hata: '+e.message;});}
 
-/* ── Pane 3: Profil ── */
-function savePw(){var p1=document.getElementById('pw1').value,p2=document.getElementById('pw2').value,el=document.getElementById('st-pw');el.style.display='block';if(p1!==p2){el.style.background='#fee';el.textContent='Şifreler eşleşmiyor';return;}if(p1.length<4){el.style.background='#fee';el.textContent='En az 4 karakter';return;}el.style.background='#fffbe0';el.textContent='Kaydediliyor...';fetch('/api/update-password?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({newKey:p1})}).then(function(r){return r.json();}).then(function(r){if(r.ok){el.style.background='#e0fce8';el.textContent='Şifre güncellendi. Yeni URL: /admin?key='+p1;document.getElementById('pw1').value='';document.getElementById('pw2').value='';}else{el.style.background='#fee';el.textContent='Hata';}}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
+/* ── Pane 5: Satıcı ── */
+function loadSeller(){
+  api('/api/file?name=legal-seller.json&t='+Date.now())
+    .then(function(r){return r.text();})
+    .then(function(t){var s=JSON.parse(t);
+      document.getElementById('s-name').value=s.sellerName||'';
+      document.getElementById('s-type').value=s.sellerType||'';
+      document.getElementById('s-brand').value=s.brand||'CliniPipes';
+      document.getElementById('s-email').value=s.email||'';
+      document.getElementById('s-phone').value=s.phone||'';
+      document.getElementById('s-updated').value=s.updated||'';
+      document.getElementById('s-addr').value=s.address||'';
+      document.getElementById('s-taxoff').value=s.taxOffice||'';
+      document.getElementById('s-taxno').value=s.taxNumber||'';
+      document.getElementById('s-mersis').value=s.mersis||'';
+    }).catch(function(){});
+}
+function saveSeller(){
+  var data={sellerName:document.getElementById('s-name').value,sellerType:document.getElementById('s-type').value,brand:document.getElementById('s-brand').value,address:document.getElementById('s-addr').value,phone:document.getElementById('s-phone').value,email:document.getElementById('s-email').value,taxOffice:document.getElementById('s-taxoff').value,taxNumber:document.getElementById('s-taxno').value,mersis:document.getElementById('s-mersis').value,updated:document.getElementById('s-updated').value};
+  var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:'legal-seller.json',content:JSON.stringify(data,null,2)})})
+    .then(function(r){return r.json();})
+    .then(function(r){if(!r.ok)throw new Error('save failed');
+      return api('/api/rebuild-legal',{method:'POST'});
+    })
+    .then(function(r){return r.json();})
+    .then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Kaydedildi + yasal sayfalar guncellendi':'Kaydedildi ama yeniden olusturma basarisiz';})
+    .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+
+/* ── Pane 6: Profil ── */
+function savePw(){var p0=document.getElementById('pw0').value,p1=document.getElementById('pw1').value,p2=document.getElementById('pw2').value,el=document.getElementById('st-pw');el.style.display='block';if(p1!==p2){el.style.background='#fee';el.textContent='Şifreler eşleşmiyor';return;}if(p1.length<8){el.style.background='#fee';el.textContent='En az 8 karakter';return;}el.style.background='#fffbe0';el.textContent='Kaydediliyor...';var body={currentPassword:p0,newKey:p1};if(TOTP_ENABLED)body.totp=document.getElementById('pw-totp').value.trim();api('/api/update-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(r){if(r.ok){el.style.background='#e0fce8';el.textContent='Şifre güncellendi.';document.getElementById('pw0').value='';document.getElementById('pw1').value='';document.getElementById('pw2').value='';document.getElementById('pw-totp').value='';}else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');}}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
 
 /* ── Init ── */
+function bootAdmin(){
 fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){
-  if(c.prices){['sm','sy','pm','py','setup','bundle'].forEach(function(k){var el=document.getElementById('p-'+k);if(el)el.value=c.prices[k];});}
-  if(c.founding){var fs=document.getElementById('f-slots');var fd=document.getElementById('f-disc');if(fs)fs.value=c.founding.slots_remaining;if(fd)fd.value=c.founding.discount;}
-  if(c.gallery)gal=c.gallery;buildGrid();
-}).catch(function(){buildGrid();});
+  if(c.prices){var sm=+c.prices.sm,pm=+c.prices.pm;document.getElementById('p-sm').value=sm;document.getElementById('p-sy').value=sm*10;document.getElementById('p-pm').value=pm;document.getElementById('p-py').value=pm*10;document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-bundle').value=c.prices.bundle;}
+  if(c.founding){
+    var fs=document.getElementById('f-slots');var fd=document.getElementById('f-disc');
+    if(fs)fs.value=c.founding.slots_remaining;if(fd)fd.value=c.founding.discount;
+    if(c.founding.strip_tr){document.getElementById('f-st-tr').value=c.founding.strip_tr;document.getElementById('f-st-en').value=c.founding.strip_en||'';}
+    if(c.founding.banner_title_tr){document.getElementById('f-bt-tr').value=c.founding.banner_title_tr;document.getElementById('f-bt-en').value=c.founding.banner_title_en||'';document.getElementById('f-bd-tr').value=c.founding.banner_desc_tr||'';document.getElementById('f-bd-en').value=c.founding.banner_desc_en||'';}
+  }
+  if(c.demo){
+    demoData=c.demo;
+    document.getElementById('d-ey-tr').value=c.demo.eyebrow_tr||'';document.getElementById('d-ey-en').value=c.demo.eyebrow_en||'';
+    document.getElementById('d-ti-tr').value=c.demo.title_tr||'';document.getElementById('d-ti-en').value=c.demo.title_en||'';
+    document.getElementById('d-su-tr').value=c.demo.sub_tr||'';document.getElementById('d-su-en').value=c.demo.sub_en||'';
+    buildDemoGrid();
+  }
+  if(c.landing){
+    if(c.landing.hero){
+      var h=c.landing.hero;
+      document.getElementById('h-ey-tr').value=h.eyebrow_tr||'';document.getElementById('h-ey-en').value=h.eyebrow_en||'';
+      document.getElementById('h-ti-tr').value=h.title_tr||'';document.getElementById('h-ti-en').value=h.title_en||'';
+      document.getElementById('h-de-tr').value=h.desc_tr||'';document.getElementById('h-de-en').value=h.desc_en||'';
+    }
+    if(c.landing.sections){document.getElementById('landing-sections-json').value=JSON.stringify(c.landing.sections,null,2);}
+    faqList=c.landing.faq||[];renderFaq();
+  }
+}).catch(function(){buildDemoGrid();renderFaq();});
+loadSeller();
+loadDemoDataAdmin();
 loadDashboard();
-function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){window.location.href="/admin";}}
-window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 loadFile();
+}
+document.getElementById('p-sm').addEventListener('input',syncYearly);
+document.getElementById('p-pm').addEventListener('input',syncYearly);
+function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){api('/api/admin/logout',{method:'POST'}).finally(function(){location.href='/admin/login';});}}
+window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
+api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';return null;}return r.json();}).then(function(me){
+  if(!me)return;
+  CSRF=me.csrf;TOTP_ENABLED=!!me.totpEnabled;update2faUI();
+  if(!TOTP_ENABLED&&!sessionStorage.getItem('2fa-banner-dismiss')){sw(6);}
+  bootAdmin();
+});
 </script>
 </body>
 </html>

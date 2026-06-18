@@ -330,12 +330,12 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
         <div class="mock-nav-item">⚙️ <span>Kurulum</span></div>
       </div>
       <div class="mock-content">
-        <div class="mock-kpi-row">
+        <div class="mock-kpi-row" id="hm-kpis">
           <div class="mock-kpi"><span class="mock-kpi-v">24</span><div class="mock-kpi-l">Bu ay lead</div></div>
           <div class="mock-kpi"><span class="mock-kpi-v">14</span><div class="mock-kpi-l">Teklif verildi</div></div>
           <div class="mock-kpi"><span class="mock-kpi-v" style="color:var(--g)">9</span><div class="mock-kpi-l">Onaylandı</div></div>
         </div>
-        <div>
+        <div id="hm-rows">
           <div class="mock-table-row" style="padding-bottom:.35rem;margin-bottom:.2rem">
             <div style="font-size:.62rem;color:rgba(255,255,255,.2);font-weight:600;letter-spacing:.05em">HASTA</div>
             <div style="font-size:.62rem;color:rgba(255,255,255,.2);font-weight:600">DURUM</div>
@@ -413,7 +413,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       <h2 class="section-h" data-tr="Talep gelir. Süreç başlar.<br>Satış tamamlanır." data-en="Inquiry arrives. Process starts.<br>Sale closes.">Talep gelir. Süreç başlar.<br>Satış tamamlanır.</h2>
       <p class="section-p" data-tr="Bir hasta formu gönderdiği andan nihai onayı verdiği ana kadar her adım izlenir, hiçbir aşama atlanmaz." data-en="From the moment a patient submits a form to the moment they approve — every step is tracked, nothing is missed.">Bir hasta formu gönderdiği andan nihai onayı verdiği ana kadar her adım izlenir, hiçbir aşama atlanmaz.</p>
     </div>
-    <div class="pipe-track reveal">
+    <div class="pipe-track reveal" id="pipe-track">
       <div class="pipe-step"><div class="pipe-icon">📞</div><h4 data-tr="Lead Karşılama" data-en="Lead Intake">Lead Karşılama</h4><p data-tr="Satış ekibi gelen talebi karşılar ve süreci başlatır." data-en="Sales team receives the inquiry and starts the process.">Satış ekibi gelen talebi karşılar ve süreci başlatır.</p></div>
       <div class="pipe-step"><div class="pipe-icon">🔗</div><h4 data-tr="Form Gönderimi" data-en="Form Sent">Form Gönderimi</h4><p data-tr="Hasta formu linki hastaya iletilir." data-en="Patient form link is sent to the patient.">Hasta formu linki hastaya iletilir.</p></div>
       <div class="pipe-step"><div class="pipe-icon">📋</div><h4 data-tr="Hasta Formu" data-en="Patient Form">Hasta Formu</h4><p data-tr="Hasta sağlık geçmişi, fotoğraf ve röntgenini doldurur." data-en="Patient fills medical history, photos and X-rays.">Hasta sağlık geçmişi, fotoğraf ve röntgenini doldurur.</p></div>
@@ -423,7 +423,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     </div>
     <div style="margin-top:2.5rem;padding:1.25rem 1.75rem;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.18);border-radius:10px;display:flex;align-items:center;gap:1rem;font-size:.85rem;color:rgba(255,255,255,.6)" class="reveal">
       <span style="font-size:1.25rem">⚡</span>
-      <span data-tr="Kurulum <strong style='color:var(--g)'>1 iş günü</strong> sürer. Personeliniz sistemi ilk günden kullanabilir — eğitim gerekmez, teknik destek dahil." data-en="Setup takes <strong style='color:var(--g)'>1 business day.</strong> Your team can use the system from day one — no training required, technical support included.">Kurulum <strong style="color:var(--g)">1 iş günü</strong> sürer. Personeliniz sistemi ilk günden kullanabilir — eğitim gerekmez, teknik destek dahil.</span>
+      <span id="pipe-note" data-tr="Kurulum <strong style='color:var(--g)'>1 iş günü</strong> sürer. Personeliniz sistemi ilk günden kullanabilir — eğitim gerekmez, teknik destek dahil." data-en="Setup takes <strong style='color:var(--g)'>1 business day.</strong> Your team can use the system from day one — no training required, technical support included.">Kurulum <strong style="color:var(--g)">1 iş günü</strong> sürer. Personeliniz sistemi ilk günden kullanabilir — eğitim gerekmez, teknik destek dahil.</span>
     </div>
   </div>
 </section>
@@ -455,29 +455,34 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     <div class="reveal">
       <div class="eyebrow" style="color:var(--g)" data-tr="Canlı Sistem" data-en="Live System">Canlı Sistem</div>
       <h2 class="section-h" data-tr="Gerçek bir klinik gibi görünüyor.<br>Çünkü öyle." data-en="Looks like a real clinic.<br>Because it is.">Gerçek bir klinik gibi görünüyor.<br>Çünkü öyle.</h2>
-      <p class="section-p" data-tr="Gerçek CliniPipes arayüzünden ekran görüntüleri. Canlı demo hesabı için bizimle iletişime geçin." data-en="Screenshots from the real CliniPipes interface. Contact us for a live demo account.">Gerçek CliniPipes arayüzünden ekran görüntüleri. Canlı demo hesabı için bizimle iletişime geçin.</p>
+      <p class="section-p" data-tr="Canlı CliniPipes ortamından alınan gerçek arayüz ekran görüntüleri." data-en="Real interface screenshots from the live CliniPipes environment.">Canlı CliniPipes ortamından alınan gerçek arayüz ekran görüntüleri.</p>
     </div>
     <div class="demo-tabs reveal">
       <div class="demo-tab on" data-demo="dashboard" onclick="setTab(this)" data-tr="Dashboard" data-en="Dashboard">Dashboard</div>
       <div class="demo-tab" data-demo="sales" onclick="setTab(this)" data-tr="Satış Paneli" data-en="Sales Panel">Satış Paneli</div>
       <div class="demo-tab" data-demo="form" onclick="setTab(this)" data-tr="Hasta Formu" data-en="Patient Form">Hasta Formu</div>
+      <div class="demo-tab" data-demo="doctor" onclick="setTab(this)" data-tr="Doktor Paneli" data-en="Doctor Panel">Doktor Paneli</div>
       <div class="demo-tab" data-demo="pdf" onclick="setTab(this)" data-tr="PDF Teklif" data-en="PDF Quote">PDF Teklif</div>
     </div>
     <div class="demo-frame reveal">
       <div class="demo-panel on" data-demo="dashboard">
-        <img src="/demo/dashboard.png?v=3" alt="CliniPipes Dashboard" loading="lazy">
+        <img src="/demo/dashboard.png?v=6" alt="CliniPipes Dashboard" loading="lazy">
         <div class="demo-cap" data-tr="Yönetici dashboard — lead, dönüşüm ve satış hacmi tek ekranda." data-en="Owner dashboard — leads, conversion and sales volume in one view.">Yönetici dashboard — lead, dönüşüm ve satış hacmi tek ekranda.</div>
       </div>
       <div class="demo-panel" data-demo="sales">
-        <img src="/demo/sales.png?v=3" alt="Satış Pipeline" loading="lazy">
+        <img src="/demo/sales.png?v=6" alt="Satış Pipeline" loading="lazy">
         <div class="demo-cap" data-tr="Satış pipeline — kanban görünümü, hasta durumu ve sorumlu takibi." data-en="Sales pipeline — kanban view, patient status and ownership tracking.">Satış pipeline — kanban görünümü, hasta durumu ve sorumlu takibi.</div>
       </div>
       <div class="demo-panel" data-demo="form">
-        <img src="/demo/form.png?v=3" alt="Hasta Formu" loading="lazy">
+        <img src="/demo/form.png?v=6" alt="Hasta Formu" loading="lazy">
         <div class="demo-cap" data-tr="Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme." data-en="Branded patient form — English, KVKK/GDPR consent and photo upload.">Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme.</div>
       </div>
+      <div class="demo-panel" data-demo="doctor">
+        <img src="/demo/doctor.png?v=6" alt="Doktor Paneli" loading="lazy">
+        <div class="demo-cap" data-tr="Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda." data-en="Doctor panel — clinical assessment, treatment plan and patient images in one view.">Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda.</div>
+      </div>
       <div class="demo-panel" data-demo="pdf">
-        <img src="/demo/pdf.png?v=3" alt="PDF Teklif" loading="lazy">
+        <img src="/demo/pdf.png?v=6" alt="PDF Teklif" loading="lazy">
         <div class="demo-cap" data-tr="PDF teklif — doktor planı, fiyat, otel bilgisi; EN veya DE dil seçeneği." data-en="PDF quote — doctor plan, price, hotel info; English or German language option.">PDF teklif — doktor planı, fiyat, otel bilgisi; EN veya DE dil seçeneği.</div>
       </div>
     </div>
@@ -642,8 +647,18 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
   <div class="co-head"><h3 data-tr="Sipariş Onayı" data-en="Order Confirmation">Sipariş Onayı</h3><button class="co-close" onclick="closeCheckout()">&times;</button></div>
   <div class="co-body">
     <div class="co-summary" id="coSummary"></div>
-    <div class="co-contract"><iframe src="/mesafeli-satis" title="Mesafeli Satış"></iframe></div>
-    <label class="co-check"><input type="checkbox" id="coAgree" onchange="document.getElementById('coConfirm').disabled=!this.checked"><span data-tr="Mesafeli Satış Sözleşmesi'ni okudum ve onaylıyorum." data-en="I accept the Distance Sales Agreement.">Mesafeli Satış Sözleşmesi'ni okudum ve onaylıyorum.</span></label>
+    <label data-tr="Klinik adı" data-en="Clinic name">Klinik adı</label>
+    <input type="text" id="coClinic" maxlength="120" style="width:100%;padding:.55rem .7rem;border:1px solid #ddd;border-radius:6px;margin-bottom:.65rem" autocomplete="organization">
+    <label data-tr="Yetkili e-posta" data-en="Owner email">Yetkili e-posta</label>
+    <input type="email" id="coEmail" maxlength="120" style="width:100%;padding:.55rem .7rem;border:1px solid #ddd;border-radius:6px;margin-bottom:.65rem" autocomplete="email">
+    <label data-tr="Telefon (opsiyonel)" data-en="Phone (optional)">Telefon (opsiyonel)</label>
+    <input type="tel" id="coPhone" maxlength="32" style="width:100%;padding:.55rem .7rem;border:1px solid #ddd;border-radius:6px;margin-bottom:.65rem" autocomplete="tel">
+    <input type="text" id="coWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0">
+    <div class="co-contract"><iframe src="/on-bilgilendirme" title="Ön Bilgilendirme"></iframe></div>
+    <label class="co-check"><input type="checkbox" id="coPreInfo" onchange="updateCheckoutConfirm()"><span data-tr="Ön Bilgilendirme Formu'nu okudum." data-en="I have read the Pre-Contract Information Form.">Ön Bilgilendirme Formu'nu okudum.</span> <a href="/on-bilgilendirme" target="_blank" rel="noopener">↗</a></label>
+    <label class="co-check"><input type="checkbox" id="coAgree" onchange="updateCheckoutConfirm()"><span data-tr="Mesafeli Hizmet Sözleşmesi'ni okudum ve kabul ediyorum." data-en="I accept the Distance Sales Agreement.">Mesafeli Hizmet Sözleşmesi'ni okudum ve kabul ediyorum.</span> <a href="/mesafeli-satis" target="_blank" rel="noopener">↗</a></label>
+    <label class="co-check"><input type="checkbox" id="coDigital" onchange="updateCheckoutConfirm()"><span data-tr="Dijital hizmetin derhal ifasına onay veriyorum; cayma hakkımı kaybedeceğimi kabul ediyorum." data-en="I agree to immediate delivery of the digital service and accept loss of withdrawal right.">Dijital hizmetin derhal ifasına onay veriyorum; cayma hakkımı kaybedeceğimi kabul ediyorum.</span></label>
+    <label class="co-check"><input type="checkbox" id="coKvkk" onchange="updateCheckoutConfirm()"><span data-tr="KVKK Aydınlatma Metni'ni okudum." data-en="I have read the Privacy / KVKK notice.">KVKK Aydınlatma Metni'ni okudum.</span> <a href="/gizlilik" target="_blank" rel="noopener">↗</a></label>
     <button class="co-confirm" id="coConfirm" disabled onclick="confirmPurchase()" data-tr="Siparişi Gönder" data-en="Submit Order">Siparişi Gönder</button>
   </div>
 </div>

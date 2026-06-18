@@ -1,0 +1,60 @@
+{
+  "hero": {
+    "kpis": [
+      {"v": "24", "l_tr": "Bu ay lead", "l_en": "Leads this month"},
+      {"v": "14", "l_tr": "Teklif verildi", "l_en": "Quoted"},
+      {"v": "9", "l_tr": "Onaylandı", "l_en": "Approved", "highlight": true}
+    ],
+    "headers_tr": ["HASTA", "DURUM", "TEKLİF"],
+    "headers_en": ["PATIENT", "STATUS", "QUOTE"],
+    "rows": [
+      {"name": "Emma Fischer", "meta": "🇩🇪 Diş implant", "status_tr": "Onaylandı", "status_en": "Approved", "tag": "ok", "amount": "€4.200"},
+      {"name": "James Okafor", "meta": "🇬🇧 Saç ekimi", "status_tr": "Teklif Verildi", "status_en": "Quoted", "tag": "p", "amount": "€2.800"},
+      {"name": "Sofia Andreou", "meta": "🇬🇷 Rinoplasti", "status_tr": "Plan Bekleniyor", "status_en": "Plan Pending", "tag": "w", "amount": "—"},
+      {"name": "M. Al-Rashid", "meta": "🇦🇪 Veneer", "status_tr": "Onaylandı", "status_en": "Approved", "tag": "ok", "amount": "€6.500"},
+      {"name": "Lena Müller", "meta": "🇩🇪 Estetik cerrahi", "status_tr": "Follow-up", "status_en": "Follow-up", "tag": "f", "amount": "€3.100"}
+    ]
+  },
+  "dashboard": {
+    "owner": "Dentavera Owner",
+    "kpis": [
+      {"v": "24", "label": "Bu Ay Lead"},
+      {"v": "8", "label": "Onaylanan Hasta"},
+      {"v": "33%", "label": "Lead → Satış %"},
+      {"v": "€142.500", "label": "Toplam Teklif Hacmi"},
+      {"v": "€68.400", "label": "Onaylanan Tedavi Hacmi"},
+      {"v": "€8.550", "label": "Ortalama Vaka Değeri"},
+      {"v": "91%", "label": "SLA Uyum Oranı"},
+      {"v": "42 dk", "label": "Ort. İlk Temas Süresi"}
+    ],
+    "funnel": [
+      {"stage": "Lead", "count": "24", "prev": "—", "total": "100%"},
+      {"stage": "Değerlendirme", "count": "18", "prev": "75%", "total": "75%"},
+      {"stage": "Plan Hazır", "count": "14", "prev": "78%", "total": "58%"},
+      {"stage": "Teklif Verildi", "count": "11", "prev": "79%", "total": "46%"},
+      {"stage": "Onaylandı", "count": "8", "prev": "73%", "total": "33%"}
+    ]
+  },
+  "sales": {
+    "user": "Ayşe Satış",
+    "formUrl": "https://app.clinipipes.com/form/54d115ed98192cda23a85c1f413618fd"
+  },
+  "pdf": {
+    "clinic": "Dentavera Dental Clinic",
+    "location": "İzmir, Turkey · +90 530 300 00 00",
+    "patient": "James Mitchell",
+    "price": "€4.850"
+  },
+  "form": {
+    "clinic": "Dentavera Dental Clinic",
+    "title": "Patient Pre-Assessment Form",
+    "subtitle": "Please complete all sections. Fields marked * are required."
+  },
+  "doctor": {
+    "user": "Dr. Mehmet Yılmaz",
+    "patient": "Thomas Weber",
+    "treatment": "Zirconium Crowns",
+    "country": "Germany",
+    "status": "Plan Hazır"
+  }
+}

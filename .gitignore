@@ -1,3 +1,5 @@
 node_modules/
 .DS_Store
 admin_local.json
+.env
+orders/
