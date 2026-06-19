@@ -406,11 +406,19 @@ function open2faSetup(){
 }
 function send2faCode(purpose){
   var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kod gönderiliyor...';
-  api('/api/admin/2fa/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({purpose:purpose})})
-    .then(function(r){return r.json();}).then(function(r){
-      if(r.ok){el.style.background='#e0fce8';el.textContent=(r.message||'Kod gönderildi.')+(r.emailMask?' ('+r.emailMask+')':'');}
-      else{el.style.background='#fee';el.textContent=r.message||r.error||'Gönderilemedi';}
-    }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+  var ctrl=new AbortController();
+  var timer=setTimeout(function(){ctrl.abort();},20000);
+  api('/api/admin/2fa/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({purpose:purpose}),signal:ctrl.signal})
+    .then(function(r){return r.json().then(function(d){return {status:r.status,data:d};});})
+    .then(function(res){
+      clearTimeout(timer);
+      if(res.data.ok){el.style.background='#e0fce8';el.textContent=(res.data.message||'Kod gönderildi.')+(res.data.emailMask?' ('+res.data.emailMask+')':'');}
+      else{el.style.background='#fee';el.textContent=res.data.message||res.data.error||'Gönderilemedi';}
+    }).catch(function(e){
+      clearTimeout(timer);
+      el.style.background='#fee';
+      el.textContent=e.name==='AbortError'?'Zaman aşımı — Railway SMTP çalışmıyor olabilir. RESEND_API_KEY ekleyin.':('Hata: '+(e.message||'bağlantı'));
+    });
 }
 function setup2faEmail(){
   document.getElementById('2fa-setup').style.display='block';
