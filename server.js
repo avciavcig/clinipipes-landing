@@ -389,6 +389,18 @@ http.createServer(function(req,res){
     });
   }
 
+
+  if(url==='/api/admin/mail-test'&&req.method==='POST'){
+    if(!requireAdmin(req,res,qs))return;
+    if(!mailer.isConfigured())return mailNotConfigured(res,req);
+    return mailer.sendTestEmail().then(function(sent){
+      if(!sent.ok){
+        return jsonRes(res,503,{ok:false,error:sent.error||'send_failed',message:sent.error||'Test e-postası gönderilemedi.'},req,true);
+      }
+      return jsonRes(res,200,{ok:true,message:'Test e-postası gönderildi: '+mailer.maskEmail(mailer.getAdmin2faEmail())},req,true);
+    });
+  }
+
   if(url==='/api/checkout-token'&&req.method==='GET'){
     auth.setSecurityHeaders(res);
     var token=pubSec.createCheckoutToken();
