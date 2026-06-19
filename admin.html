@@ -72,9 +72,9 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   <a href="javascript:void(0)" onclick="logout()" style="margin-left:1.5rem;color:#888;font-size:.82rem;text-decoration:none;border:1px solid #333;padding:.28rem .75rem;border-radius:5px" onmouseover="this.style.color='#fff';this.style.borderColor='#888'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#10005; &#199;&#305;k&#305;&#351;</a>
 </header>
 <div class="sec-banner" id="2fa-banner">
-  <span><strong>Güvenlik zorunlu:</strong> Admin paneline tam erişim için Google Authenticator ile 2FA kurun.</span>
+  <span><strong>Güvenlik zorunlu:</strong> E-posta ile 2FA kurun. Kodlar <span id="banner-email">e-postanıza</span> gönderilir.</span>
   <div class="sec-actions">
-    <button class="btn2" onclick="sw(6);setup2fa()">2FA Kur</button>
+    <button class="btn2" onclick="sw(6);setup2faEmail()">2FA Kur</button>
   </div>
 </div>
 <div class="tabs">
@@ -309,24 +309,20 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128272; &#304;ki Fakt&#246;rl&#252; Do&#287;rulama (2FA)</h2>
     <p id="2fa-status" style="font-size:.88rem;color:#666;margin-bottom:1rem">Durum kontrol ediliyor...</p>
     <div id="2fa-off">
-      <button class="btn2" onclick="setup2fa()">Google Authenticator ile 2FA Kur</button>
+      <button class="btn2" onclick="setup2faEmail()">E-posta ile 2FA Kur</button>
     </div>
     <div id="2fa-setup" style="display:none;margin-top:1rem">
-      <p style="font-size:.82rem;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem"><strong>Önce:</strong> Google Authenticator&#8217;da tüm <em>CliniPipes</em> kayıtlarını silin. QR kullanmayın.</p>
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>1.</strong> Authenticator &rarr; <strong>+</strong> &rarr; <strong>Kurulum anahtarı gir</strong></p>
-      <p style="font-size:.82rem;color:#666;margin-bottom:.5rem"><strong>2.</strong> Hesap: <em>CliniPipes</em> &middot; Tür: <strong>Zaman bazlı</strong> &middot; Anahtar:</p>
-      <code id="2fa-secret" style="display:block;background:#f0f0ee;padding:.6rem .75rem;border-radius:6px;font-size:1rem;letter-spacing:.1em;word-break:break-all;margin-bottom:.35rem;user-select:all"></code>
-      <p id="2fa-secret-tail" style="font-size:.78rem;color:#666;margin-bottom:.5rem"></p>
-      <button type="button" class="btn2" onclick="copy2faSecret()" style="margin-bottom:.75rem;font-size:.78rem">Anahtarı Kopyala ve Authenticator&#8217;a Yapıştır</button>
-      <p style="font-size:.82rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem">Kontrol &mdash; Sunucu: <strong id="2fa-preview-code" style="font-size:1.15rem;letter-spacing:.12em">—</strong> &middot; Authenticator ile <strong>aynı</strong> olmalı.</p>
-      <p style="font-size:.82rem;color:#666;margin-bottom:.35rem"><strong>3.</strong> Kodlar eşleşince 6 haneyi yazın:</p>
+      <p id="2fa-email-hint" style="font-size:.82rem;color:#666;margin-bottom:.75rem">Doğrulama kodu e-postanıza gönderilir.</p>
+      <button type="button" class="btn2" onclick="send2faCode('setup')" style="margin-bottom:.75rem">Doğrulama Kodu Gönder</button>
+      <label>E-postanıza gelen kod (6 hane)</label>
       <input type="text" id="2fa-enable-code" inputmode="numeric" maxlength="6" placeholder="482913" style="margin-bottom:.75rem" autocomplete="one-time-code">
-      <button class="btn" id="2fa-enable-btn" onclick="enable2fa()">2FA&#8217;y&#305; Etkinle&#351;tir</button>
+      <button class="btn" onclick="enable2faEmail()">2FA&#8217;y&#305; Etkinle&#351;tir</button>
     </div>
     <div id="2fa-on" style="display:none;margin-top:1rem">
       <label>Mevcut şifre</label>
       <input type="password" id="2fa-disable-pw" style="margin-bottom:.5rem">
-      <label>Authenticator kodu</label>
+      <button type="button" class="btn2" onclick="send2faCode('disable')" style="margin-bottom:.5rem;font-size:.78rem">Devre D&#305;&#351;&#305; Kodu G&#246;nder</button>
+      <label>E-posta kodu</label>
       <input type="text" id="2fa-disable-code" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:.75rem">
       <button class="btn2" onclick="disable2fa()" style="background:#fee;color:#b91c1c;border:1px solid #fecaca">2FA&#8217;y&#305; Kapat</button>
     </div>
@@ -341,7 +337,8 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <input type="password" id="pw1" placeholder="Yeni şifre girin" style="margin-bottom:.75rem">
       <label>&#350;ifre Tekrar</label>
       <input type="password" id="pw2" placeholder="Tekrar girin" style="margin-bottom:.75rem">
-      <label id="pw-totp-label" style="display:none">Authenticator Kodu</label>
+      <label id="pw-totp-label" style="display:none">E-posta Doğrulama Kodu</label>
+      <button type="button" class="btn2" id="pw-send-code" onclick="send2faCode('password')" style="margin-bottom:.5rem;font-size:.78rem;display:none">Şifre Değişikliği Kodu Gönder</button>
       <input type="text" id="pw-totp" inputmode="numeric" maxlength="6" placeholder="000000" style="margin-bottom:1rem;display:none">
       <button class="btn" onclick="savePw()">&#128274; &#350;ifreyi G&#252;ncelle</button>
       <div class="st" id="st-pw" style="margin-top:.75rem"></div>
@@ -358,7 +355,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 </div>
 
 <script>
-var CSRF='',TOTP_ENABLED=false;
+var CSRF='',TOTP_ENABLED=false,TWO_FACTOR_METHOD='email',EMAIL_MASK='';
 var origHead='',isCode=false,codeMode=false,dirty=false;
 var demoData={items:[]},faqList=[],contentVer=1;
 var DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
@@ -380,17 +377,19 @@ function update2faUI(){
   var pwLbl=document.getElementById('pw-totp-label');
   var banner=document.getElementById('2fa-banner');
   if(TOTP_ENABLED){
-    st.textContent='2FA etkin — girişte Authenticator kodu zorunlu.';
+    st.textContent='2FA etkin — girişte '+EMAIL_MASK+' adresine kod gönderilir.';
     st.style.color='#166534';
     off.style.display='none';on.style.display='block';
     pwTotp.style.display='block';pwLbl.style.display='block';
+    document.getElementById('pw-send-code').style.display='inline-block';
     if(banner)banner.style.display='none';
     unlockAdminTabs();
   }else{
-    st.textContent='2FA kurulmadı — panel kilitli, önce kurulum yapın.';
+    st.textContent='2FA kurulmadı — önce e-posta doğrulaması kurun.';
     st.style.color='#b45309';
     off.style.display='block';on.style.display='none';
     pwTotp.style.display='none';pwLbl.style.display='none';
+    document.getElementById('pw-send-code').style.display='none';
     if(banner)banner.style.display='flex';
     lockAdminTabs();
   }
@@ -403,74 +402,33 @@ function unlockAdminTabs(){
 }
 function open2faSetup(){
   sw(6);
-  if(!TOTP_ENABLED)setup2fa();
+  if(!TOTP_ENABLED)setup2faEmail();
 }
-function stop2faPreview(){
-  if(window._2faPreviewIv){clearInterval(window._2faPreviewIv);window._2faPreviewIv=null;}
+function send2faCode(purpose){
+  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kod gönderiliyor...';
+  api('/api/admin/2fa/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({purpose:purpose})})
+    .then(function(r){return r.json();}).then(function(r){
+      if(r.ok){el.style.background='#e0fce8';el.textContent=(r.message||'Kod gönderildi.')+(r.emailMask?' ('+r.emailMask+')':'');}
+      else{el.style.background='#fee';el.textContent=r.message||r.error||'Gönderilemedi';}
+    }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
-function refresh2faPreview(){
-  var sec=sessionStorage.getItem('cp_2fa_setup_secret');
-  if(!sec)return;
-  api('/api/admin/2fa/preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({setupSecret:sec})})
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var el=document.getElementById('2fa-preview-code');
-      if(d.ok&&el)el.textContent=d.code;
-    }).catch(function(){});
+function setup2faEmail(){
+  document.getElementById('2fa-setup').style.display='block';
+  document.getElementById('2fa-off').style.display='none';
+  var hint=document.getElementById('2fa-email-hint');
+  if(hint)hint.textContent=EMAIL_MASK?'Kod '+EMAIL_MASK+' adresine gönderilir.':'Kod admin e-postanıza gönderilir.';
+  document.getElementById('2fa-enable-code').value='';
+  send2faCode('setup');
 }
-function start2faPreview(){
-  stop2faPreview();
-  refresh2faPreview();
-  window._2faPreviewIv=setInterval(refresh2faPreview,2000);
-}
-function getSetupSecret(){
-  return (sessionStorage.getItem('cp_2fa_setup_secret')||'').replace(/\s/g,'').trim();
-}
-function copy2faSecret(){
-  var sec=getSetupSecret();
-  if(!sec)return;
-  navigator.clipboard.writeText(sec).then(function(){
-    var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#e0fce8';el.textContent='Anahtar kopyalandı. Authenticator → Kurulum anahtarı gir → yapıştır → Zaman bazlı.';
-  }).catch(function(){});
-}
-function setup2fa(){
-  stop2faPreview();
-  var el=document.getElementById('st-2fa');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kurulum hazırlanıyor...';
-  api('/api/admin/2fa/setup',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
-    if(!r.ok){el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');return;}
-    document.getElementById('2fa-setup').style.display='block';
-    document.getElementById('2fa-off').style.display='none';
-    var secret=r.secret||'';
-    document.getElementById('2fa-secret').textContent=r.secretDisplay||secret;
-    var tailEl=document.getElementById('2fa-secret-tail');
-    if(tailEl&&r.secretTail)tailEl.textContent='Doğrulama: Authenticator kaydı …'+r.secretTail+' ile bitmeli.';
-    if(secret)sessionStorage.setItem('cp_2fa_setup_secret',secret);
-    document.getElementById('2fa-enable-code').value='';
-    el.style.background='#e0fce8';el.textContent='Anahtarı kopyalayıp Authenticator\'a ekleyin. Sunucu kodu ile eşleştiğini kontrol edin.';
-    start2faPreview();
-  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
-}
-function enable2fa(){
+function enable2faEmail(){
   var code=document.getElementById('2fa-enable-code').value.replace(/\s/g,'');
   var el=document.getElementById('st-2fa');el.style.display='block';
-  if(!/^\d{6}$/.test(code)){el.style.background='#fee';el.textContent='Authenticator\'daki 6 haneli kodu girin.';return;}
-  var setupSecret=getSetupSecret();
-  if(!setupSecret){el.style.background='#fee';el.textContent='Kurulumu yeniden başlatın.';return;}
+  if(!/^\d{6}$/.test(code)){el.style.background='#fee';el.textContent='E-postanıza gelen 6 haneli kodu girin.';return;}
   el.style.background='#fffbe0';el.textContent='Etkinleştiriliyor...';
-  api('/api/admin/2fa/enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,setupSecret:setupSecret})})
+  api('/api/admin/2fa/enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,method:'email'})})
     .then(function(r){return r.json();}).then(function(r){
-      if(r.ok){
-        TOTP_ENABLED=true;update2faUI();document.getElementById('2fa-setup').style.display='none';
-        sessionStorage.removeItem('cp_2fa_setup_secret');stop2faPreview();
-        el.style.background='#e0fce8';
-        el.textContent='2FA etkin.'+(r.backupHint?' '+r.backupHint:'');
-      }else{
-        var msg=r.message||'';
-        if(r.serverCode)msg+=' Sunucu: '+r.serverCode+'.';
-        if(r.hint)msg+=' '+r.hint;
-        el.style.background='#fee';el.textContent=msg||('Hata: '+(r.error||'geçersiz kod'));
-        refresh2faPreview();
-      }
+      if(r.ok){TOTP_ENABLED=true;TWO_FACTOR_METHOD='email';update2faUI();document.getElementById('2fa-setup').style.display='none';el.style.background='#e0fce8';el.textContent='2FA etkin. Girişte e-postanıza kod gönderilecek.';}
+      else{el.style.background='#fee';el.textContent=r.message||('Hata: '+(r.error||'geçersiz kod'));}
     }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function disable2fa(){
@@ -718,8 +676,9 @@ function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){a
 window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';return null;}return r.json();}).then(function(me){
   if(!me)return;
-  CSRF=me.csrf;TOTP_ENABLED=!!me.totpEnabled;update2faUI();
-  if(!TOTP_ENABLED){sw(6);setup2fa();}
+  CSRF=me.csrf;TOTP_ENABLED=!!me.totpEnabled;TWO_FACTOR_METHOD=me.twoFactorMethod||'email';EMAIL_MASK=me.emailMask||'';update2faUI();
+  var be=document.getElementById('banner-email');if(be&&EMAIL_MASK)be.textContent=EMAIL_MASK;
+  if(!TOTP_ENABLED){sw(6);setup2faEmail();}
   bootAdmin();
 });
 </script>

@@ -1,5 +1,6 @@
 const http=require('http');const fs=require('fs');const path=require('path');const https=require('https');const{execSync}=require('child_process');
 const{createAdminAuth}=require('./lib/admin-auth');
+const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
@@ -43,6 +44,9 @@ function requireAdminWith2fa(req,res,qs,csrf){
 }
 function setSessionCookies(res,req,session){
   auth.setCookie(res,auth.SESSION_COOKIE,session.token,8*3600,req);
+}
+function mailNotConfigured(res,req){
+  return jsonRes(res,503,{ok:false,error:'mail_not_configured',message:'Railway\'de SMTP_HOST, SMTP_USER, SMTP_PASS ve ADMIN_2FA_EMAIL tanımlayın.'},req,true);
 }
 function getAnalytics(){try{return JSON.parse(fs.readFileSync(ANALYTICS_FILE,'utf-8'));}catch(e){return{total:0,daily:{},cities:{},provinces:{},devices:{},recent:[]};}}
 function saveAnalytics(d){fs.writeFileSync(ANALYTICS_FILE,JSON.stringify(d),'utf-8');}
@@ -189,7 +193,13 @@ http.createServer(function(req,res){
 
   if(url==='/api/admin/login-info'&&req.method==='GET'){
     var cfg=auth.loadConfig();
-    return jsonRes(res,200,{twoFactorRequired:!!cfg.totpEnabled},req,true);
+    var method=auth.getTwoFactorMethod(cfg);
+    return jsonRes(res,200,{
+      twoFactorRequired:!!cfg.totpEnabled,
+      twoFactorMethod:method||'email',
+      emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),
+      mailConfigured:mailer.isConfigured()
+    },req,true);
   }
   if(url==='/api/admin/login'&&req.method==='POST'){
     return auth.readBody(req,function(err,body){
@@ -203,6 +213,7 @@ http.createServer(function(req,res){
         var password=String(data.password||'');
         var totp=String(data.totp||'').trim();
         var pending=String(data.pending||'');
+        var method=auth.getTwoFactorMethod(cfg);
         if(!password){return jsonRes(res,400,{ok:false,error:'password_required'},req,true);}
         if(!auth.verifyPassword(password,auth.getStoredPasswordHash(cfg))){
           var retry=auth.recordFailedLogin(cfg,ip);
@@ -210,17 +221,39 @@ http.createServer(function(req,res){
         }
         if(cfg.totpEnabled){
           if(!totp){
+            if(method==='email'){
+              if(!mailer.isConfigured())return mailNotConfigured(res,req);
+              var loginCode=auth.createEmailOtp('login:'+ip);
+              var pTokenE=auth.createPending2fa(ip,loginCode);
+              return mailer.sendAdminCode(loginCode,'login').then(function(sent){
+                if(!sent.ok){
+                  auth.clearEmailOtp('login:'+ip);
+                  auth.finishPending2fa(pTokenE);
+                  return jsonRes(res,503,{ok:false,error:sent.error||'send_failed',message:'Doğrulama e-postası gönderilemedi.'},req,true);
+                }
+                return jsonRes(res,200,{ok:false,needs2fa:true,pending:pTokenE,twoFactorMethod:'email',emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),message:'Doğrulama kodu e-postanıza gönderildi.'},req,true);
+              });
+            }
             var pToken=auth.createPending2fa(ip);
-            return jsonRes(res,200,{ok:false,needs2fa:true,pending:pToken},req,true);
+            return jsonRes(res,200,{ok:false,needs2fa:true,pending:pToken,twoFactorMethod:'totp'},req,true);
           }
-          if(pending&&!auth.peekPending2fa(pending,ip)){
-            return jsonRes(res,401,{ok:false,error:'session_expired'},req,true);
+          if(method==='email'){
+            if(!pending||!auth.verifyPendingEmailCode(pending,ip,totp)){
+              var retryE=auth.recordFailedLogin(cfg,ip);
+              return jsonRes(res,401,{ok:false,error:'invalid_2fa',retryAfter:retryE||undefined,message:'E-posta kodu hatalı veya süresi doldu. Şifre ile tekrar deneyin.'},req,true);
+            }
+            auth.finishPending2fa(pending);
+            auth.clearEmailOtp('login:'+ip);
+          }else{
+            if(pending&&!auth.peekPending2fa(pending,ip)){
+              return jsonRes(res,401,{ok:false,error:'session_expired'},req,true);
+            }
+            if(!auth.verifyTotp(cfg.totpSecret,totp)){
+              var retry2=auth.recordFailedLogin(cfg,ip);
+              return jsonRes(res,401,{ok:false,error:'invalid_2fa',retryAfter:retry2||undefined},req,true);
+            }
+            if(pending)auth.finishPending2fa(pending);
           }
-          if(!auth.verifyTotp(cfg.totpSecret,totp)){
-            var retry2=auth.recordFailedLogin(cfg,ip);
-            return jsonRes(res,401,{ok:false,error:'invalid_2fa',retryAfter:retry2||undefined},req,true);
-          }
-          if(pending)auth.finishPending2fa(pending);
         }
         auth.clearFailedLogin(cfg,ip);
         var session=auth.createSession(cfg);
@@ -240,29 +273,30 @@ http.createServer(function(req,res){
     var cfgM=auth.loadConfig();
     var sess=auth.findSession(cfgM,auth.parseCookies(req)[auth.SESSION_COOKIE]);
     if(!sess){return jsonRes(res,401,{ok:false},req,true);}
-    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled,require2faSetup:!cfgM.totpEnabled},req,true);
+    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled,twoFactorMethod:auth.getTwoFactorMethod(cfgM)||'email',emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),require2faSetup:!cfgM.totpEnabled,mailConfigured:mailer.isConfigured()},req,true);
   }
-  if(url==='/api/admin/2fa/setup'&&req.method==='POST'){
-    if(!requireAdmin(req,res,qs))return;
-    var cfgS=auth.loadConfig();
-    var sessS=auth.findSession(cfgS,auth.parseCookies(req)[auth.SESSION_COOKIE]);
-    if(!sessS){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
-    if(cfgS.totpEnabled){return jsonRes(res,400,{ok:false,error:'already_enabled'},req,true);}
-    var setup=auth.createTotpSetup();
-    return jsonRes(res,200,{ok:true,secret:setup.secret,secretDisplay:setup.secretDisplay,secretTail:setup.secretTail},req,true);
-  }
-  if(url==='/api/admin/2fa/preview'&&req.method==='POST'){
+  if(url==='/api/admin/2fa/send-code'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
     return auth.readBody(req,function(err,body){
       if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,true);}
       try{
         var data=JSON.parse(body||'{}');
-        var cfgP=auth.loadConfig();
-        var sessP=auth.findSession(cfgP,auth.parseCookies(req)[auth.SESSION_COOKIE]);
-        if(!sessP){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
-        var secret=auth.normalizeTotpSecret(data.setupSecret)||auth.getPendingTotpSecret(cfgP,sessP.token);
-        if(!secret){return jsonRes(res,400,{ok:false,error:'setup_required'},req,true);}
-        return jsonRes(res,200,{ok:true,code:auth.currentTotpCode(secret),unix:Math.floor(Date.now()/1000)},req,true);
+        var purpose=String(data.purpose||'setup');
+        var cfgC=auth.loadConfig();
+        var sessC=auth.findSession(cfgC,auth.parseCookies(req)[auth.SESSION_COOKIE]);
+        if(!sessC){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
+        if(!mailer.isConfigured())return mailNotConfigured(res,req);
+        if(purpose==='setup'&&cfgC.totpEnabled){return jsonRes(res,400,{ok:false,error:'already_enabled'},req,true);}
+        if((purpose==='disable'||purpose==='password')&&!cfgC.totpEnabled){return jsonRes(res,400,{ok:false,error:'not_enabled'},req,true);}
+        var otpKey=purpose+':'+sessC.token;
+        var code=auth.createEmailOtp(otpKey);
+        return mailer.sendAdminCode(code,purpose).then(function(sent){
+          if(!sent.ok){
+            auth.clearEmailOtp(otpKey);
+            return jsonRes(res,503,{ok:false,error:sent.error||'send_failed',message:'E-posta gönderilemedi.'},req,true);
+          }
+          return jsonRes(res,200,{ok:true,emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),message:'Doğrulama kodu gönderildi.'},req,true);
+        });
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
     });
   }
@@ -277,10 +311,23 @@ http.createServer(function(req,res){
         if(!sessE){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
         var code=auth.normalizeOtpCode(data.code);
         if(!/^\d{6}$/.test(code)){return jsonRes(res,400,{ok:false,error:'invalid_format',message:'6 haneli sayısal kod girin.'},req,true);}
+        if(data.method==='email'||!data.setupSecret){
+          if(!auth.verifyEmailOtp('setup:'+sessE.token,code)){
+            return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'E-posta kodu hatalı veya süresi doldu. Yeni kod isteyin.'},req,true);
+          }
+          cfgE.totpEnabled=true;
+          cfgE.twoFactorMethod='email';
+          cfgE.totpSecret=null;
+          cfgE.admin2faEmail=mailer.getAdmin2faEmail();
+          cfgE.totpDisabledExplicitly=false;
+          auth.clearPendingTotpSecret(cfgE,sessE.token);
+          auth.saveConfig(cfgE);
+          return jsonRes(res,200,{ok:true,twoFactorMethod:'email'},req,true);
+        }
         var clientSecret=auth.normalizeTotpSecret(data.setupSecret);
         if(!clientSecret){return jsonRes(res,400,{ok:false,error:'missing_setup_secret',message:'Kurulumu yeniden başlatın.'},req,true);}
         if(!auth.verifyTotp(clientSecret,code)){
-          return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod eşleşmedi.',serverCode:auth.currentTotpCode(clientSecret),hint:'Sunucu kodu ile Authenticator aynı olmalı. Eski CliniPipes kayıtlarını silip anahtarı yeniden yapıştırın.'},req,true);
+          return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'Kod eşleşmedi.',serverCode:auth.currentTotpCode(clientSecret)},req,true);
         }
         cfgE.totpSecret=clientSecret;
         cfgE.totpEnabled=true;
@@ -288,7 +335,7 @@ http.createServer(function(req,res){
         cfgE.totpDisabledExplicitly=false;
         auth.clearPendingTotpSecret(cfgE,sessE.token);
         auth.saveConfig(cfgE);
-        return jsonRes(res,200,{ok:true,backupHint:'Kalıcılık için Railway\'e ADMIN_TOTP_SECRET ortam değişkeni olarak bu kurulum anahtarını kaydedin.'},req,true);
+        return jsonRes(res,200,{ok:true,twoFactorMethod:cfgE.twoFactorMethod},req,true);
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
     });
   }
@@ -302,8 +349,13 @@ http.createServer(function(req,res){
         var sessD=auth.findSession(cfgD,auth.parseCookies(req)[auth.SESSION_COOKIE]);
         if(!sessD){return jsonRes(res,401,{ok:false,error:'unauthorized'},req,true);}
         if(!auth.verifyPassword(String(data.password||''),auth.getStoredPasswordHash(cfgD))){return jsonRes(res,401,{ok:false,error:'invalid_credentials'},req,true);}
-        if(cfgD.totpEnabled&&!auth.verifyTotp(cfgD.totpSecret,data.code)){
-          return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);
+        if(cfgD.totpEnabled){
+          var methodD=auth.getTwoFactorMethod(cfgD);
+          if(methodD==='email'){
+            if(!auth.verifyEmailOtp('disable:'+sessD.token,data.code)){return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'E-posta kodu hatalı veya süresi doldu.'},req,true);}
+          }else if(!auth.verifyTotp(cfgD.totpSecret,data.code)){
+            return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);
+          }
         }
         cfgD.totpEnabled=false;
         cfgD.totpSecret=null;
@@ -454,8 +506,16 @@ http.createServer(function(req,res){
         if(!auth.verifyPassword(String(data.currentPassword||''),auth.getStoredPasswordHash(cfgP))){
           return jsonRes(res,401,{ok:false,error:'invalid_credentials'},req,true);
         }
-        if(cfgP.totpEnabled&&!auth.verifyTotp(cfgP.totpSecret,data.totp)){
-          return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);
+        if(cfgP.totpEnabled){
+          var methodP=auth.getTwoFactorMethod(cfgP);
+          var sessP=auth.findSession(cfgP,auth.parseCookies(req)[auth.SESSION_COOKIE]);
+          if(methodP==='email'){
+            if(!sessP||!auth.verifyEmailOtp('password:'+sessP.token,data.totp)){
+              return jsonRes(res,401,{ok:false,error:'invalid_2fa',message:'E-posta kodu hatalı veya süresi doldu.'},req,true);
+            }
+          }else if(!auth.verifyTotp(cfgP.totpSecret,data.totp)){
+            return jsonRes(res,401,{ok:false,error:'invalid_2fa'},req,true);
+          }
         }
         if(!data.newKey||String(data.newKey).length<auth.MIN_PASSWORD_LEN){
           return jsonRes(res,400,{ok:false,error:'password_too_short',min:auth.MIN_PASSWORD_LEN},req,true);
