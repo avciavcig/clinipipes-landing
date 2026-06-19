@@ -285,6 +285,7 @@ http.createServer(function(req,res){
         cfgE.totpSecret=clientSecret;
         cfgE.totpEnabled=true;
         cfgE.twoFactorMethod='totp';
+        cfgE.totpDisabledExplicitly=false;
         auth.clearPendingTotpSecret(cfgE,sessE.token);
         auth.saveConfig(cfgE);
         return jsonRes(res,200,{ok:true,backupHint:'Kalıcılık için Railway\'e ADMIN_TOTP_SECRET ortam değişkeni olarak bu kurulum anahtarını kaydedin.'},req,true);
@@ -307,9 +308,31 @@ http.createServer(function(req,res){
         cfgD.totpEnabled=false;
         cfgD.totpSecret=null;
         cfgD.twoFactorMethod=null;
+        cfgD.totpDisabledExplicitly=true;
         auth.clearPendingTotpSecret(cfgD,null);
         auth.saveConfig(cfgD);
         return jsonRes(res,200,{ok:true},req,true);
+      }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
+    });
+  }
+  if(url==='/api/admin/2fa/reset-with-password'&&req.method==='POST'){
+    return auth.readBody(req,function(err,body){
+      if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,true);}
+      var ip=auth.getClientIp(req);
+      var cfgR=auth.loadConfig();
+      var allowed=auth.checkLoginAllowed(cfgR,ip);
+      if(!allowed.ok){return jsonRes(res,429,{ok:false,error:'locked',retryAfter:allowed.retryAfter},req,true);}
+      try{
+        var dataR=JSON.parse(body||'{}');
+        var passwordR=String(dataR.password||'');
+        if(!passwordR){return jsonRes(res,400,{ok:false,error:'password_required'},req,true);}
+        if(!auth.verifyPassword(passwordR,auth.getStoredPasswordHash(cfgR))){
+          var retryR=auth.recordFailedLogin(cfgR,ip);
+          return jsonRes(res,401,{ok:false,error:'invalid_credentials',retryAfter:retryR||undefined},req,true);
+        }
+        auth.clearFailedLogin(cfgR,ip);
+        auth.resetTotpSetup(cfgR);
+        return jsonRes(res,200,{ok:true,message:'2FA sıfırlandı. Şifre ile giriş yapıp kurulumu yeniden başlatın.'},req,true);
       }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,true);}
     });
   }
