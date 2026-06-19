@@ -308,6 +308,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   <div class="card">
     <h2>&#128272; &#304;ki Fakt&#246;rl&#252; Do&#287;rulama (2FA)</h2>
     <p id="2fa-status" style="font-size:.88rem;color:#666;margin-bottom:1rem">Durum kontrol ediliyor...</p>
+    <p id="2fa-mail-warn" style="display:none;font-size:.82rem;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem"></p>
     <div id="2fa-off">
       <button class="btn2" onclick="setup2faEmail()">E-posta ile 2FA Kur</button>
     </div>
@@ -686,7 +687,12 @@ api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';ret
   if(!me)return;
   CSRF=me.csrf;TOTP_ENABLED=!!me.totpEnabled;TWO_FACTOR_METHOD=me.twoFactorMethod||'email';EMAIL_MASK=me.emailMask||'';update2faUI();
   var be=document.getElementById('banner-email');if(be&&EMAIL_MASK)be.textContent=EMAIL_MASK;
-  if(!TOTP_ENABLED){sw(6);setup2faEmail();}
+  var mw=document.getElementById('2fa-mail-warn');
+  if(mw){
+    if(!me.mailConfigured){mw.style.display='block';mw.textContent=me.mailError||'E-posta ayarı eksik: RESEND_API_KEY ve ADMIN_2FA_EMAIL gerekli.';}
+    else{mw.style.display='none';}
+  }
+  if(!TOTP_ENABLED){sw(6);if(me.mailConfigured)setup2faEmail();else{document.getElementById('2fa-setup').style.display='block';document.getElementById('2fa-off').style.display='none';}}
   bootAdmin();
 });
 </script>

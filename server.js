@@ -46,7 +46,7 @@ function setSessionCookies(res,req,session){
   auth.setCookie(res,auth.SESSION_COOKIE,session.token,8*3600,req);
 }
 function mailNotConfigured(res,req){
-  return jsonRes(res,503,{ok:false,error:'mail_not_configured',message:'Railway\'de Gmail SMTP çalışmaz. resend.com → API key → RESEND_API_KEY ve ADMIN_2FA_EMAIL=avcivcig@gmail.com ekleyin.'},req,true);
+  return jsonRes(res,503,{ok:false,error:'mail_not_configured',message:mailer.configError()},req,true);
 }
 function getAnalytics(){try{return JSON.parse(fs.readFileSync(ANALYTICS_FILE,'utf-8'));}catch(e){return{total:0,daily:{},cities:{},provinces:{},devices:{},recent:[]};}}
 function saveAnalytics(d){fs.writeFileSync(ANALYTICS_FILE,JSON.stringify(d),'utf-8');}
@@ -273,7 +273,7 @@ http.createServer(function(req,res){
     var cfgM=auth.loadConfig();
     var sess=auth.findSession(cfgM,auth.parseCookies(req)[auth.SESSION_COOKIE]);
     if(!sess){return jsonRes(res,401,{ok:false},req,true);}
-    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled,twoFactorMethod:auth.getTwoFactorMethod(cfgM)||'email',emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),require2faSetup:!cfgM.totpEnabled,mailConfigured:mailer.isConfigured(),mailProvider:mailer.getMailProvider()},req,true);
+    return jsonRes(res,200,{ok:true,csrf:sess.csrf,totpEnabled:!!cfgM.totpEnabled,twoFactorMethod:auth.getTwoFactorMethod(cfgM)||'email',emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),require2faSetup:!cfgM.totpEnabled,mailConfigured:mailer.isConfigured(),mailProvider:mailer.getMailProvider(),mailError:mailer.isConfigured()?null:mailer.configError()},req,true);
   }
   if(url==='/api/admin/2fa/send-code'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
@@ -293,7 +293,7 @@ http.createServer(function(req,res){
         return mailer.sendAdminCode(code,purpose).then(function(sent){
           if(!sent.ok){
             auth.clearEmailOtp(otpKey);
-            return jsonRes(res,503,{ok:false,error:sent.error||'send_failed',message:sent.error||sent.message||'E-posta gönderilemedi.'},req,true);
+            return jsonRes(res,503,{ok:false,error:sent.error||'send_failed',message:sent.error||'E-posta gönderilemedi.'},req,true);
           }
           return jsonRes(res,200,{ok:true,emailMask:mailer.maskEmail(mailer.getAdmin2faEmail()),message:'Doğrulama kodu gönderildi.'},req,true);
         });
