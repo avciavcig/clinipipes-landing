@@ -4,6 +4,7 @@ const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
+const demoCaptureEnv=require('./lib/demo-capture-env');
 (function loadEnvFile(){
   var envPath=path.join(__dirname,'.env');
   if(!fs.existsSync(envPath))return;
@@ -535,6 +536,14 @@ http.createServer(function(req,res){
     if(!requireAdminWith2fa(req,res,qs))return;
     captureDemoScreens(function(ok,err){
       jsonRes(res,200,{ok:ok,error:err||null},req,true);
+    });return;
+  }
+  if(url==='/api/admin/demo-capture-status'&&req.method==='GET'){
+    if(!requireAdminWith2fa(req,res,qs))return;
+    demoCaptureEnv.getCombinedDemoCaptureStatus().then(function(status){
+      jsonRes(res,200,{ok:true,status:status},req,true);
+    }).catch(function(e){
+      jsonRes(res,500,{ok:false,error:e.message||'status_failed'},req,true);
     });return;
   }
   if(url==='/api/update-password'&&req.method==='POST'){

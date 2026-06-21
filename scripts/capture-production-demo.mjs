@@ -5,6 +5,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { captureViaPortalApi } from './capture-via-portal-api.mjs';
 import { captureDirect } from './capture-production-direct.mjs';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { getLandingDemoCaptureStatus } = require('../lib/demo-capture-env.js');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -26,6 +30,14 @@ function loadEnvFile() {
 loadEnvFile();
 
 async function main() {
+  const landing = getLandingDemoCaptureStatus();
+  if (!landing.ready) {
+    throw new Error(
+      'Demo capture env eksik (landing): ' + landing.missing.join(', ')
+      + '. Railway: CLINIPIPES_WEBHOOK_SECRET + CLINIC_PORTAL_URL (+ portal tarafında DEMO_USER, DEMO_PASS, DEMO_FORM_PATH).'
+    );
+  }
+
   if (process.env.CLINIPIPES_WEBHOOK_SECRET && (process.env.CLINIC_PORTAL_URL || process.env.PORTAL_URL)) {
     try {
       const r = await captureViaPortalApi();

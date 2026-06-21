@@ -143,8 +143,9 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128247; Demo Ekran G&#246;r&#252;nt&#252;leri &nbsp;<small style="color:#aaa;font-weight:400">PNG y&#252;kle veya HTML'den &#252;ret</small></h2>
     <div class="bar" style="margin-bottom:1rem">
       <button class="btn2" onclick="captureDemo()">&#128248; Canl&#305; Panelden G&#246;r&#252;nt&#252; Al</button>
-      <span style="font-size:.78rem;color:#888">Landing + clinic-portal Railway: CLINIPIPES_WEBHOOK_SECRET, CLINIC_PORTAL_URL, DEMO_USER, DEMO_PASS</span>
+      <button class="btn2" onclick="loadDemoCaptureStatus()" style="margin-left:.5rem">&#9881; Env Durumu</button>
     </div>
+    <div id="demo-env-status" style="display:none;margin-bottom:1rem;padding:.75rem 1rem;border-radius:8px;font-size:.78rem;line-height:1.5"></div>
     <div class="g2" id="demo-grid"></div>
   </div>
   <div class="card">
@@ -472,6 +473,7 @@ function sw(i){
   document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});
   document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',j===i);});
   if(i===0)loadDashboard();
+  if(i===1)loadDemoCaptureStatus();
 }
 
 /* ── Dashboard ── */
@@ -563,9 +565,32 @@ function editDemoHtml(path){sw(4);document.getElementById('fname').value=path;lo
 function captureDemo(){
   var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Ekran goruntuleri aliniyor (sunucu acik olmali, 30-60sn)...';
   api('/api/capture-demo',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
-    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'5 gorsel canli panelden guncellendi (mock degil)':'Hata: '+(r.error||'DEMO_USER/DEMO_PASS ve CLINIPIPES_WEBHOOK_SECRET kontrol edin');
+    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'5 gorsel canli panelden guncellendi (mock degil)':'Hata: '+(r.error||'Env durumunu kontrol edin');
     if(r.ok){demoData.version=(demoData.version||1)+1;buildDemoGrid();}
+    loadDemoCaptureStatus();
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function loadDemoCaptureStatus(){
+  var box=document.getElementById('demo-env-status');
+  if(!box)return;
+  box.style.display='block';box.style.background='#fffbe0';box.textContent='Env kontrol ediliyor...';
+  api('/api/admin/demo-capture-status').then(function(r){return r.json();}).then(function(r){
+    if(!r.ok||!r.status){box.style.background='#fee2e2';box.textContent='Durum alinamadi';return;}
+    var s=r.status,l=s.landing||{},p=s.portal||{},lines=[];
+    lines.push('Landing: '+(l.ready?'hazir':'eksik')+' ('+(l.mode||'-')+')');
+    Object.keys(l.checks||{}).forEach(function(k){lines.push((l.checks[k]?'✓':'✗')+' '+k);});
+    if(s.portalProbe&&s.portalProbe.ok&&p.checks){
+      lines.push('Portal: '+(p.ready?'hazir':'eksik'));
+      Object.keys(p.checks).forEach(function(k){lines.push((p.checks[k]?'✓':'✗')+' portal:'+k);});
+    }else{
+      lines.push('Portal: ulasilamadi — '+(s.portalProbe&&s.portalProbe.error?s.portalProbe.error:'?'));
+    }
+    lines.push('Genel: '+(s.ready?'CANLI CAPTURE HAZIR':'eksik degisken var'));
+    if(s.combinedMissing&&s.combinedMissing.length)lines.push('Eksik: '+s.combinedMissing.join(', '));
+    box.style.background=s.ready?'#ecfdf5':'#fff7ed';
+    box.style.border='1px solid '+(s.ready?'#86efac':'#fed7aa');
+    box.innerHTML=lines.map(function(x){return '<div>'+x+'</div>';}).join('');
+  }).catch(function(e){box.style.background='#fee2e2';box.textContent='Hata: '+e.message;});
 }
 function loadDemoDataAdmin(){
   api('/api/file?name=demo-data.json&t='+Date.now())

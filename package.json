@@ -6,6 +6,7 @@
     "start": "node server.js",
     "sync:legal": "node scripts/sync-legal-from-live.mjs",
     "build:legal": "node scripts/build-legal-pages.mjs",
+    "check:demo-env": "node scripts/check-demo-capture-env.mjs",
     "capture:demo": "node scripts/capture-production-demo.mjs",
     "capture:demo:local": "node scripts/capture-demo.mjs",
     "postinstall": "npx playwright install chromium || true"
