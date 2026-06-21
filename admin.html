@@ -297,6 +297,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#127970; Sat&#305;c&#305; / Veri Sorumlusu</h2>
     <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Kaynak: <code>scripts/legal-content.mjs</code> + <code>legal-seller.json</code>. Sat&#305;c&#305; kayd&#305; t&#252;m yasal HTML sayfalar&#305;n&#305; yeniden olu&#351;turur — Edit&#246;r&#8217;deki elle d&#252;zenlemelerin &#252;zerine yazar.</p>
     <div class="warn-box" style="margin-bottom:1rem">Kal&#305;c&#305; metin de&#287;i&#351;ikli&#287;i i&#231;in &#246;nce <code>scripts/legal-content.mjs</code> d&#252;zenleyin (Edit&#246;r &#8594; Legal templates), sonra Sat&#305;c&#305; kaydedin veya &#8220;Yasal sayfalar&#305; yeniden olu&#351;tur&#8221; kullan&#305;n.</div>
+    <div class="warn-box" id="seller-2fa-warn" style="margin-bottom:1rem;display:none">Sat&#305;c&#305; bilgilerini kaydetmek i&#231;in &#246;nce <strong>Profil</strong> sekmesinden e-posta ile <strong>2FA</strong> kurun. &#8220;Yeniden olu&#351;tur&#8221; mevcut &#351;ablonlarla &#231;al&#305;&#351;&#305;r.</div>
     <div class="g2">
       <div><label>Sat&#305;c&#305; ad&#305;</label><input type="text" id="s-name"></div>
       <div><label>&#350;irket t&#252;r&#252;</label><input type="text" id="s-type" placeholder="&#350;ah&#305;s firmas&#305;"></div>
@@ -311,8 +312,8 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <div><label>Vergi no</label><input type="text" id="s-taxno"></div>
       <div><label>MERS&#304;S</label><input type="text" id="s-mersis"></div>
     </div>
-    <button class="btn" onclick="saveSeller()" style="margin-top:1rem">&#128190; Kaydet &amp; Yasal Sayfalar&#305; G&#252;ncelle</button>
-    <button class="btn2" onclick="rebuildLegalOnly()" style="margin-top:.5rem;margin-left:.5rem">&#9851; Yasal Sayfalar&#305; Yeniden Olu&#351;tur</button>
+    <button class="btn" id="btn-save-seller" onclick="saveSeller()" style="margin-top:1rem">&#128190; Kaydet &amp; Yasal Sayfalar&#305; G&#252;ncelle</button>
+    <button class="btn2" id="btn-rebuild-legal" onclick="rebuildLegalOnly()" style="margin-top:.5rem;margin-left:.5rem">&#9851; Yasal Sayfalar&#305; Yeniden Olu&#351;tur</button>
     <div class="st" id="st-seller"></div>
   </div>
   <div class="card">
@@ -403,6 +404,34 @@ function api(url,opts){
   opts.headers=h;
   return fetch(url,opts);
 }
+function apiJson(url,opts){
+  return api(url,opts).then(function(res){
+    return res.json().catch(function(){return {};}).then(function(data){
+      if(!res.ok||data.ok===false){
+        var err=new Error(data.message||data.error||('HTTP '+res.status));
+        err.code=data.error||('http_'+res.status);
+        err.data=data;
+        throw err;
+      }
+      return data;
+    });
+  });
+}
+function adminErrorMessage(err){
+  if(!err)return 'Bilinmeyen hata';
+  if(err.code==='2fa_required')return 'Önce Profil sekmesinden e-posta ile 2FA kurun.';
+  if(err.code==='csrf')return 'Oturum süresi doldu — sayfayı yenileyip tekrar giriş yapın.';
+  if(err.code==='unauthorized')return 'Oturum geçersiz — tekrar giriş yapın.';
+  if(err.code==='write_failed')return err.message||'Dosya kaydedilemedi (GITHUB_TOKEN veya yazma izni).';
+  if(err.code==='github_push_failed')return 'GitHub\'a gönderilemedi — GITHUB_TOKEN kontrol edin.';
+  return err.message||String(err);
+}
+function updateSellerActions(){
+  var saveBtn=document.getElementById('btn-save-seller');
+  var warn=document.getElementById('seller-2fa-warn');
+  if(saveBtn)saveBtn.disabled=!TOTP_ENABLED;
+  if(warn)warn.style.display=TOTP_ENABLED?'none':'block';
+}
 function update2faUI(){
   var st=document.getElementById('2fa-status');
   var off=document.getElementById('2fa-off');
@@ -427,6 +456,7 @@ function update2faUI(){
     if(banner)banner.style.display='flex';
     lockAdminTabs();
   }
+  updateSellerActions();
 }
 function lockAdminTabs(){
   document.querySelectorAll('.tab').forEach(function(t,i){if(i<6){t.style.opacity='0.45';t.style.pointerEvents='none';}});
@@ -697,22 +727,19 @@ function loadSeller(){
     }).catch(function(){});
 }
 function saveSeller(){
+  if(!TOTP_ENABLED){open2faSetup();return;}
   var data={sellerName:document.getElementById('s-name').value,sellerType:document.getElementById('s-type').value,brand:document.getElementById('s-brand').value,address:document.getElementById('s-addr').value,phone:document.getElementById('s-phone').value,email:document.getElementById('s-email').value,taxOffice:document.getElementById('s-taxoff').value,taxNumber:document.getElementById('s-taxno').value,mersis:document.getElementById('s-mersis').value,updated:document.getElementById('s-updated').value};
   var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
-  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:'legal-seller.json',content:JSON.stringify(data,null,2)})})
-    .then(function(r){return r.json();})
-    .then(function(r){if(!r.ok)throw new Error('save failed');
-      return api('/api/rebuild-legal',{method:'POST'});
-    })
-    .then(function(r){return r.json();})
-    .then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Kaydedildi + yasal sayfalar guncellendi':'Kaydedildi ama yeniden olusturma basarisiz';})
-    .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+  apiJson('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:'legal-seller.json',content:JSON.stringify(data,null,2)})})
+    .then(function(){el.textContent='Yasal sayfalar oluşturuluyor...';return apiJson('/api/rebuild-legal',{method:'POST'});})
+    .then(function(){el.style.background='#e0fce8';el.textContent='Kaydedildi + yasal sayfalar güncellendi';})
+    .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+adminErrorMessage(e);});
 }
 function rebuildLegalOnly(){
-  var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Yasal sayfalar olusturuluyor...';
-  api('/api/rebuild-legal',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
-    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'10 yasal sayfa yeniden olusturuldu':'Hata: '+(r.error||'?');
-  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+  var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Yasal sayfalar oluşturuluyor...';
+  apiJson('/api/rebuild-legal',{method:'POST'})
+    .then(function(){el.style.background='#e0fce8';el.textContent='10 yasal sayfa yeniden oluşturuldu';})
+    .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+adminErrorMessage(e);});
 }
 function renderLegalUrlList(){
   var box=document.getElementById('legal-url-list');if(!box)return;

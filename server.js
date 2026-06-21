@@ -1,4 +1,4 @@
-const http=require('http');const fs=require('fs');const path=require('path');const https=require('https');const{execSync}=require('child_process');
+const http=require('http');const fs=require('fs');const path=require('path');const os=require('os');const https=require('https');const{execSync}=require('child_process');
 const{createAdminAuth}=require('./lib/admin-auth');
 const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
@@ -25,8 +25,9 @@ const PAGES={'/':'index.html','/hakkimizda':'hakkimizda.html','/gizlilik':'gizli
 const EDITABLE=['index.html','hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html','content.json','legal-seller.json','scripts/legal-content.mjs','demo-data.json','demo/shared.css','demo/treatment-proposal.css','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
 const DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
 const LEGAL_PAGES=['hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
-const ANALYTICS_FILE=path.join(__dirname,'analytics.json');
-const LOCAL_ADMIN=path.join(__dirname,'admin_local.json');
+const DATA_DIR=process.env.ADMIN_DATA_DIR||process.env.RAILWAY_VOLUME_MOUNT_PATH||__dirname;
+const ANALYTICS_FILE=path.join(DATA_DIR,'analytics.json');
+const LOCAL_ADMIN=path.join(DATA_DIR,'admin_local.json');
 const auth=createAdminAuth(LOCAL_ADMIN,ADMIN_KEY);
 var geoCache={};var visitBatch=0;
 
@@ -76,16 +77,40 @@ function githubPut(fn,content,msg,cb){
     });
   }).on('error',function(){cb(false);});
 }
-function commit(fn,content,cb){fs.writeFileSync(path.join(__dirname,fn),content,'utf-8');if(GITHUB_TOKEN){githubPut(fn,content,'Admin: '+fn,cb);}else{cb(false);}}
-
+function canWriteDir(dir){
+  try{var t=path.join(dir,'.wtest-'+Date.now());fs.writeFileSync(t,'1');fs.unlinkSync(t);return true;}catch(e){return false;}
+}
+function commit(fn,content,cb){
+  var text=typeof content==='string'?content:JSON.stringify(content,null,2);
+  var localOk=false;
+  try{fs.writeFileSync(path.join(__dirname,fn),text,'utf-8');localOk=true;}catch(e){
+    if(!GITHUB_TOKEN)return cb(false,e.message);
+  }
+  if(GITHUB_TOKEN){githubPut(fn,text,'Admin: '+fn,function(gok){cb(!!(localOk||gok),localOk?'local':'github');});}
+  else{cb(localOk);}
+}
 function rebuildLegalPages(cb){
-  try{execSync('node scripts/build-legal-pages.mjs',{cwd:__dirname,stdio:'pipe'});}catch(e){cb(false,e.message);return;}
-  if(!GITHUB_TOKEN){cb(true);return;}
-  var pending=LEGAL_PAGES.length,done=0,ok=true;
+  var outDir=canWriteDir(__dirname)?__dirname:path.join(os.tmpdir(),'clinipipes-legal');
+  try{
+    if(outDir!==__dirname)fs.mkdirSync(outDir,{recursive:true});
+    execSync('node scripts/build-legal-pages.mjs',{cwd:__dirname,env:Object.assign({},process.env,{LEGAL_OUT_DIR:outDir}),stdio:'pipe'});
+  }catch(e){
+    var msg=e.message||'build_failed';
+    if(e.stderr)msg+=' — '+String(e.stderr).trim();
+    cb(false,msg);return;
+  }
+  if(!GITHUB_TOKEN){
+    if(outDir!==__dirname)return cb(true);
+    cb(true);return;
+  }
+  var pending=LEGAL_PAGES.length,done=0,ok=true,lastErr=null;
   LEGAL_PAGES.forEach(function(fn){
-    try{var content=fs.readFileSync(path.join(__dirname,fn),'utf-8');
-    githubPut(fn,content,'Admin: rebuild legal pages',function(gok){if(!gok)ok=false;done++;if(done===pending)cb(ok);});
-    }catch(e){ok=false;done++;if(done===pending)cb(ok,e.message);}
+    try{var content=fs.readFileSync(path.join(outDir,fn),'utf-8');
+    githubPut(fn,content,'Admin: rebuild legal pages',function(gok){
+      if(!gok){ok=false;lastErr='github_push_failed';}
+      done++;if(done===pending)cb(ok,ok?null:lastErr);
+    });
+    }catch(e){ok=false;lastErr=e.message;done++;if(done===pending)cb(ok,lastErr);}
   });
 }
 
@@ -517,7 +542,7 @@ http.createServer(function(req,res){
     return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:isPortalIntegrationEnabled()},req,true);
   }
   if(url==='/api/rebuild-legal'&&req.method==='POST'){
-    if(!requireAdminWith2fa(req,res,qs))return;
+    if(!requireAdmin(req,res,qs))return;
     rebuildLegalPages(function(ok,err){
       jsonRes(res,200,{ok:ok,error:err||null},req,true);
     });return;
@@ -601,7 +626,11 @@ http.createServer(function(req,res){
           while((m=re.exec(orig))!==null)imgs.push(m[0]);
           let idx=0;content=content.replace(/\[BASE64_IMAGE\]/g,function(){return imgs[idx++]||'[BASE64_IMAGE]';});
         }
-        commit(data.filename,content,function(ok){jsonRes(res,200,{ok:true,github:ok},req,true);});
+        if(data.filename==='legal-seller.json'){try{JSON.parse(content);}catch(e){return jsonRes(res,400,{ok:false,error:'invalid_json',message:'legal-seller.json geçerli JSON değil.'},req,true);}}
+        commit(data.filename,content,function(ok,mode){
+          if(!ok)return jsonRes(res,500,{ok:false,error:'write_failed',message:'Dosya kaydedilemedi. GITHUB_TOKEN veya yazma izni kontrol edin.'},req,true);
+          jsonRes(res,200,{ok:true,github:mode==='github'},req,true);
+        });
       }else{
         var merged=mergeContent(JSON.parse(body));
         fs.writeFileSync(path.join(__dirname,'content.json'),merged);
