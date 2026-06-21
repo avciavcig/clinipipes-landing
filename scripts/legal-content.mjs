@@ -16,37 +16,84 @@ export function sellerBlock(S) {
 }
 
 export function legalNotice() {
-  return `<div class="legal-notice"><strong>Önemli:</strong> Bu metinler bilgilendirme amaçlıdır. Yayına almadan önce avukatınız ve/veya KVKK uzmanınız ile doğrulamanız önerilir.</div>`;
+  return `<div class="legal-notice"><strong>Önemli:</strong> Bu metinler CliniPipes SaaS hizmeti için hazırlanmıştır; emredici kanun hükümleri saklıdır. Avukat incelemesi yine de önerilir. Metinler; <strong>rol ayrımı</strong> (hasta verisinde sorumluluk klinikte), <strong>sorumluluk sınırı</strong>, <strong>tazminat</strong> ve <strong>sağlık hizmeti sunulmadığı</strong> ilkelerini açıkça düzenlemeyi amaçlar.</div>`;
+}
+
+export function medicalDisclaimer() {
+  return `
+<p>CliniPipes <strong>sağlık kuruluşu değildir</strong>; tıbbi teşhis, tedavi, reçete, acil müdahale veya sağlık danışmanlığı <strong>sunmaz ve sunamaz</strong>. Platformdaki içerik, form alanları, PDF teklif şablonları ve raporlar yalnızca idari/operasyonel amaçlıdır; tıbbi karar niteliği taşımaz. Tüm klinik, etik ve mesleki sorumluluk <strong>Müşteri / Klinik</strong>’e aittir.</p>`;
+}
+
+export function warrantyDisclaimer() {
+  return `
+<p>Hizmet, emredici hükümler saklı kalmak kaydıyla, <strong>“olduğu gibi”</strong> ve <strong>“mevcut hâliyle”</strong> sunulur. CliniPipes; Müşteri’nin mevzuata (KVKK, GDPR, sağlık mevzuatı, reklam/tüketici kuralları vb.) uyumunu, hasta sonuçlarını, ticari başarısını veya kesintisiz çalışmayı <strong>garanti etmez</strong>. Yazılımın Müşteri’nin özel beklentilerini karşılayacağına dair zımni garanti verilmez.</p>`;
+}
+
+export function forceMajeure() {
+  return `
+<p>Taraflar; doğal afet, savaş, salgın, grev, kamu otoritesi kararı, enerji/altyapı kesintisi, internet omurga arızası, siber saldırı (makul önlemlere rağmen), barındırma/ödeme/iletişim sağlayıcı kesintileri ve kontrol dışı diğer olaylardan doğan gecikme veya ifa edilememeden, gerekli özeni göstermiş olmak kaydıyla sorumlu tutulamaz.</p>`;
+}
+
+export function b2bAcknowledgment() {
+  return `
+<p>CliniPipes ağırlıklı olarak <strong>sağlık kuruluşları ve ticari işletmelere</strong> yöneliktir. Müşteri, siparişi klinik/kurum adına veren kişinin <strong>yetkili temsilci</strong> olduğunu; kurumun veri sorumlusu sıfatını kabul ettiğini ve (tüketici niteliği taşıması halinde) emredici tüketici hükümlerinin saklı olduğunu beyan eder.</p>`;
+}
+
+export function liabilityCap() {
+  return `
+<p><strong>8.1. Sorumluluk tavanı.</strong> Emredici kanun hükümleri saklı kalmak kaydıyla; Hizmet Sağlayıcı’nın işbu sözleşmeden, haksız fiilden, kusurdan veya sair sebeplerden doğan <strong>toplam</strong> sorumluluğu, talebe konu olaydan önceki <strong>son 12 ayda Müşteri tarafından Hizmet Sağlayıcı’ya fiilen ödenen net hizmet bedeli</strong> ile sınırlıdır.</p>
+<p><strong>8.2. Hariç tutulan zararlar.</strong> Hiçbir hâlde; dolaylı zarar, kar kaybı, gelir kaybı, itibar kaybı, veri kaybı veya bozulması (Müşteri’nin düzenli yedek/export yükümlülüğü saklı), iş kesintisi, üçüncü kişi talepleri, idari para cezası, cezai şart, manevi tazminat veya örnek niteliğinde tazminat talep edilemez.</p>
+<p><strong>8.3. Klinik kaynaklı talepler.</strong> Müşteri’nin veri sorumluluğu, eksik aydınlatma/rıza, sağlık verisi işleme, tıbbi içerik, hasta iletişimi, personel ihlali, hukuka aykırı kullanım veya platforma yüklenen içerikten doğan talepler <strong>bu sınırın dışında değerlendirilmez</strong> — bu talepler Müşteri’nin tazminat yükümlülüğü kapsamındadır (bkz. Tazminat maddesi).</p>
+<p><strong>8.4. Üçüncü taraf hizmetler.</strong> Barındırma, ödeme, e-posta, SMS, WhatsApp/Telegram API ve benzeri üçüncü taraf kesintilerinden Hizmet Sağlayıcı sorumlu değildir.</p>
+<p><strong>8.5. Kasıt ve ağır kusur.</strong> Hizmet Sağlayıcı’nın kasıtı veya ağır kusuru hallerinde emredici kanun uyarınca sorumluluk sınırı uygulanmayabilir.</p>`;
+}
+
+export function indemnificationClause(S) {
+  return `
+<p><strong>9.1. Genel tazminat.</strong> Müşteri; aşağıdaki konulardan kaynaklanan veya bunlarla bağlantılı her türlü üçüncü kişi talebi, idari soruşturma, veri koruma otoritesi (KVKK Kurumu, AB denetim otoriteleri vb.) işlemi, dava, zarar, ceza, masraf (makul avukatlık ve vekalet ücretleri dahil) nedeniyle Hizmet Sağlayıcı’nın uğradığı zararı <strong>derhal tazmin etmeyi, savunmayı ve beri kılmayı</strong> kabul eder:</p>
+<ul>
+  <li>Müşteri’nin <strong>veri sorumlusu</strong> sıfatıyla yürüttüğü tüm kişisel veri işleme faaliyetleri (sağlık verisi / özel nitelikli veri dahil)</li>
+  <li>Eksik veya hatalı aydınlatma, rıza, opt-in, çerez/onay metinleri</li>
+  <li>Hasta/aday formları, PDF teklifler, e-posta/SMS/WhatsApp mesajları ve klinik personelinin iletişimleri</li>
+  <li>Tıbbi değerlendirme, teklif, fiyatlandırma, tanı/tedavi iddiası veya sağlık sonucu taahhüdü</li>
+  <li>CliniPipes’ın veri sorumlusu veya sağlık hizmeti sağlayıcısı gibi gösterilmesi</li>
+  <li>Platforma yüklenen içerik, görüntü, marka ihlali veya üçüncü kişi hak ihlali</li>
+  <li>Personel/alt kullanıcı hesaplarının kötüye kullanımı</li>
+  <li>Mevzuata aykırı reklam, sağlık turizmi veya tüketici uygulamaları</li>
+  <li>Müşteri talimatına aykırı olmayan teknik barındırma dışında, Müşteri kaynaklı uyumsuzluk iddiaları</li>
+</ul>
+<p><strong>9.2. Bildirim.</strong> Hizmet Sağlayıcı, talebi makul sürede Müşteri’ye iletir; Müşteri savunmada iş birliği yapar.</p>
+<p><strong>9.3. Sınır.</strong> Tazminat yükümlülüğü, Hizmet Sağlayıcı’nın <strong>kasıt veya ağır kusurundan</strong> doğrudan ve somut olarak kaynaklanan zararlar için tersine çevrilemez.</p>`;
+}
+
+export function clinicDataDuties() {
+  return `
+<ul>
+  <li>Kendi adına hasta/aday verisi işleyen <strong>münhasır veri sorumlusu</strong> olduğunu kabul eder; CliniPipes’ın bu verilerde veri sorumlusu olmadığını bilir.</li>
+  <li>6698 sayılı KVKK, GDPR (uygulanabildiği ölçüde), sağlık mevzuatı ve ilgili tüm düzenlemelere <strong>kendi adına</strong> uymakla yükümlüdür.</li>
+  <li>Özel nitelikli kişisel veri (sağlık verisi) için gerekli <strong>aydınlatma, açık rıza veya istisnai hukuki sebep</strong> şartlarını sağlar.</li>
+  <li>Hasta/aday formlarında, web sitesinde, PDF’lerde ve iletişim kanallarında <strong>kendi unvanını, iletişim bilgisini ve gizlilik metnini</strong> kullanır; CliniPipes’ı veri sorumlusu veya sağlık hizmeti sağlayıcısı olarak göstermez.</li>
+  <li>Platforma yalnızca <strong>hukuka uygun</strong> elde edilmiş veri girer; sahte, yanıltıcı veya yetkisiz veri yüklemekten kaçınır.</li>
+  <li>Personel erişimlerini rol bazlı yönetir; ayrılan personelin erişimini kapatır; şifre paylaşımını yasaklar.</li>
+  <li>Düzenli veri yedekleme/export alır; fesih sonrası veri kaybı riskini kendisi yönetir.</li>
+  <li>Veri ihlali şüphesinde <strong>önce kendi yükümlülükleri</strong> kapsamında mercilere bildirim yapar ve eş zamanlı Hizmet Sağlayıcı’yı bilgilendirir.</li>
+  <li>AB/UK ve diğer ülkelerden gelen hastalar için <strong>uluslararası aktarım</strong> yükümlülüklerini kendi adına yerine getirir.</li>
+  <li>CliniPipes’ın yalnızca <strong>yazılım lisansı</strong> verdiğini; uyum denetimi veya hukuki danışmanlık vermediğini kabul eder.</li>
+</ul>`;
 }
 
 export function roleSummary(S) {
   return `
 <h2>Veri koruma — temel ilke</h2>
 <div class="role-box">
-<p><strong>CliniPipes hasta verisi toplayan bir uygulama değildir.</strong> CliniPipes; sağlık kuruluşlarına (kliniklere) yönelik <strong>bulut tabanlı yazılım (SaaS)</strong> lisansı sunar. Hasta ve aday kişisel verileri — sağlık verisi dahil — <strong>klinik tarafından</strong>, kliniğin kendi operasyonel süreçleri kapsamında, kliniğe tahsis edilen şifreli bulut ortamına kaydedilir.</p>
+<p><strong>CliniPipes hasta verisi toplayan bir uygulama değildir.</strong> CliniPipes; sağlık kuruluşlarına (kliniklere) yönelik <strong>bulut tabanlı yazılım (SaaS)</strong> lisansı sunar. Hasta ve aday kişisel verileri — sağlık verisi dahil — <strong>klinik tarafından</strong>, kliniğin kendi operasyonel süreçleri kapsamında, kliniğe tahsis edilen şifreli bulut ortamına kaydedilir. CliniPipes bu verileri <strong>kendi adına toplamaz, profillemez, pazarlama amacıyla kullanmaz veya üçüncü taraflara satmaz</strong>.</p>
 <ul>
-  <li><strong>Hasta / aday verileri:</strong> KVKK md. 3 uyarınca <strong>veri sorumlusu ilgili sağlık kuruluşudur (Müşteri / Klinik)</strong>. CliniPipes bu veriler bakımından <strong>veri sorumlusu değildir</strong>; yalnızca hizmetin teknik sunumu için sınırlı <strong>veri işleyen</strong> konumundadır.</li>
+  <li><strong>Hasta / aday verileri:</strong> KVKK md. 3 uyarınca <strong>veri sorumlusu ilgili sağlık kuruluşudur (Müşteri / Klinik)</strong>. CliniPipes bu veriler bakımından <strong>veri sorumlusu değildir</strong>; yalnızca klinik talimatları ve sözleşme kapsamında sınırlı <strong>veri işleyen</strong> konumundadır.</li>
   <li><strong>Abone / ziyaretçi verileri:</strong> Web sitesi, sipariş, fatura ve hesap açılışına ilişkin veriler bakımından <strong>veri sorumlusu ${S.sellerName}</strong>’dir.</li>
   <li><strong>Sağlık hizmeti:</strong> CliniPipes tıbbi teşhis, tedavi veya sağlık danışmanlığı sunmaz; tüm klinik kararlar kliniğin sorumluluğundadır.</li>
 </ul>
 <p>Ayrıntılı rol ayrımı için <a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a> metnine bakınız.</p>
 </div>`;
-}
-
-export function liabilityCap(S) {
-  return `
-<p>Emredici kanun hükümleri saklı kalmak kaydıyla; Hizmet Sağlayıcı’nın sözleşmeden, haksız fiilden veya sair sebeplerden doğan toplam sorumluluğu, talebe konu olaydan önceki <strong>son 12 ayda Müşteri tarafından Hizmet Sağlayıcı’ya fiilen ödenen hizmet bedeli</strong> ile sınırlıdır. Hiçbir hâlde dolaylı zarar, kar kaybı, itibar kaybı, veri kaybı (Müşteri yedekleme yükümlülüğü saklı), üçüncü kişi talepleri veya cezai şart talep edilemez — Müşteri’nin veri sorumluluğu, rıza/aydınlatma eksikliği veya hukuka aykırı kullanımından kaynaklanan talepler dahil.</p>`;
-}
-
-export function clinicDataDuties() {
-  return `
-<ul>
-  <li>Kendi adına hasta/aday verisi işleyen <strong>tek veri sorumlusu</strong> olduğunu kabul eder.</li>
-  <li>Platforma girdiği tüm veriler için gerekli <strong>aydınlatma, açık rıza, özel nitelikli veri (sağlık verisi) şartları</strong>, GDPR/KVKK yükümlülüklerini kendi adına yerine getirir.</li>
-  <li>Hasta formları, PDF teklifler ve iletişim kanallarında <strong>kendi unvanını ve gizlilik metinlerini</strong> kullanır; CliniPipes markasını hasta verisi toplayıcısı gibi sunmaz.</li>
-  <li>Personel erişimlerini, şifre güvenliğini ve hesap iptallerini yönetir.</li>
-  <li>Veri ihlali şüphesinde derhal Hizmet Sağlayıcı’ya ve gerekli mercilere bildirim yapar.</li>
-</ul>`;
 }
 
 export function consumerDispute() {
@@ -58,7 +105,12 @@ export function pages(S) {
   const sb = sellerBlock(S);
   const ln = legalNotice();
   const rs = roleSummary(S);
-  const lc = liabilityCap(S);
+  const lc = liabilityCap();
+  const ind = indemnificationClause(S);
+  const md = medicalDisclaimer();
+  const wd = warrantyDisclaimer();
+  const fm = forceMajeure();
+  const b2b = b2bAcknowledgment();
   const cd = clinicDataDuties();
   const cdisp = consumerDispute();
   const updated = S.updated || 'Haziran 2026';
@@ -135,18 +187,34 @@ ${cd}
 <h2>6. Alt hizmet sağlayıcılar ve yurt dışı aktarım</h2>
 <p>Platform altyapısı (barındırma, e-posta, ödeme, CDN vb.) yurt içi veya yurt dışında konumlanabilir. Hizmet Sağlayıcı, hasta verisi bakımından yalnızca klinik adına teknik barındırma sağlar. Yurt dışına aktarım söz konusu olduğunda KVKK md. 9 ve (AB hastaları için) GDPR aktarım kurallarına uyum <strong>öncelikle klinik veri sorumlusunun yükümlülüğündedir</strong>; Hizmet Sağlayıcı makul teknik ve sözleşmesel destek sunar.</p>
 
-<h2>7. Tazminat (klinik kaynaklı talepler)</h2>
-<p>Müşteri; kendi veri sorumluluğu kapsamındaki eksik aydınlatma/rıza, hukuka aykırı veri işleme, tıbbi içerik, hasta iletişimi, personel ihlali veya platforma yüklediği içerikten doğan üçüncü kişi, kurum veya veri koruma otoritesi talepleri nedeniyle Hizmet Sağlayıcı’nın uğrayacağı zarar, idari para cezası, avukatlık ve masrafları <strong>ilk talep halinde tazmin etmeyi</strong> kabul eder — Hizmet Sağlayıcı’nın kasıt veya ağır kusuru ayrıca değerlendirilir.</p>
+<h2>7. Tazminat (Müşteri → Hizmet Sağlayıcı)</h2>
+${ind}
 
 <h2>8. Sorumluluk sınırı</h2>
 ${lc}
 
-<h2>9. Veri sahibi başvuruları</h2>
-<p><strong>Hasta / aday:</strong> KVKK md. 11 haklarını <strong>doğrudan kliniğe (veri sorumlusuna)</strong> yöneltmelidir. CliniPipes destek kanalları hasta başvurularını kliniğe yönlendirir.</p>
-<p><strong>Abone / ziyaretçi:</strong> <a href="/gizlilik">KVKK Aydınlatma Metni</a> kapsamında ${S.email} adresine başvurabilir.</p>
+<h2>9. Veri ihlali bildirimi</h2>
+<p><strong>9.1.</strong> Müşteri, kendi sistem/kullanıcı kaynaklı ihlalleri ilgili mercilere bildirmekten birincil derecede sorumludur.</p>
+<p><strong>9.2.</strong> Hizmet Sağlayıcı, altyapı kaynaklı şüpheli ihlali makul sürede Müşteri’ye bildirir; hasta/adaylara doğrudan bildirim yapma yükümlülüğü <strong>Müşteri’ye (veri sorumlusu)</strong> aittir.</p>
 
-<h2>10. Yürürlük</h2>
-<p>Abonelik satın alımı veya platform kullanımı ile kabul edilmiş sayılır.</p>`,
+<h2>10. İşleme talimatları ve erişim</h2>
+<p>Hasta verisi, yalnızca Müşteri’nin platform kullanımı ve destek talepleri kapsamında, sözleşmeye uygun şekilde işlenir. Hizmet Sağlayıcı personeli <strong>need-to-know</strong> ilkesiyle sınırlı erişir. Müşteri, hasta verisine erişim taleplerini kendi personeli üzerinden yönetir.</p>
+
+<h2>11. Yasak beyanlar</h2>
+<p>Müşteri; CliniPipes’ı hasta/adaylara “veri sorumlusu”, “sağlık hizmeti sağlayıcısı” veya “veri toplayıcı” olarak tanıtamaz; CliniPipes logosunu kendi gizlilik metninde veri sorumlusu gibi gösteremez.</p>
+
+<h2>12. Sözleşme sonu — silme / iade</h2>
+<p>Abonelik sona erdiğinde Müşteri verilerini önceden export eder. Hizmet Sağlayıcı, makul süre sonunda teknik imkânlar dâhilinde silme sağlar; yasal saklama yükümlülükleri saklıdır.</p>
+
+<h2>13. Veri sahibi başvuruları</h2>
+<p><strong>Hasta / aday:</strong> KVKK md. 11 / GDPR taleplerini <strong>doğrudan kliniğe</strong> yöneltmelidir. CliniPipes destek kanalları hasta başvurularını yanıtlamaz; kliniğe yönlendirir.</p>
+<p><strong>Abone / ziyaretçi:</strong> <a href="/gizlilik">KVKK Aydınlatma Metni</a> kapsamında ${S.email}.</p>
+
+<h2>14. Mücbir sebep</h2>
+${fm}
+
+<h2>15. Bölünebilirlik ve yürürlük</h2>
+<p>Bir hükmün geçersiz sayılması diğer hükümleri etkilemez. Abonelik satın alımı veya platform kullanımı ile kabul edilmiş sayılır.</p>`,
 
     'gizlilik.html': `
 <h1>Gizlilik Politikası ve KVKK Aydınlatma Metni</h1>
@@ -176,6 +244,7 @@ ${sb}
 </ul>
 <h3>3.2. Hasta / aday verileri — CliniPipes veri sorumlusu değildir</h3>
 <p>Klinikler tarafından platforma girilen hasta ve aday verileri (sağlık verisi, görüntü, form yanıtları dahil) <strong>CliniPipes tarafından toplanmaz veya kendi adına işlenmez</strong>. Bu veriler kliniğin veri sorumluluğunda, kliniğe tahsis edilen şifreli ortamda saklanır. CliniPipes yalnızca sözleşme kapsamında sınırlı <strong>veri işleyen</strong> rolündedir.</p>
+<p><strong>Hasta/aday başvuruları</strong> (KVKK md. 11, GDPR talepleri) doğrudan ilgili <strong>kliniğe</strong> yapılmalıdır; ${S.email} adresine gelen hasta talepleri yanıtlanmadan kliniğe yönlendirilir.</p>
 
 <h2>4. İşleme amaçları (A kapsamı)</h2>
 <ul>
@@ -252,7 +321,7 @@ ${sb}
 <p>CliniPipes; ${S.sellerName} tarafından sunulan bulut tabanlı SaaS yazılımıdır. Koşullar web sitesi, yönetim paneli ve ilişkili hizmetleri kapsar.</p>
 
 <h2>2. Hizmet niteliği — yazılım, sağlık hizmeti değil</h2>
-<p>CliniPipes <strong>tıbbi teşhis, tedavi, reçete veya acil sağlık hizmeti sunmaz</strong>. Platform yalnızca klinik operasyonlarının dijital yönetim aracıdır. Tüm klinik karar, teklif, onay ve hasta iletişimi <strong>Müşteri’nin mesleki ve hukuki sorumluluğundadır</strong>.</p>
+${md}
 
 <h2>3. Hesap ve erişim</h2>
 <ul>
@@ -277,14 +346,21 @@ ${cd}
 <h2>6. Fikri mülkiyet</h2>
 <p>CliniPipes yazılımı, markası, arayüzü ve dokümantasyonu Hizmet Sağlayıcı’ya aittir. Müşteri’ye abonelik süresince devredilemez, münhasır olmayan kullanım hakkı verilir. Müşteri yalnızca kendi girdiği verilerin sahibidir.</p>
 
-<h2>7. Hizmet seviyesi</h2>
-<p>Makul erişilebilirlik hedeflenir. Bakım, güncelleme, altyapı kesintisi ve mücbir sebep hallerinde kesinti olabilir; mümkün olduğunca önceden bilgilendirme yapılır. Kesintisiz çalışma taahhüdü verilmez.</p>
+<h2>7. Hizmet seviyesi ve garanti reddi</h2>
+${wd}
+<p>Makul erişilebilirlik hedeflenir. Bakım, güncelleme, altyapı kesintisi ve mücbir sebep hallerinde kesinti olabilir.</p>
 
 <h2>8. Sorumluluk sınırı ve tazminat</h2>
 ${lc}
-<p>Müşteri, kendi veri sorumluluğu, tıbbi içerik, hasta ilişkileri ve platforma yüklediği verilerden doğan üçüncü kişi talepleri nedeniyle Hizmet Sağlayıcı’yı tazmin etmeyi kabul eder (<a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a> md. 7).</p>
+${ind}
 
-<h2>9. Süre, fesih ve veri</h2>
+<h2>9. Mücbir sebep</h2>
+${fm}
+
+<h2>10. B2B / yetkili temsil</h2>
+${b2b}
+
+<h2>11. Süre, fesih ve veri</h2>
 <p>Abonelik dönemi ve yenileme koşulları sipariş ekranında belirtilir. Fesih halinde erişim dönem sonunda sona erer. Müşteri, fesih öncesi verilerini export etmekle yükümlüdür. Saklama/silme prosedürü sözleşme ve mevzuata uygun yürütülür.</p>
 
 <h2>10. Gizlilik ve çerezler</h2>
@@ -305,13 +381,15 @@ ${ln}
 <h2>1. Taraflar</h2>
 ${sb}
 <p><strong>Müşteri:</strong> Platform üzerinden hizmet satın alan gerçek veya tüzel kişi (sağlık kuruluşu / yetkili temsilcisi).</p>
-<p>6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği kapsamında elektronik ortamda kurulmuştur. Müşteri’nin <strong>ticari/kurumsal</strong> sıfatıyla hareket etmesi halinde uygulanabilir emredici tüketici hükümleri saklı kalmak kaydıyla sözleşme serbest irade ile akdedilir.</p>
+${b2b}
+<p>6502 sayılı Kanun ve Mesafeli Sözleşmeler Yönetmeliği kapsamında elektronik ortamda kurulmuştur.</p>
 
 <h2>2. Konu</h2>
 <p>CliniPipes bulut yazılım aboneliğinin (ve varsa kurulum hizmetinin) satın alınması, dijital erişimin sağlanması ve kullanımına ilişkin hak ve yükümlülükler.</p>
 
 <h2>3. Hizmetin niteliği</h2>
-<p><strong>Dijital yazılım hizmeti (SaaS).</strong> Fiziksel ürün teslimi yoktur. CliniPipes sağlık hizmeti sunmaz; hasta verisi toplayıcısı değildir (<a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a>).</p>
+<p><strong>Dijital yazılım hizmeti (SaaS).</strong> Fiziksel ürün teslimi yoktur. CliniPipes sağlık hizmeti sunmaz; hasta verisi toplayıcısı değildir.</p>
+${md}
 
 <h2>4. Hizmet kapsamı</h2>
 <p>Pakete göre: hasta/lead yönetimi, satış takibi, form, PDF teklif, ekip yönetimi, operasyon takibi, raporlama. Özellikler geliştirme ile güncellenebilir; esaslı hak kaybı oluşturmayan değişiklikler makul kabul edilir.</p>
@@ -350,15 +428,21 @@ ${cd}
 <h2>13. Fikri mülkiyet</h2>
 <p>CliniPipes yazılımı ve markası Hizmet Sağlayıcı’ya aittir; Müşteri’ye süreli kullanım hakkı verilir.</p>
 
-<h2>14. Sorumluluk sınırı ve tazminat</h2>
-${lc}
-<p>Müşteri, veri sorumluluğu ve hasta verilerinden doğan taleplere ilişkin tazminat yükümlülüğünü kabul eder.</p>
+<h2>14. Garanti reddi</h2>
+${wd}
 
-<h2>15. Uyuşmazlık</h2>
+<h2>15. Sorumluluk sınırı ve tazminat</h2>
+${lc}
+${ind}
+
+<h2>16. Mücbir sebep</h2>
+${fm}
+
+<h2>17. Uyuşmazlık</h2>
 ${cdisp}
 <p>Diğer uyuşmazlıklarda İzmir Mahkemeleri ve İcra Daireleri yetkilidir.</p>
 
-<h2>16. Yürürlük</h2>
+<h2>18. Yürürlük</h2>
 <p>Müşteri siparişi onaylayarak <a href="/on-bilgilendirme">Ön Bilgilendirme Formu</a>’nu, <a href="/kullanim-kosullari">Kullanım Koşulları</a>’nı, <a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a>’nı ve bu sözleşmeyi kabul eder.</p>`,
 
     'teslimat.html': `
@@ -491,6 +575,10 @@ ${sb}
 
 <p><strong>Cayma hakkım var mı?</strong></p>
 <p>Tüketici iseniz ve dijital hizmete hemen erişim onayı vermediyseniz 14 gün cayma hakkınız olabilir. Anında erişim onayı verirseniz cayma hakkı kaybolur (<a href="/mesafeli-satis">Mesafeli Sözleşme</a>).</p>
+<hr>
+
+<p><strong>Hasta verisi ihlalinde kim sorumlu?</strong></p>
+<p>Platforma girilen hasta verilerinde <strong>veri sorumlusu kliniktir</strong>. CliniPipes yazılım sağlayıcısıdır; klinik kaynaklı aydınlatma/rıza eksiklikleri, tıbbi içerik ve hasta iletişiminden doğan talepler kliniğin sorumluluğundadır. Ayrıntılar: <a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a> (tazminat ve sorumluluk sınırı maddeleri).</p>
 <hr>
 
 <p><strong>İletişim?</strong></p>
