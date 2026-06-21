@@ -9,23 +9,6 @@ var cart = { starter: false, pro: false, setup: false };
 function t(tr, en) { return lang === 'en' ? en : tr; }
 function eur(n) { return '$' + n; }
 
-function applyContactEmail(email) {
-  if (!email) return;
-  contactEmail = email;
-  var mailto = 'mailto:' + email;
-  document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
-    a.href = mailto;
-    var tr = a.getAttribute('data-tr') || '';
-    if (tr.indexOf('Destek:') === 0 || tr.indexOf('Support:') === 0) {
-      var trTxt = 'Destek: ' + email;
-      var enTxt = 'Support: ' + email;
-      a.setAttribute('data-tr', trTxt);
-      a.setAttribute('data-en', enTxt);
-      a.textContent = lang === 'en' ? enTxt : trTxt;
-    }
-  });
-}
-
 function toggleLang() {
   lang = lang === 'tr' ? 'en' : 'tr';
   document.documentElement.lang = lang;
@@ -39,6 +22,7 @@ function toggleLang() {
   });
   renderCart();
   loadPrices();
+  if (contactEmail) applyContactEmail(contactEmail);
 }
 
 function toggleFaq(q) {
@@ -252,6 +236,29 @@ function paintCard(id, listM, nowM, listY, nowY) {
   }
 }
 
+function applyContactEmail(email) {
+  email = String(email || '').trim();
+  if (!email) return;
+  contactEmail = email;
+  document.querySelectorAll('[data-contact-mail]').forEach(function (el) {
+    el.href = 'mailto:' + email;
+  });
+  var footer = document.getElementById('footerSupportLink');
+  if (footer) {
+    var tr = 'Destek: ' + email;
+    var en = 'Support: ' + email;
+    footer.setAttribute('data-tr', tr);
+    footer.setAttribute('data-en', en);
+    footer.textContent = lang === 'en' ? en : tr;
+  }
+}
+
+function loadContactEmail() {
+  fetch('/legal-seller.json?t=' + Date.now()).then(function (r) { return r.json(); }).then(function (s) {
+    if (s && s.email) applyContactEmail(s.email);
+  }).catch(function () {});
+}
+
 function loadPrices() {
   fetch('/content.json').then(function (r) { return r.json(); }).then(function (c) {
     if (!c) return;
@@ -297,8 +304,6 @@ function loadPrices() {
     }
     if (c.demo) applyDemo(c.demo);
     if (c.landing) applyLanding(c.landing);
-    if (c.contact && c.contact.email) applyContactEmail(c.contact.email);
-    else if (contactEmail) applyContactEmail(contactEmail);
     loadDemoData();
   }).catch(function () { loadDemoData(); });
 }
@@ -490,6 +495,7 @@ document.querySelectorAll('.reveal').forEach(function (el) {
 
 document.addEventListener('DOMContentLoaded', function () {
   renderCart();
+  loadContactEmail();
   loadPrices();
   refreshCheckoutToken();
 });
