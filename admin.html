@@ -143,7 +143,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128247; Demo Ekran G&#246;r&#252;nt&#252;leri &nbsp;<small style="color:#aaa;font-weight:400">PNG y&#252;kle veya HTML'den &#252;ret</small></h2>
     <div class="bar" style="margin-bottom:1rem">
       <button class="btn2" onclick="captureDemo()">&#128248; Canl&#305; Panelden G&#246;r&#252;nt&#252; Al</button>
-      <span style="font-size:.78rem;color:#888">PORTAL_URL + DEMO_USER (e-posta) + DEMO_PASS (sunucu env)</span>
+      <span style="font-size:.78rem;color:#888">Landing + clinic-portal Railway: CLINIPIPES_WEBHOOK_SECRET, CLINIC_PORTAL_URL, DEMO_USER, DEMO_PASS</span>
     </div>
     <div class="g2" id="demo-grid"></div>
   </div>
@@ -548,7 +548,7 @@ function editDemoHtml(path){sw(4);document.getElementById('fname').value=path;lo
 function captureDemo(){
   var el=document.getElementById('st-demo');el.style.display='block';el.style.background='#fffbe0';el.textContent='Ekran goruntuleri aliniyor (sunucu acik olmali, 30-60sn)...';
   api('/api/capture-demo',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
-    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'5 gorsel canli panelden guncellendi':'Hata: '+(r.error||'DEMO_PASS env veya Playwright gerekli');
+    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'5 gorsel canli panelden guncellendi (mock degil)':'Hata: '+(r.error||'DEMO_USER/DEMO_PASS ve CLINIPIPES_WEBHOOK_SECRET kontrol edin');
     if(r.ok){demoData.version=(demoData.version||1)+1;buildDemoGrid();}
   }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }

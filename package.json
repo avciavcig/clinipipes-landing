@@ -1,1 +1,19 @@
-{"name":"clinipipes-landing","version":"2.0.0","description":"CliniPipes landing page — clinipipes.v2","scripts":{"start":"node server.js","sync:legal":"node scripts/sync-legal-from-live.mjs","build:legal":"node scripts/build-legal-pages.mjs","capture:demo":"node scripts/capture-production-demo.mjs","capture:demo:local":"node scripts/capture-demo.mjs"},"devDependencies":{"playwright":"^1.49.0"},"dependencies":{"nodemailer":"^6.10.1","qrcode":"^1.5.4","speakeasy":"^2.0.0"}}
+{
+  "name": "clinipipes-landing",
+  "version": "2.0.0",
+  "description": "CliniPipes landing page — clinipipes.v2",
+  "scripts": {
+    "start": "node server.js",
+    "sync:legal": "node scripts/sync-legal-from-live.mjs",
+    "build:legal": "node scripts/build-legal-pages.mjs",
+    "capture:demo": "node scripts/capture-production-demo.mjs",
+    "capture:demo:local": "node scripts/capture-demo.mjs",
+    "postinstall": "npx playwright install chromium || true"
+  },
+  "dependencies": {
+    "nodemailer": "^6.10.1",
+    "playwright": "^1.49.0",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
+  }
+}

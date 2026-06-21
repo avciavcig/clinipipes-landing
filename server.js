@@ -4,6 +4,17 @@ const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
+(function loadEnvFile(){
+  var envPath=path.join(__dirname,'.env');
+  if(!fs.existsSync(envPath))return;
+  fs.readFileSync(envPath,'utf8').split('\n').forEach(function(line){
+    var m=line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)?\s*$/);
+    if(!m||process.env[m[1]])return;
+    var val=(m[2]||'').trim();
+    if((val.charAt(0)==='"'&&val.charAt(val.length-1)==='"')||(val.charAt(0)==="'"&&val.charAt(val.length-1)==="'"))val=val.slice(1,-1);
+    process.env[m[1]]=val;
+  });
+})();
 const PORT=process.env.PORT||8080;
 const ADMIN_KEY=process.env.ADMIN_KEY||'admin123';
 const GITHUB_TOKEN=process.env.GITHUB_TOKEN||'';
@@ -130,10 +141,16 @@ function captureDemoScreens(cb){
     }catch(e){cb(false,e.message);}
   }
   try{
-    execSync('node scripts/capture-production-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:180000,env:process.env});
+    execSync('node scripts/capture-production-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:240000,env:process.env});
     finishCapture('production');
   }catch(e){
-    console.warn('[capture] Production failed, using local demo HTML:',e.stderr?e.stderr.toString().slice(0,200):e.message);
+    var errMsg=e.stderr?e.stderr.toString():e.message;
+    console.warn('[capture] Production capture failed:',errMsg.slice(0,300));
+    if(process.env.NODE_ENV==='production'){
+      cb(false,errMsg.slice(0,300)||'capture_failed');
+      return;
+    }
+    console.warn('[capture] Dev fallback: local demo HTML');
     try{
       execSync('node scripts/capture-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:120000,env:Object.assign({},process.env,{PORT:process.env.PORT||8080})});
       finishCapture('local');
