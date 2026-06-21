@@ -423,7 +423,9 @@ function adminErrorMessage(err){
   if(err.code==='csrf')return 'Oturum süresi doldu — sayfayı yenileyip tekrar giriş yapın.';
   if(err.code==='unauthorized')return 'Oturum geçersiz — tekrar giriş yapın.';
   if(err.code==='write_failed')return err.message||'Dosya kaydedilemedi (GITHUB_TOKEN veya yazma izni).';
-  if(err.code==='github_push_failed')return 'GitHub\'a gönderilemedi — GITHUB_TOKEN kontrol edin.';
+  if(err.code==='github_push_failed')return (err.data&&err.data.details&&err.data.details[0])||'GitHub\'a gönderilemedi — GITHUB_TOKEN (repo Contents: Read and write) kontrol edin.';
+  if(err.data&&err.data.error&&err.data.error!=='github_push_failed')return err.data.error;
+  if(err.data&&err.data.details&&err.data.details[0])return err.data.details[0];
   return err.message||String(err);
 }
 function updateSellerActions(){
@@ -726,19 +728,25 @@ function loadSeller(){
       document.getElementById('s-mersis').value=s.mersis||'';
     }).catch(function(){});
 }
+function legalRebuildMessage(r){
+  if(r.github)return r.local?'Kaydedildi + yasal sayfalar güncellendi (GitHub ~2dk)':'Yasal sayfalar GitHub\'a gönderildi (~2dk deploy)';
+  if(r.local&&r.warning)return 'Yasal sayfalar sunucuda güncellendi. '+r.warning;
+  if(r.local)return 'Yasal sayfalar güncellendi.';
+  return 'Yasal sayfalar yeniden oluşturuldu.';
+}
 function saveSeller(){
   if(!TOTP_ENABLED){open2faSetup();return;}
   var data={sellerName:document.getElementById('s-name').value,sellerType:document.getElementById('s-type').value,brand:document.getElementById('s-brand').value,address:document.getElementById('s-addr').value,phone:document.getElementById('s-phone').value,email:document.getElementById('s-email').value,taxOffice:document.getElementById('s-taxoff').value,taxNumber:document.getElementById('s-taxno').value,mersis:document.getElementById('s-mersis').value,updated:document.getElementById('s-updated').value};
   var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
   apiJson('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:'legal-seller.json',content:JSON.stringify(data,null,2)})})
     .then(function(){el.textContent='Yasal sayfalar oluşturuluyor...';return apiJson('/api/rebuild-legal',{method:'POST'});})
-    .then(function(){el.style.background='#e0fce8';el.textContent='Kaydedildi + yasal sayfalar güncellendi';})
+    .then(function(r){el.style.background=r.warning?'#fffbe0':'#e0fce8';el.textContent=legalRebuildMessage(r);})
     .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+adminErrorMessage(e);});
 }
 function rebuildLegalOnly(){
   var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Yasal sayfalar oluşturuluyor...';
   apiJson('/api/rebuild-legal',{method:'POST'})
-    .then(function(){el.style.background='#e0fce8';el.textContent='10 yasal sayfa yeniden oluşturuldu';})
+    .then(function(r){el.style.background=r.warning?'#fffbe0':'#e0fce8';el.textContent=legalRebuildMessage(r);})
     .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+adminErrorMessage(e);});
 }
 function renderLegalUrlList(){

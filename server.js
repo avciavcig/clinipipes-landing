@@ -65,17 +65,51 @@ function getAnalytics(){try{return JSON.parse(fs.readFileSync(ANALYTICS_FILE,'ut
 function saveAnalytics(d){fs.writeFileSync(ANALYTICS_FILE,JSON.stringify(d),'utf-8');}
 
 function githubPut(fn,content,msg,cb){
-  const p='/repos/'+GITHUB_REPO+'/contents/'+fn;
-  const hdr={'Authorization':'token '+GITHUB_TOKEN,'User-Agent':'clinipipes-admin'};
+  const p='/repos/'+GITHUB_REPO+'/contents/'+fn.split('/').map(encodeURIComponent).join('/');
+  const hdr={
+    'Authorization':'Bearer '+GITHUB_TOKEN,
+    'User-Agent':'clinipipes-admin',
+    'Accept':'application/vnd.github+json',
+    'X-GitHub-Api-Version':'2022-11-28'
+  };
   https.get({hostname:'api.github.com',path:p+'?ref='+GITHUB_BRANCH,headers:hdr},function(r){
     let d='';r.on('data',function(c){d+=c;});r.on('end',function(){
-      let sha=null;try{sha=JSON.parse(d).sha;}catch(e){}
+      let sha=null;
+      if(r.statusCode===200){try{sha=JSON.parse(d).sha;}catch(e){}}
       const body=JSON.stringify({message:msg,content:Buffer.from(content).toString('base64'),sha:sha,branch:GITHUB_BRANCH});
       const req=https.request({hostname:'api.github.com',path:p,method:'PUT',headers:Object.assign({'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)},hdr)},
-        function(r2){let d2='';r2.on('data',function(c){d2+=c;});r2.on('end',function(){cb(r2.statusCode===200||r2.statusCode===201);});});
-      req.on('error',function(){cb(false);});req.write(body);req.end();
+        function(r2){let d2='';r2.on('data',function(c){d2+=c;});r2.on('end',function(){
+          var ok=r2.statusCode===200||r2.statusCode===201;
+          var err=null;
+          if(!ok){try{err=JSON.parse(d2).message||('HTTP '+r2.statusCode);}catch(e){err='HTTP '+r2.statusCode;}}
+          cb(ok,err);
+        });});
+      req.on('error',function(){cb(false,'network_error');});req.write(body);req.end();
     });
-  }).on('error',function(){cb(false);});
+  }).on('error',function(){cb(false,'network_error');});
+}
+function syncLegalOutput(outDir){
+  if(outDir===__dirname)return true;
+  var ok=true;
+  LEGAL_PAGES.forEach(function(fn){
+    try{fs.writeFileSync(path.join(__dirname,fn),fs.readFileSync(path.join(outDir,fn),'utf-8'),'utf-8');}
+    catch(e){ok=false;}
+  });
+  return ok;
+}
+function pushLegalPagesToGithub(outDir,idx,errors,cb){
+  if(idx>=LEGAL_PAGES.length)return cb(errors);
+  var fn=LEGAL_PAGES[idx];
+  try{
+    var content=fs.readFileSync(path.join(outDir,fn),'utf-8');
+    githubPut(fn,content,'Admin: rebuild legal pages',function(gok,err){
+      if(!gok)errors.push(fn+(err?(': '+err):''));
+      pushLegalPagesToGithub(outDir,idx+1,errors,cb);
+    });
+  }catch(e){
+    errors.push(fn+': '+e.message);
+    pushLegalPagesToGithub(outDir,idx+1,errors,cb);
+  }
 }
 function canWriteDir(dir){
   try{var t=path.join(dir,'.wtest-'+Date.now());fs.writeFileSync(t,'1');fs.unlinkSync(t);return true;}catch(e){return false;}
@@ -97,20 +131,30 @@ function rebuildLegalPages(cb){
   }catch(e){
     var msg=e.message||'build_failed';
     if(e.stderr)msg+=' — '+String(e.stderr).trim();
-    cb(false,msg);return;
+    cb({ok:false,error:msg,local:false,github:false});return;
   }
+  var localOk=syncLegalOutput(outDir);
   if(!GITHUB_TOKEN){
-    if(outDir!==__dirname)return cb(true);
-    cb(true);return;
+    cb({ok:localOk,error:localOk?null:'write_failed',local:localOk,github:false});
+    return;
   }
-  var pending=LEGAL_PAGES.length,done=0,ok=true,lastErr=null;
-  LEGAL_PAGES.forEach(function(fn){
-    try{var content=fs.readFileSync(path.join(outDir,fn),'utf-8');
-    githubPut(fn,content,'Admin: rebuild legal pages',function(gok){
-      if(!gok){ok=false;lastErr='github_push_failed';}
-      done++;if(done===pending)cb(ok,ok?null:lastErr);
-    });
-    }catch(e){ok=false;lastErr=e.message;done++;if(done===pending)cb(ok,lastErr);}
+  pushLegalPagesToGithub(outDir,0,[],function(errors){
+    var githubOk=!errors.length;
+    if(localOk){
+      cb({
+        ok:true,
+        error:null,
+        local:true,
+        github:githubOk,
+        warning:githubOk?null:('GitHub push başarısız: '+errors[0]+(errors.length>1?' (+'+(errors.length-1)+' dosya)':''))
+      });
+      return;
+    }
+    if(githubOk){
+      cb({ok:true,error:null,local:false,github:true});
+      return;
+    }
+    cb({ok:false,error:errors[0]||'github_push_failed',local:false,github:false,details:errors});
   });
 }
 
@@ -543,8 +587,15 @@ http.createServer(function(req,res){
   }
   if(url==='/api/rebuild-legal'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
-    rebuildLegalPages(function(ok,err){
-      jsonRes(res,200,{ok:ok,error:err||null},req,true);
+    rebuildLegalPages(function(result){
+      jsonRes(res,200,{
+        ok:!!result.ok,
+        error:result.error||null,
+        local:!!result.local,
+        github:!!result.github,
+        warning:result.warning||null,
+        details:result.details||null
+      },req,true);
     });return;
   }
   if(url==='/api/save-demo-image'&&req.method==='POST'){
