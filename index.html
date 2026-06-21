@@ -138,11 +138,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .demo-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:0}
 .demo-tab{padding:.6rem 1.1rem;font-size:.82rem;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
 .demo-tab.on{color:#fff;border-bottom-color:var(--g)}
-.demo-frame{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;aspect-ratio:16/10;max-height:min(540px,56vw);background:#F8FAFC}
-.demo-panel{display:none;height:100%}
+.demo-frame{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;background:#F8FAFC;max-height:min(640px,70vh);display:flex;flex-direction:column}
+.demo-scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
+.demo-scroll::-webkit-scrollbar{width:8px}
+.demo-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:999px}
+.demo-panel{display:none}
 .demo-panel.on{display:block}
-.demo-panel img{width:100%;height:100%;display:block;border:0;background:#F8FAFC;object-fit:cover;object-position:top center}
-.demo-cap{padding:.85rem 1.25rem;font-size:.78rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.15)}
+.demo-panel img{width:100%;height:auto;display:block;border:0;background:#F8FAFC}
+.demo-cap{padding:.85rem 1.25rem;font-size:.78rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.15);flex-shrink:0}
  
 /* ── FAQ ── */
 .faq{padding:6rem 0;background:var(--off)}
@@ -465,26 +468,24 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       <div class="demo-tab" data-demo="pdf" onclick="setTab(this)" data-tr="PDF Teklif" data-en="PDF Quote">PDF Teklif</div>
     </div>
     <div class="demo-frame reveal">
+      <div class="demo-scroll">
       <div class="demo-panel on" data-demo="dashboard">
-        <img src="/demo/dashboard.png?v=11" alt="CliniPipes Yönetim Paneli" loading="lazy">
-        <div class="demo-cap" data-tr="Yönetim paneli — funnel, SLA, KPI ve operasyon uyarıları tek ekranda." data-en="Admin panel — funnel, SLA, KPIs and operational alerts in one view.">Yönetim paneli — funnel, SLA, KPI ve operasyon uyarıları tek ekranda.</div>
+        <img src="/demo/dashboard.png?v=12" alt="CliniPipes Yönetim Paneli" loading="lazy">
       </div>
       <div class="demo-panel" data-demo="sales">
-        <img src="/demo/sales.png?v=11" alt="Satış Pipeline" loading="lazy">
-        <div class="demo-cap" data-tr="Lead Akışı — kanban görünümü, hasta durumu ve sorumlu takibi." data-en="Lead pipeline — kanban view, patient status and ownership tracking.">Lead Akışı — kanban görünümü, hasta durumu ve sorumlu takibi.</div>
+        <img src="/demo/sales.png?v=12" alt="Satış Pipeline" loading="lazy">
       </div>
       <div class="demo-panel" data-demo="form">
-        <img src="/demo/form.png?v=11" alt="Hasta Formu" loading="lazy">
-        <div class="demo-cap" data-tr="Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme." data-en="Branded patient form — English, KVKK/GDPR consent and photo upload.">Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme.</div>
+        <img src="/demo/form.png?v=12" alt="Hasta Formu" loading="lazy">
       </div>
       <div class="demo-panel" data-demo="doctor">
-        <img src="/demo/doctor.png?v=11" alt="Doktor Paneli" loading="lazy">
-        <div class="demo-cap" data-tr="Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda." data-en="Doctor panel — clinical assessment, treatment plan and patient images in one view.">Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda.</div>
+        <img src="/demo/doctor.png?v=12" alt="Doktor Paneli" loading="lazy">
       </div>
       <div class="demo-panel" data-demo="pdf">
-        <img src="/demo/pdf.png?v=11" alt="PDF Teklif" loading="lazy">
-        <div class="demo-cap" data-tr="Çok sayfalı tedavi teklifi — doktor mektubu, klinik plan, seyahat paketi ve yatırım özeti." data-en="Multi-page treatment proposal — doctor letter, clinical plan, travel package and investment summary.">Çok sayfalı tedavi teklifi — doktor mektubu, klinik plan, seyahat paketi ve yatırım özeti.</div>
+        <img src="/demo/pdf.png?v=12" alt="PDF Teklif" loading="lazy">
       </div>
+      </div>
+      <div class="demo-cap demo-cap-active" data-tr="Kaydırarak tüm ekranı görüntüleyin." data-en="Scroll to view the full screen.">Kaydırarak tüm ekranı görüntüleyin.</div>
     </div>
   </div>
 </section>

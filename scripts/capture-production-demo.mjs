@@ -49,8 +49,9 @@ async function waitStyled(page, selector, label) {
 }
 
 async function shot(page, file, label) {
-  await page.screenshot({ path: path.join(DEMO, file), type: 'png', fullPage: false });
-  console.log('saved', file, label ? '(' + label + ')' : '');
+  await page.screenshot({ path: path.join(DEMO, file), type: 'png', fullPage: true });
+  const size = fs.statSync(path.join(DEMO, file)).size;
+  console.log('saved', file, 'full-page', size, 'bytes', label ? '(' + label + ')' : '');
 }
 
 async function login(page, email, password) {

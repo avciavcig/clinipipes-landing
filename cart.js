@@ -38,6 +38,8 @@ function setTab(tab) {
   document.querySelectorAll('.demo-panel').forEach(function (p) {
     p.classList.toggle('on', p.getAttribute('data-demo') === key);
   });
+  var scroll = document.querySelector('.demo-scroll');
+  if (scroll) scroll.scrollTop = 0;
 }
 
 function addToCart(key) {

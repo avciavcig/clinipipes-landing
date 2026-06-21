@@ -2,13 +2,13 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1440, height=900">
+<meta name="viewport" content="width=1440">
 <title>CliniPipes — Yönetim Paneli</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/demo/shared.css">
 </head>
 <body>
-<div class="demo-app">
+<div class="demo-app demo-app--full">
   <div class="topbar">
     <div class="topbar-brand"><h1>CliniPipes</h1></div>
     <div class="topbar-right">
@@ -26,10 +26,31 @@
       </nav>
     </div>
   </div>
-  <div class="demo-body">
+  <div class="demo-body demo-body--scroll">
     <div class="dash-wrap">
-      <div class="dash-header"><h2>Yönetim Paneli</h2><p>Operasyon optimizasyonu ve karar desteği</p></div>
+      <div class="dash-header">
+        <h2>Yönetim Paneli</h2>
+        <p>Operasyon optimizasyonu ve karar desteği</p>
+      </div>
       <div class="info-banner">Kurulum ve bildirim ayarları için <a href="#">Kurulum Rehberi</a> sayfasını takip edin.</div>
+
+      <div class="pj-panel">
+        <div class="pj-panel-head">
+          <div>
+            <h3>Hasta yolculuğu</h3>
+            <p>Lead'den onaya — kliniğinizdeki hastalar hangi aşamada?</p>
+          </div>
+          <a href="#" class="pj-panel-link">Detaylı rehber →</a>
+        </div>
+        <div class="pj-flow">
+          <div class="pj-step done"><div class="pj-icon-wrap"><span>📞</span></div><div class="pj-label">Lead</div><span class="pj-count">24</span></div>
+          <div class="pj-step done"><div class="pj-icon-wrap"><span>📋</span></div><div class="pj-label">Form</div><span class="pj-count">18</span></div>
+          <div class="pj-step active"><div class="pj-icon-wrap"><span>🩺</span></div><div class="pj-label">Değerlendirme</div><span class="pj-count">14</span></div>
+          <div class="pj-step"><div class="pj-icon-wrap"><span>📄</span></div><div class="pj-label">Teklif</div><span class="pj-count">11</span></div>
+          <div class="pj-step"><div class="pj-icon-wrap"><span>✅</span></div><div class="pj-label">Onay</div><span class="pj-count">8</span></div>
+        </div>
+      </div>
+
       <div class="dash-grid-4">
         <div class="dash-card" data-accent="amber"><div class="kpi-num">24</div><div class="kpi-label">Bu Ay Lead</div></div>
         <div class="dash-card" data-accent="green"><div class="kpi-num">8</div><div class="kpi-label">Onaylanan Hasta</div></div>
@@ -40,18 +61,40 @@
         <div class="dash-card" data-accent="purple"><div class="kpi-num">91%</div><div class="kpi-label">SLA Uyum Oranı</div></div>
         <div class="dash-card" data-accent="followup"><div class="kpi-num">42 dk</div><div class="kpi-label">Ort. İlk Temas Süresi</div></div>
       </div>
+
       <div class="dash-panel">
         <h3>Lead Funnel</h3>
-        <div class="funnel-step"><span>Lead</span><span class="funnel-count">24</span><span class="funnel-pct">—</span><span class="funnel-drop">Toplam: 100%</span></div>
-        <div class="funnel-step"><span>Değerlendirme</span><span class="funnel-count">18</span><span class="funnel-pct">Önceki: 75%</span><span class="funnel-drop">Toplam: 75%</span></div>
-        <div class="funnel-step"><span>Plan Hazır</span><span class="funnel-count">14</span><span class="funnel-pct">Önceki: 78%</span><span class="funnel-drop">Toplam: 58%</span></div>
-        <div class="funnel-step"><span>Teklif Verildi</span><span class="funnel-count">11</span><span class="funnel-pct">Önceki: 79%</span><span class="funnel-drop">Toplam: 46%</span></div>
-        <div class="funnel-step"><span>Onaylandı</span><span class="funnel-count">8</span><span class="funnel-pct">Önceki: 73%</span><span class="funnel-drop">Toplam: 33%</span></div>
+        <div class="funnel-step"><span class="funnel-label">Lead</span><span class="funnel-count">24</span><span class="funnel-pct">—</span><span class="funnel-drop neutral">Toplam: 100%</span></div>
+        <div class="funnel-step"><span class="funnel-label">Değerlendirme</span><span class="funnel-count">18</span><span class="funnel-pct">Önceki: 75%</span><span class="funnel-drop neutral">Toplam: 75%</span></div>
+        <div class="funnel-step"><span class="funnel-label">Plan Hazır</span><span class="funnel-count">14</span><span class="funnel-pct">Önceki: 78%</span><span class="funnel-drop neutral">Toplam: 58%</span></div>
+        <div class="funnel-step"><span class="funnel-label">Teklif Verildi</span><span class="funnel-count">11</span><span class="funnel-pct">Önceki: 79%</span><span class="funnel-drop neutral">Toplam: 46%</span></div>
+        <div class="funnel-step"><span class="funnel-label">Onaylandı</span><span class="funnel-count">8</span><span class="funnel-pct">Önceki: 73%</span><span class="funnel-drop neutral">Toplam: 33%</span></div>
+      </div>
+
+      <div class="dash-panel">
+        <h3>SLA Performansı</h3>
+        <table class="dash-table">
+          <thead><tr><th>Süreç</th><th class="num">Ortalama Süre</th><th class="num">Hedef</th><th class="num">Uyum Oranı</th><th class="num">SLA Aşımı</th></tr></thead>
+          <tbody>
+            <tr><td>İlk temas</td><td class="num">42 dk</td><td class="num">60 dk</td><td class="num">91%</td><td class="num">2</td></tr>
+            <tr><td>Doktor değerlendirme</td><td class="num">18 sa</td><td class="num">24 sa</td><td class="num">88%</td><td class="num">1</td></tr>
+            <tr><td>Teklif gönderimi</td><td class="num">6 sa</td><td class="num">12 sa</td><td class="num">94%</td><td class="num">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dash-panel">
+        <h3>Satışçı Performansı</h3>
+        <table class="dash-table">
+          <thead><tr><th>Satışçı</th><th class="num">Atanan Lead</th><th class="num">Teklif</th><th class="num">Onay</th><th class="num">Dönüşüm</th></tr></thead>
+          <tbody>
+            <tr><td>Ayşe Yılmaz</td><td class="num">14</td><td class="num">9</td><td class="num">5</td><td class="num">36%</td></tr>
+            <tr><td>Mehmet Demir</td><td class="num">10</td><td class="num">6</td><td class="num">3</td><td class="num">30%</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
-<script>window.DEMO_PAGE='dashboard';</script>
-<script src="/demo/render.js"></script>
 </body>
 </html>
