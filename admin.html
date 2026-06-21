@@ -198,27 +198,35 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <!-- PANE 3: FİYAT -->
 <div class="pane" id="pane3">
   <div class="card">
-    <h2>&#128176; Fiyatlar</h2>
-    <div class="g3">
+    <h2>&#128176; Fiyatlar (USD)</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Normal fiyatlar &#252;st&#252; &#231;izili g&#246;sterilir. Kurucu fiyatlar&#305; yaln&#305;zca kalan slot &gt; 0 iken uygulan&#305;r. Y&#305;ll&#305;k = ayl&#305;k &#215; 10 (2 ay bedava).</p>
+    <div class="g2">
       <div>
-        <label>Ba&#351;lang&#305;&#231; / ay ($)</label><input type="number" id="p-sm">
-        <label>Ba&#351;lang&#305;&#231; / y&#305;l (otomatik &#215;10)</label><input type="number" id="p-sy" readonly style="background:#f4f4f2">
+        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Starter</h3>
+        <label>Normal / ay ($)</label><input type="number" id="p-sm">
+        <label>Kurucu / ay ($)</label><input type="number" id="p-sm-f">
+        <label>Normal / y&#305;l (otomatik)</label><input type="number" id="p-sy" readonly style="background:#f4f4f2">
+        <label>Kurucu / y&#305;l (otomatik)</label><input type="number" id="p-sy-f" readonly style="background:#f4f4f2">
       </div>
       <div>
-        <label>Pro / ay ($)</label><input type="number" id="p-pm">
-        <label>Pro / y&#305;l (otomatik &#215;10)</label><input type="number" id="p-py" readonly style="background:#f4f4f2">
-      </div>
-      <div>
-        <label>Kurulum ($)</label><input type="number" id="p-setup">
-        <label>Paket indirimi ($)</label><input type="number" id="p-bundle">
+        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Professional</h3>
+        <label>Normal / ay ($)</label><input type="number" id="p-pm">
+        <label>Kurucu / ay ($)</label><input type="number" id="p-pm-f">
+        <label>Normal / y&#305;l (otomatik)</label><input type="number" id="p-py" readonly style="background:#f4f4f2">
+        <label>Kurucu / y&#305;l (otomatik)</label><input type="number" id="p-py-f" readonly style="background:#f4f4f2">
       </div>
     </div>
-  </div>
-  <div class="card">
-    <h2>&#128274; Kurucu &#304;ndirim</h2>
-    <div class="g2">
-      <div><label>Kalan slot (0 = indirim bitti)</label><input type="number" id="f-slots" min="0" max="100"></div>
-      <div><label>&#304;ndirim oran&#305; (%)</label><input type="number" id="f-disc" min="0" max="90"></div>
+    <div class="g2" style="margin-top:.75rem">
+      <div>
+        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Kurulum (tek seferlik)</h3>
+        <label>Normal ($)</label><input type="number" id="p-setup">
+        <label>Kurucu ($)</label><input type="number" id="p-setup-f">
+      </div>
+      <div>
+        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Kurucu Klinikler Program&#305;</h3>
+        <label>Kalan slot (0 = indirim bitti)</label><input type="number" id="f-slots" min="0" max="100">
+        <p style="font-size:.78rem;color:#888;margin:.5rem 0 0">Banner metinleri &#304;&#231;erik sekmesinde d&#252;zenlenir.</p>
+      </div>
     </div>
   </div>
   <button class="btn" onclick="savePrices()" style="width:100%;padding:.75rem">&#128190; Fiyat Kaydet</button>
@@ -450,7 +458,12 @@ function disable2fa(){
 }
 function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+title+' — CliniPipes</title><style>'+LEGAL_CSS+'</style></head><body><div class="container">'+body+'</div></body></html>';}
 function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
-function syncYearly(){var sm=+document.getElementById('p-sm').value||0,pm=+document.getElementById('p-pm').value||0;document.getElementById('p-sy').value=sm*10;document.getElementById('p-py').value=pm*10;}
+function syncYearly(){
+  var sm=+document.getElementById('p-sm').value||0,smf=+document.getElementById('p-sm-f').value||0;
+  var pm=+document.getElementById('p-pm').value||0,pmf=+document.getElementById('p-pm-f').value||0;
+  document.getElementById('p-sy').value=sm*10;document.getElementById('p-sy-f').value=smf*10;
+  document.getElementById('p-py').value=pm*10;document.getElementById('p-py-f').value=pmf*10;
+}
 
 function sw(i){
   if(!TOTP_ENABLED&&i<6){open2faSetup();return;}
@@ -599,8 +612,10 @@ function saveContent(){
 
 /* ── Pane 3: Fiyat ── */
 function savePrices(){
-  var sm=+document.getElementById('p-sm').value,pm=+document.getElementById('p-pm').value;
-  var payload={prices:{sm:sm,sy:sm*10,pm:pm,py:pm*10,setup:+document.getElementById('p-setup').value,bundle:+document.getElementById('p-bundle').value},founding:{slots_remaining:+document.getElementById('f-slots').value,discount:+document.getElementById('f-disc').value}};
+  syncYearly();
+  var sm=+document.getElementById('p-sm').value,smf=+document.getElementById('p-sm-f').value;
+  var pm=+document.getElementById('p-pm').value,pmf=+document.getElementById('p-pm-f').value;
+  var payload={prices:{sm:sm,sy:sm*10,sm_f:smf,sy_f:smf*10,pm:pm,py:pm*10,pm_f:pmf,py_f:pmf*10,setup:+document.getElementById('p-setup').value,setup_f:+document.getElementById('p-setup-f').value,bundle:0},founding:{slots_remaining:+document.getElementById('f-slots').value}};
   var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
   api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
@@ -649,10 +664,17 @@ function savePw(){var p0=document.getElementById('pw0').value,p1=document.getEle
 /* ── Init ── */
 function bootAdmin(){
 fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){
-  if(c.prices){var sm=+c.prices.sm,pm=+c.prices.pm;document.getElementById('p-sm').value=sm;document.getElementById('p-sy').value=sm*10;document.getElementById('p-pm').value=pm;document.getElementById('p-py').value=pm*10;document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-bundle').value=c.prices.bundle;}
+  if(c.prices){
+    var sm=+c.prices.sm,pm=+c.prices.pm;
+    document.getElementById('p-sm').value=sm;document.getElementById('p-sy').value=c.prices.sy||sm*10;
+    document.getElementById('p-sm-f').value=c.prices.sm_f||'';document.getElementById('p-sy-f').value=c.prices.sy_f||(c.prices.sm_f?c.prices.sm_f*10:'');
+    document.getElementById('p-pm').value=pm;document.getElementById('p-py').value=c.prices.py||pm*10;
+    document.getElementById('p-pm-f').value=c.prices.pm_f||'';document.getElementById('p-py-f').value=c.prices.py_f||(c.prices.pm_f?c.prices.pm_f*10:'');
+    document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-setup-f').value=c.prices.setup_f||'';
+  }
   if(c.founding){
-    var fs=document.getElementById('f-slots');var fd=document.getElementById('f-disc');
-    if(fs)fs.value=c.founding.slots_remaining;if(fd)fd.value=c.founding.discount;
+    var fs=document.getElementById('f-slots');
+    if(fs)fs.value=c.founding.slots_remaining;
     if(c.founding.strip_tr){document.getElementById('f-st-tr').value=c.founding.strip_tr;document.getElementById('f-st-en').value=c.founding.strip_en||'';}
     if(c.founding.banner_title_tr){document.getElementById('f-bt-tr').value=c.founding.banner_title_tr;document.getElementById('f-bt-en').value=c.founding.banner_title_en||'';document.getElementById('f-bd-tr').value=c.founding.banner_desc_tr||'';document.getElementById('f-bd-en').value=c.founding.banner_desc_en||'';}
   }
@@ -680,7 +702,9 @@ loadDashboard();
 loadFile();
 }
 document.getElementById('p-sm').addEventListener('input',syncYearly);
+document.getElementById('p-sm-f').addEventListener('input',syncYearly);
 document.getElementById('p-pm').addEventListener('input',syncYearly);
+document.getElementById('p-pm-f').addEventListener('input',syncYearly);
 function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){api('/api/admin/logout',{method:'POST'}).finally(function(){location.href='/admin/login';});}}
 window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';return null;}return r.json();}).then(function(me){

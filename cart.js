@@ -1,8 +1,8 @@
 var lang = 'tr', period = 'monthly', BUNDLE = 20, foundingActive = false, checkoutToken = '';
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
-  pro: { monthly: 95, yearly: 950, recurring: true, tr: 'Pro Plan', en: 'Pro Plan' },
-  setup: { oneoff: 100, recurring: false, tr: 'Kurulum Hizmeti', en: 'Setup Service' }
+  pro: { monthly: 79, yearly: 790, recurring: true, tr: 'Professional Plan', en: 'Professional Plan' },
+  setup: { oneoff: 99, recurring: false, tr: 'Kurulum Hizmeti', en: 'Setup Service' }
 };
 var cart = { starter: false, pro: false, setup: false };
 
@@ -211,36 +211,45 @@ function refreshCheckoutToken() {
   }).catch(function () {});
 }
 
+function fmtUsd(n) {
+  return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function paintCard(id, listM, nowM, listY, nowY) {
   var w = document.getElementById('was' + id);
   var n = document.getElementById('now' + id);
   var y = document.getElementById('yr' + id);
-  if (n) n.textContent = '$' + nowM;
+  if (n) n.textContent = fmtUsd(nowM);
   if (w) {
-    if (listM !== nowM) { w.textContent = '$' + listM; w.style.display = 'inline'; }
+    if (listM !== nowM) { w.textContent = fmtUsd(listM); w.style.display = 'inline'; }
     else w.style.display = 'none';
   }
-  if (y) y.textContent = (lang === 'en' ? 'or $' : 'veya $') + nowY + (lang === 'en' ? '/year — 2 months free' : '/yıl — 2 ay bedava');
+  if (y) {
+    var save = lang === 'en' ? ' — Save 2 months.' : ' — 2 ay bedava';
+    var yrSuffix = lang === 'en' ? '/year' : '/yıl';
+    if (listY !== nowY) y.innerHTML = '<s>' + fmtUsd(listY) + yrSuffix + '</s> ' + fmtUsd(nowY) + yrSuffix + save;
+    else y.textContent = fmtUsd(nowY) + yrSuffix + save;
+  }
 }
 
 function loadPrices() {
   fetch('/content.json').then(function (r) { return r.json(); }).then(function (c) {
     if (!c) return;
     if (c.prices) {
-      var p = c.prices, disc = 0, rem = 0;
+      var p = c.prices, rem = 0;
+      var sm = +p.sm, pm = +p.pm, su = +p.setup;
+      var sy = +(p.sy || sm * 10), py = +(p.py || pm * 10);
+      var smN = sm, syN = sy, pmN = pm, pyN = py, suN = su;
       if (c.founding && c.founding.slots_remaining > 0) {
-        disc = (c.founding.discount || 50) / 100;
         rem = c.founding.slots_remaining;
         foundingActive = true;
-      }
-      BUNDLE = +(p.bundle || 20);
-      var sm = +p.sm, pm = +p.pm;
-      var sy = sm * 10, py = pm * 10;
-      var smN = disc ? Math.round(sm * (1 - disc)) : sm;
-      var syN = disc ? Math.round(sy * (1 - disc)) : sy;
-      var pmN = disc ? Math.round(pm * (1 - disc)) : pm;
-      var pyN = disc ? Math.round(py * (1 - disc)) : py;
-      var su = +p.setup, suN = disc ? Math.round(su * (1 - disc)) : su;
+        smN = +(p.sm_f != null ? p.sm_f : sm);
+        syN = +(p.sy_f != null ? p.sy_f : sy);
+        pmN = +(p.pm_f != null ? p.pm_f : pm);
+        pyN = +(p.py_f != null ? p.py_f : py);
+        suN = +(p.setup_f != null ? p.setup_f : su);
+      } else foundingActive = false;
+      BUNDLE = +(p.bundle || 0);
       PRICES.starter.monthly = smN; PRICES.starter.yearly = syN;
       PRICES.pro.monthly = pmN; PRICES.pro.yearly = pyN;
       PRICES.setup.oneoff = suN;
@@ -248,8 +257,8 @@ function loadPrices() {
       paintCard('Pro', pm, pmN, py, pyN);
       paintCard('Setup', su, suN, su, suN);
       var slots = document.getElementById('foundingBannerSlots');
-      var strip = document.querySelector('.strip-slots');
-      var txt = rem + (lang === 'en' ? ' slots left' : ' slot kaldı');
+      var strip = document.getElementById('foundingStripSlots');
+      var txt = rem + (lang === 'en' ? ' spots remaining' : ' slot kaldı');
       if (slots) slots.textContent = txt;
       if (strip) strip.textContent = txt;
     }

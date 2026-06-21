@@ -183,7 +183,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-list li{font-size:.82rem;color:var(--muted);display:flex;align-items:flex-start;gap:.45rem}
 .p-list li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0;margin-top:.05rem}
 .p-card.hot .p-list li{color:rgba(255,255,255,.5)}
-.p-btn{display:block;text-align:center;padding:.8rem;border-radius:8px;font-size:.88rem;font-weight:600;background:var(--ink);color:#fff;transition:all .2s;border:none;cursor:pointer;font-family:inherit;width:100%}
+.p-btn{display:block;text-align:center;padding:.8rem;border-radius:8px;font-size:.88rem;font-weight:600;background:var(--ink);color:#fff;transition:all .2s;border:none;cursor:pointer;font-family:inherit;width:100%;text-decoration:none}
 .p-price s{font-size:1.2rem;color:var(--muted);font-weight:500;margin-right:.35rem;text-decoration:line-through}
 .p-card.hot .p-price s{color:rgba(255,255,255,.35)}
 .cart-fab{position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--g);color:#fff;border:none;border-radius:100px;padding:.85rem 1.25rem;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(14,14,12,.18);display:flex;align-items:center;gap:.5rem}
@@ -230,6 +230,26 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-card.hot .p-btn{background:var(--g)}
 .p-card.hot .p-btn:hover{background:var(--g2)}
 .p-note{text-align:center;margin-top:1.25rem;font-size:.78rem;color:var(--muted)}
+.p-price-label{font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem}
+.p-price-label.founding{color:var(--g2);margin-top:.5rem}
+.p-card.hot .p-price-label{color:rgba(255,255,255,.35)}
+.p-card.hot .p-price-label.founding{color:var(--g)}
+.p-price-contact{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:700;color:var(--g);line-height:1.2;margin:.35rem 0 .5rem}
+.p-card.hot .p-price-contact{color:#fff}
+.p-annual{margin-top:.65rem}
+.setup-service{margin-top:1.5rem;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.35rem 1.75rem}
+.setup-service-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.setup-service h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin:0 0 .75rem}
+.setup-service-list{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem .75rem;margin:0;padding:0}
+.setup-service-list li{font-size:.78rem;color:var(--muted);display:flex;align-items:flex-start;gap:.35rem}
+.setup-service-list li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0}
+.setup-service-side{flex-shrink:0;text-align:right;min-width:180px}
+.setup-service-prices{margin-bottom:.75rem}
+.setup-service-prices .p-price-label{text-align:right}
+.setup-service-prices .p-price{font-size:1.85rem;justify-content:flex-end;display:flex;align-items:baseline;gap:.35rem}
+.setup-service-prices .p-price s{font-size:1rem}
+.setup-service .p-btn{padding:.65rem 1.1rem;font-size:.82rem;width:auto;display:inline-block}
+@media(max-width:700px){.setup-service-list{grid-template-columns:1fr}.setup-service-side{text-align:left;width:100%}.setup-service-prices .p-price-label,.setup-service-prices .p-price{justify-content:flex-start;text-align:left}}
  
 /* ── FINAL CTA ── */
 .cta-fin{background:var(--ink);padding:7rem 0;text-align:center}
@@ -275,8 +295,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
  
 <!-- FOUNDING STRIP -->
 <div class="founding-strip">
-  <span>🏆 Kurucu Müşteri İndirimi: İlk 10 klinik için %50 indirim</span>
-  <span class="strip-slots" id="foundingStripSlots">10 slot kaldı</span>
+  <span data-tr="🏆 Kurucu Klinikler Programı" data-en="🏆 Founding Clinics Program">🏆 Kurucu Klinikler Programı</span>
+  <span class="strip-slots" id="foundingStripSlots">9 slot kaldı</span>
 </div>
  
 <!-- NAV -->
@@ -532,66 +552,110 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     <div class="reveal text-center" style="text-align:center">
       <div class="eyebrow" style="justify-content:center;display:flex" data-tr="Fiyatlandırma" data-en="Pricing">Fiyatlandırma</div>
       <h2 class="section-h" data-tr="Şeffaf. Ölçeklenebilir." data-en="Transparent. Scalable.">Şeffaf. Ölçeklenebilir.</h2>
-      <p class="section-p" style="margin:0 auto 2rem;text-align:center" data-tr="Tek seferlik klinik kurulumu opsiyoneldir. Abonelik + kurulum birlikte alındığında indirim uygulanır." data-en="One-time clinic setup is optional. Bundle subscription + setup for a discount.">Tek seferlik klinik kurulumu opsiyoneldir. Abonelik + kurulum birlikte alındığında indirim uygulanır.</p>
+      <p class="section-p" style="margin:0 auto 2rem;text-align:center" data-tr="Tüm fiyatlar USD ($) cinsindendir. Yıllık ödemede 2 ay bedava." data-en="All prices in USD ($). Save 2 months with annual billing.">Tüm fiyatlar USD ($) cinsindendir. Yıllık ödemede 2 ay bedava.</p>
     </div>
     <div class="founding-banner reveal">
-      <p>🏆 <strong data-tr="Kurucu Müşteri İndirimi" data-en="Founding Customer Discount">Kurucu Müşteri İndirimi</strong> — <span data-tr="İlk 10 klinik için tüm planlarda %50 indirim uygulanmaktadır." data-en="50% off all plans for the first 10 clinics.">İlk 10 klinik için tüm planlarda %50 indirim uygulanmaktadır.</span></p>
-      <span class="slots-badge" id="foundingBannerSlots">10 slot kaldı</span>
+      <p>🏆 <strong data-tr="Kurucu Klinikler Programı" data-en="Founding Clinics Program">Kurucu Klinikler Programı</strong> — <span data-tr="İlk 10 klinikten biri olun ve kalıcı indirimli abonelik fiyatını kilitleyin." data-en="Become one of the first 10 clinics and lock in a permanent discounted subscription price.">İlk 10 klinikten biri olun ve kalıcı indirimli abonelik fiyatını kilitleyin.</span></p>
+      <span class="slots-badge" id="foundingBannerSlots">9 slot kaldı</span>
     </div>
     <div class="price-grid reveal">
       <div class="p-card">
         <span class="p-tag" data-tr="Başlangıç" data-en="Starter">Başlangıç</span>
-        <div class="p-name" data-tr="Tek doktor, yeni başlayan klinikler" data-en="Single doctor, early-stage clinics">Tek doktor, yeni başlayan klinikler</div>
-        <div class="p-desc" data-tr="Temel modüller ve aylık 30 hasta kapasitesi" data-en="Core modules and 30 patients/month capacity">Temel modüller ve aylık 30 hasta kapasitesi</div>
-        <div class="p-price"><s id="wasStarter" style="display:none"></s><span id="nowStarter">$45</span></div>
+        <div class="p-desc" style="margin-bottom:1rem" data-tr="Tek hekimli klinikler ve sağlık turizmine yeni başlayanlar için ideal." data-en="Perfect for solo dentists and clinics starting their health tourism journey.">Tek hekimli klinikler ve sağlık turizmine yeni başlayanlar için ideal.</div>
+        <div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div>
+        <div class="p-price"><s id="wasStarter">$69</s></div>
+        <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
+        <div class="p-price"><span id="nowStarter">$45</span></div>
         <div class="p-per" data-tr="/ ay" data-en="/ month">/ ay</div>
-        <span class="p-yr" id="yrStarter">veya $450/yıl — 2 ay bedava</span>
+        <div class="p-annual">
+          <div class="p-price-label" data-tr="Yıllık" data-en="Annual">Yıllık</div>
+          <span class="p-yr" id="yrStarter"><s>$690</s> $450/year — 2 ay bedava</span>
+        </div>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="1 satışçı + 1 doktor kullanıcısı" data-en="1 sales + 1 doctor user">1 satışçı + 1 doktor kullanıcısı</li>
-          <li data-tr="Aylık 30 hasta başvurusu" data-en="30 patient submissions/month">Aylık 30 hasta başvurusu</li>
-          <li data-tr="Dashboard & satış paneli" data-en="Dashboard & sales panel">Dashboard & satış paneli</li>
-          <li data-tr="Form Builder & PDF teklif" data-en="Form Builder & PDF quote">Form Builder & PDF teklif</li>
+          <li data-tr="1 Kullanıcı" data-en="1 User">1 Kullanıcı</li>
+          <li data-tr="1 Klinik" data-en="1 Clinic">1 Klinik</li>
+          <li data-tr="50'e kadar hasta lead'i" data-en="Up to 50 Patient Leads">50'e kadar hasta lead'i</li>
+          <li data-tr="Hasta Yönetimi" data-en="Patient Management">Hasta Yönetimi</li>
+          <li data-tr="Tedavi Planlama" data-en="Treatment Planning">Tedavi Planlama</li>
+          <li data-tr="PDF Tedavi Teklifi" data-en="PDF Treatment Proposal">PDF Tedavi Teklifi</li>
+          <li data-tr="Temel Dashboard" data-en="Basic Dashboard">Temel Dashboard</li>
+          <li data-tr="E-posta Destek" data-en="Email Support">E-posta Destek</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Sepete Ekle" data-en="Add to Cart">Sepete Ekle</button>
+        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Starter ile Başla" data-en="Start with Starter">Starter ile Başla</button>
       </div>
       <div class="p-card hot">
-        <div class="hot-label" data-tr="⭐ ÖNERİLEN" data-en="⭐ RECOMMENDED">⭐ ÖNERİLEN</div>
-        <span class="p-tag" data-tr="Pro" data-en="Pro">Pro</span>
-        <div class="p-name" data-tr="Büyüyen, çok kullanıcılı klinikler" data-en="Growing, multi-user clinics">Büyüyen, çok kullanıcılı klinikler</div>
-        <div class="p-desc" data-tr="Tüm modüller, sınırsız hasta, gelişmiş raporlar" data-en="All modules, unlimited patients, advanced reports">Tüm modüller, sınırsız hasta, gelişmiş raporlar</div>
-        <div class="p-price"><s id="wasPro" style="display:none"></s><span id="nowPro">$95</span></div>
+        <div class="hot-label" data-tr="⭐ ÖNERİLEN" data-en="⭐ Recommended">⭐ ÖNERİLEN</div>
+        <span class="p-tag" data-tr="Professional" data-en="Professional">Professional</span>
+        <div class="p-desc" style="margin-bottom:1rem" data-tr="Koordinatör ve satış ekibi olan büyüyen klinikler için tasarlandı." data-en="Designed for growing clinics with dedicated coordinators and sales teams.">Koordinatör ve satış ekibi olan büyüyen klinikler için tasarlandı.</div>
+        <div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div>
+        <div class="p-price"><s id="wasPro">$119</s></div>
+        <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
+        <div class="p-price"><span id="nowPro">$79</span></div>
         <div class="p-per" data-tr="/ ay" data-en="/ month">/ ay</div>
-        <span class="p-yr" id="yrPro">veya $950/yıl — 2 ay bedava</span>
+        <div class="p-annual">
+          <div class="p-price-label" data-tr="Yıllık" data-en="Annual">Yıllık</div>
+          <span class="p-yr" id="yrPro"><s>$1,190</s> $790/year — 2 ay bedava</span>
+        </div>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="5 kullanıcı (satış, doktor, yönetici)" data-en="5 users (sales, doctor, admin)">5 kullanıcı (satış, doktor, yönetici)</li>
-          <li data-tr="Sınırsız hasta başvurusu" data-en="Unlimited patient submissions">Sınırsız hasta başvurusu</li>
-          <li data-tr="E-posta & WhatsApp Business bildirimi" data-en="Email & WhatsApp Business alerts">E-posta & WhatsApp Business bildirimi</li>
-          <li data-tr="Funnel, SLA & ekip performansı" data-en="Funnel, SLA & team performance">Funnel, SLA & ekip performansı</li>
-          <li data-tr="Kanal / ülke kırılımları" data-en="Channel & country breakdowns">Kanal / ülke kırılımları</li>
+          <li data-tr="5'e kadar Kullanıcı" data-en="Up to 5 Users">5'e kadar Kullanıcı</li>
+          <li data-tr="Sınırsız Hasta Lead'i" data-en="Unlimited Patient Leads">Sınırsız Hasta Lead'i</li>
+          <li data-tr="Satış Pipeline" data-en="Sales Pipeline">Satış Pipeline</li>
+          <li data-tr="Doktor İş Akışı" data-en="Doctor Workflow">Doktor İş Akışı</li>
+          <li data-tr="Görev Yönetimi" data-en="Task Management">Görev Yönetimi</li>
+          <li data-tr="SLA Takibi" data-en="SLA Tracking">SLA Tracking</li>
+          <li data-tr="WhatsApp Bildirimleri" data-en="WhatsApp Notifications">WhatsApp Bildirimleri</li>
+          <li data-tr="Gelişmiş Dashboard'lar" data-en="Advanced Dashboards">Gelişmiş Dashboard'lar</li>
+          <li data-tr="Performans Raporları" data-en="Performance Reports">Performans Raporları</li>
+          <li data-tr="Öncelikli Destek" data-en="Priority Support">Öncelikli Destek</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('pro')" data-tr="Sepete Ekle" data-en="Add to Cart">Sepete Ekle</button>
+        <button type="button" class="p-btn" onclick="addToCart('pro')" data-tr="Professional Seç" data-en="Choose Professional">Professional Seç</button>
       </div>
       <div class="p-card">
-        <span class="p-tag" data-tr="Kurulum" data-en="Setup">Kurulum</span>
-        <div class="p-name" data-tr="Tek seferlik klinik kurulumu" data-en="One-time clinic setup">Tek seferlik klinik kurulumu</div>
-        <div class="p-desc" data-tr="Opsiyonel hizmet" data-en="Optional service">Opsiyonel hizmet</div>
-        <div class="p-price"><s id="wasSetup" style="display:none"></s><span id="nowSetup">$100</span></div>
-        <div class="p-per" data-tr="tek seferlik" data-en="one-time">tek seferlik</div>
-        <div style="height:1.5rem"></div>
+        <span class="p-tag" data-tr="Enterprise" data-en="Enterprise">Enterprise</span>
+        <div class="p-desc" style="margin-bottom:1rem" data-tr="Çok lokasyonlu klinik grupları ve özel entegrasyon ihtiyaçları." data-en="Multi-location clinic groups and custom integration needs.">Çok lokasyonlu klinik grupları ve özel entegrasyon ihtiyaçları.</div>
+        <div class="p-price-contact" data-tr="Satış Ekibiyle İletişim" data-en="Contact Sales">Satış Ekibiyle İletişim</div>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="Klinik bilgileri & logo entegrasyonu" data-en="Clinic details & logo integration">Klinik bilgileri & logo entegrasyonu</li>
-          <li data-tr="Doktor profilleri & fotoğraflar" data-en="Doctor profiles & photos">Doktor profilleri & fotoğraflar</li>
-          <li data-tr="EN · DE dil seçeneği (form & PDF)" data-en="EN · DE language options (form & PDF)">EN · DE dil seçeneği (form & PDF)</li>
-          <li data-tr="Kullanıcı hesapları & rol ataması" data-en="User accounts & role assignment">Kullanıcı hesapları & rol ataması</li>
-          <li data-tr="Teslim süresi: 1 iş günü" data-en="Delivery: 1 business day">Teslim süresi: 1 iş günü</li>
+          <li data-tr="Sınırsız Kullanıcı" data-en="Unlimited Users">Sınırsız Kullanıcı</li>
+          <li data-tr="Birden Fazla Klinik" data-en="Multiple Clinics">Birden Fazla Klinik</li>
+          <li data-tr="Özel İş Akışları" data-en="Custom Workflows">Özel İş Akışları</li>
+          <li data-tr="API Erişimi" data-en="API Access">API Erişimi</li>
+          <li data-tr="White Label Seçenekleri" data-en="White Label Options">White Label Seçenekleri</li>
+          <li data-tr="Özel Entegrasyonlar" data-en="Custom Integrations">Özel Entegrasyonlar</li>
+          <li data-tr="Özel Onboarding" data-en="Dedicated Onboarding">Özel Onboarding</li>
+          <li data-tr="Premium Destek" data-en="Premium Support">Premium Support</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Sepete Ekle" data-en="Add to Cart">Sepete Ekle</button>
+        <a href="mailto:info@nodustrategy.com" class="p-btn" data-tr="Satış Ekibiyle İletişim" data-en="Contact Sales">Satış Ekibiyle İletişim</a>
       </div>
     </div>
-    <p class="p-note reveal" data-tr="Abonelik + Kurulum paketinde $20 indirim uygulanır. · Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin." data-en="$20 discount on Subscription + Setup bundle. · 2 months free with annual payment. · Cancel anytime.">Abonelik + Kurulum paketinde $20 indirim uygulanır. · Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin.</p>
+    <div class="setup-service reveal">
+      <div class="setup-service-inner">
+        <div class="setup-service-main">
+          <h3 data-tr="Tek Seferlik Kurulum Hizmeti" data-en="One-Time Setup Service">Tek Seferlik Kurulum Hizmeti</h3>
+          <ul class="setup-service-list">
+            <li data-tr="Klinik Yapılandırması" data-en="Clinic Configuration">Klinik Yapılandırması</li>
+            <li data-tr="Marka & Logo Kurulumu" data-en="Branding & Logo Setup">Marka & Logo Kurulumu</li>
+            <li data-tr="Doktor Profilleri" data-en="Doctor Profiles">Doktor Profilleri</li>
+            <li data-tr="PDF Şablon Yapılandırması" data-en="PDF Template Configuration">PDF Şablon Yapılandırması</li>
+            <li data-tr="Form Yapılandırması" data-en="Form Configuration">Form Yapılandırması</li>
+            <li data-tr="Kullanıcı Oluşturma" data-en="User Creation">Kullanıcı Oluşturma</li>
+            <li data-tr="İlk Eğitim" data-en="Initial Training">İlk Eğitim</li>
+          </ul>
+        </div>
+        <div class="setup-service-side">
+          <div class="setup-service-prices">
+            <div class="p-price-label" data-tr="Normal" data-en="Regular">Normal</div>
+            <div class="p-price"><s id="wasSetup">$149</s></div>
+            <div class="p-price-label founding" data-tr="Kurucu Klinikler" data-en="Founding Clinics">Kurucu Klinikler</div>
+            <div class="p-price"><span id="nowSetup">$99</span></div>
+          </div>
+          <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Kurulumu Sepete Ekle" data-en="Add Setup Service">Kurulumu Sepete Ekle</button>
+        </div>
+      </div>
+    </div>
+    <p class="p-note reveal" data-tr="Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin." data-en="Save 2 months with annual billing. · Cancel anytime.">Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin.</p>
   </div>
 </section>
  
