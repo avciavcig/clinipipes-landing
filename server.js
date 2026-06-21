@@ -22,7 +22,7 @@ const GITHUB_TOKEN=process.env.GITHUB_TOKEN||'';
 const GITHUB_REPO='avciavcig/clinipipes-landing';
 const GITHUB_BRANCH='main';
 const PAGES={'/':'index.html','/hakkimizda':'hakkimizda.html','/gizlilik':'gizlilik.html','/veri-rolu':'veri-rolu.html','/cerez-politikasi':'cerez-politikasi.html','/teslimat':'teslimat.html','/mesafeli-satis':'mesafeli-satis.html','/on-bilgilendirme':'on-bilgilendirme.html','/sss':'sss.html','/kullanim-kosullari':'kullanim-kosullari.html','/etk':'etk.html','/admin':'admin.html'};
-const EDITABLE=['index.html','hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html','content.json','legal-seller.json','demo-data.json','demo/shared.css','demo/treatment-proposal.css','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
+const EDITABLE=['index.html','hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html','content.json','legal-seller.json','scripts/legal-content.mjs','demo-data.json','demo/shared.css','demo/treatment-proposal.css','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
 const DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
 const LEGAL_PAGES=['hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
 const ANALYTICS_FILE=path.join(__dirname,'analytics.json');
@@ -469,13 +469,13 @@ http.createServer(function(req,res){
           plan:plan,
           period:period,
           items:items,
-          consents:{preInfo:!!data.consents&&!!data.consents.preInfo,agree:!!data.consents&&!!data.consents.agree,digital:!!data.consents&&!!data.consents.digital,kvkk:!!data.consents&&!!data.consents.kvkk},
+          consents:{preInfo:!!data.consents&&!!data.consents.preInfo,agree:!!data.consents&&!!data.consents.agree,terms:!!data.consents&&!!data.consents.terms,digital:!!data.consents&&!!data.consents.digital,kvkk:!!data.consents&&!!data.consents.kvkk},
           active:false,
           status:'pending_payment',
           createdAt:new Date().toISOString(),
           sourceIp:ip
         };
-        if(!order.consents.preInfo||!order.consents.agree||!order.consents.digital||!order.consents.kvkk){
+        if(!order.consents.preInfo||!order.consents.agree||!order.consents.terms||!order.consents.digital||!order.consents.kvkk){
           return jsonRes(res,400,{ok:false,error:'consents_required'},req,false);
         }
         try{ordersStore.saveOrder(order);}catch(saveErr){

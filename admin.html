@@ -116,11 +116,11 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   </div>
   <div class="card">
     <h2>&#128230; Son Sipari&#351;ler <span id="orders-mode" style="font-size:.72rem;font-weight:500;color:#888;margin-left:.5rem"></span></h2>
-    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">&#304;yzico ve clinic-portal entegrasyonu tamamlanana kadar sipari&#351;ler manuel i&#351;lenir.</p>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Portal entegrasyonu açıksa siparişler otomatik provision edilir. Onay kutuları kayıt altına alınır.</p>
     <div style="overflow-x:auto">
       <table class="recent-tbl">
-        <thead><tr><th>Tarih</th><th>Klinik</th><th>E-posta</th><th>Plan</th><th>D&#246;nem</th><th>Durum</th></tr></thead>
-        <tbody id="orders-body"><tr><td colspan="6" style="color:#aaa;padding:1rem">Y&#252;kleniyor...</td></tr></tbody>
+        <thead><tr><th>Tarih</th><th>Klinik</th><th>E-posta</th><th>Plan</th><th>D&#246;nem</th><th>Durum</th><th>Onaylar</th></tr></thead>
+        <tbody id="orders-body"><tr><td colspan="7" style="color:#aaa;padding:1rem">Y&#252;kleniyor...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -253,6 +253,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
         <option value="index.html">Ana Sayfa (index.html)</option>
         <option value="content.json">content.json</option>
         <option value="legal-seller.json">legal-seller.json (sat&#305;c&#305;)</option>
+        <option value="scripts/legal-content.mjs">scripts/legal-content.mjs (yasal &#351;ablon)</option>
         <optgroup label="Demo HTML">
           <option value="demo/dashboard.html">demo/dashboard.html</option>
           <option value="demo/sales.html">demo/sales.html</option>
@@ -294,7 +295,8 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <div class="pane" id="pane5">
   <div class="card">
     <h2>&#127970; Sat&#305;c&#305; / Veri Sorumlusu</h2>
-    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Bu bilgiler Gizlilik, Mesafeli Sat&#305;&#351;, &#214;n Bilgilendirme ve di&#287;er yasal sayfalarda kullan&#305;l&#305;r. Kaydetti&#287;inizde yasal sayfalar otomatik yeniden olu&#351;turulur.</p>
+    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Kaynak: <code>scripts/legal-content.mjs</code> + <code>legal-seller.json</code>. Sat&#305;c&#305; kayd&#305; t&#252;m yasal HTML sayfalar&#305;n&#305; yeniden olu&#351;turur — Edit&#246;r&#8217;deki elle d&#252;zenlemelerin &#252;zerine yazar.</p>
+    <div class="warn-box" style="margin-bottom:1rem">Kal&#305;c&#305; metin de&#287;i&#351;ikli&#287;i i&#231;in &#246;nce <code>scripts/legal-content.mjs</code> d&#252;zenleyin (Edit&#246;r &#8594; Legal templates), sonra Sat&#305;c&#305; kaydedin veya &#8220;Yasal sayfalar&#305; yeniden olu&#351;tur&#8221; kullan&#305;n.</div>
     <div class="g2">
       <div><label>Sat&#305;c&#305; ad&#305;</label><input type="text" id="s-name"></div>
       <div><label>&#350;irket t&#252;r&#252;</label><input type="text" id="s-type" placeholder="&#350;ah&#305;s firmas&#305;"></div>
@@ -310,7 +312,13 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <div><label>MERS&#304;S</label><input type="text" id="s-mersis"></div>
     </div>
     <button class="btn" onclick="saveSeller()" style="margin-top:1rem">&#128190; Kaydet &amp; Yasal Sayfalar&#305; G&#252;ncelle</button>
+    <button class="btn2" onclick="rebuildLegalOnly()" style="margin-top:.5rem;margin-left:.5rem">&#9851; Yasal Sayfalar&#305; Yeniden Olu&#351;tur</button>
     <div class="st" id="st-seller"></div>
+  </div>
+  <div class="card">
+    <h2>&#128196; Yasal sayfa kontrol listesi</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Canl&#305; &#246;nizleme (yeni sekme):</p>
+    <div id="legal-url-list" style="font-size:.78rem;line-height:1.8"></div>
   </div>
 </div>
 
@@ -360,6 +368,20 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     </div>
   </div>
   <div class="card">
+    <h2>&#9881; Portal &amp; demo ortam&#305;</h2>
+    <p style="font-size:.82rem;color:#666;line-height:1.6;margin-bottom:.75rem">
+      Canl&#305; demo g&#246;r&#252;nt&#252;leri: <code>CLINIPIPES_WEBHOOK_SECRET</code>, <code>CLINIC_PORTAL_URL</code>, portal taraf&#305;nda <code>DEMO_USER</code>, <code>DEMO_PASS</code>, <code>DEMO_FORM_PATH</code>.
+      Do&#287;rulama: <code>npm run check:demo-env</code> · Demo sekmesi &#8594; Env Durumu.
+    </p>
+    <button class="btn2" onclick="loadDemoCaptureStatus()">Demo env durumunu g&#246;ster</button>
+  </div>
+  <div class="card">
+    <h2>&#128231; E-posta testi</h2>
+    <p style="font-size:.82rem;color:#666;margin-bottom:.75rem">2FA ve bildirimler i&#231;in SMTP / Resend yap&#305;land&#305;rmas&#305;n&#305; test eder.</p>
+    <button class="btn2" onclick="testAdminMail()">Test e-postas&#305; g&#246;nder</button>
+    <div class="st" id="st-mail" style="margin-top:.75rem"></div>
+  </div>
+  <div class="card">
     <h2>&#128101; Oturum Bilgileri</h2>
     <p style="font-size:.88rem;color:#666;margin-bottom:.5rem">Admin URL: <code style="background:#f0f0ee;padding:.1rem .4rem;border-radius:4px">clinipipes.com/admin</code></p>
     <p style="font-size:.88rem;color:#666">G&#252;venlik: HttpOnly oturum &#231;erezi, CSRF korumas&#305;, brute-force engeli, PNG do&#287;rulama</p>
@@ -371,7 +393,7 @@ var CSRF='',TOTP_ENABLED=false,TWO_FACTOR_METHOD='email',EMAIL_MASK='';
 var origHead='',isCode=false,codeMode=false,dirty=false;
 var demoData={items:[]},faqList=[],contentVer=1;
 var DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
-var CODES=['index.html','content.json','legal-seller.json','demo-data.json','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
+var CODES=['index.html','content.json','legal-seller.json','scripts/legal-content.mjs','demo-data.json','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
 var LEGAL=['hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
 var LEGAL_CSS='*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,sans-serif;font-size:.96rem;background:#FAFAF8;color:#0E0E0C;line-height:1.75}.container{max-width:760px;margin:0 auto;padding:4rem 2rem}h1{font-size:1.9rem;margin-bottom:.4rem;font-weight:700}h2{font-size:1.05rem;font-weight:600;margin:1.8rem 0 .5rem;color:#333}p,li{margin-bottom:.75rem;color:#3D3D3A}ul{padding-left:1.4rem;margin-bottom:1rem}a{color:#1D9E75}.back{display:inline-block;margin-bottom:2rem;color:#1D9E75;text-decoration:none;font-size:.88rem}.date{color:#888;font-size:.83rem;margin-bottom:2rem;display:block}.seller-box{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin:1rem 0 1.5rem;font-size:.92rem}.q{font-weight:600;color:#0E0E0C;margin:1.5rem 0 .35rem;display:block}';
 function api(url,opts){
@@ -505,12 +527,14 @@ function renderOrders(orders, integrationEnabled){
   if(modeEl)modeEl.textContent=integrationEnabled?'(portal bağlı)':'(manuel mod)';
   var tb=document.getElementById('orders-body');
   if(!tb)return;
-  if(!orders.length){tb.innerHTML='<tr><td colspan="6" style="color:#aaa;padding:1rem">Henüz sipariş yok</td></tr>';return;}
+  if(!orders.length){tb.innerHTML='<tr><td colspan="7" style="color:#aaa;padding:1rem">Henüz sipariş yok</td></tr>';return;}
   var statusLbl={pending_payment:'Ödeme bekliyor',paid:'Ödendi',provisioned:'Hesap açıldı'};
   tb.innerHTML=orders.slice(0,50).map(function(o){
     var dt=(o.createdAt||'').replace('T',' ').slice(0,16);
     var st=statusLbl[o.status]||o.status||'?';
-    return '<tr><td>'+dt+'</td><td>'+(o.clinicName||'?')+'</td><td>'+(o.ownerEmail||'?')+'</td><td>'+(o.plan||'?')+'</td><td>'+(o.period||'?')+'</td><td>'+st+'</td></tr>';
+    var c=o.consents||{};
+    var cons='Ön:'+(c.preInfo?'✓':'✗')+' Koşul:'+(c.terms?'✓':'✗')+' KVKK:'+(c.kvkk?'✓':'✗');
+    return '<tr><td>'+dt+'</td><td>'+(o.clinicName||'?')+'</td><td>'+(o.ownerEmail||'?')+'</td><td>'+(o.plan||'?')+'</td><td>'+(o.period||'?')+'</td><td>'+st+'</td><td style="font-size:.72rem">'+cons+'</td></tr>';
   }).join('');
 }
 
@@ -684,6 +708,27 @@ function saveSeller(){
     .then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Kaydedildi + yasal sayfalar guncellendi':'Kaydedildi ama yeniden olusturma basarisiz';})
     .catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
+function rebuildLegalOnly(){
+  var el=document.getElementById('st-seller');el.style.display='block';el.style.background='#fffbe0';el.textContent='Yasal sayfalar olusturuluyor...';
+  api('/api/rebuild-legal',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
+    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'10 yasal sayfa yeniden olusturuldu':'Hata: '+(r.error||'?');
+  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
+function renderLegalUrlList(){
+  var box=document.getElementById('legal-url-list');if(!box)return;
+  var paths={'hakkimizda.html':'/hakkimizda','gizlilik.html':'/gizlilik','veri-rolu.html':'/veri-rolu','cerez-politikasi.html':'/cerez-politikasi','teslimat.html':'/teslimat','mesafeli-satis.html':'/mesafeli-satis','on-bilgilendirme.html':'/on-bilgilendirme','sss.html':'/sss','kullanim-kosullari.html':'/kullanim-kosullari','etk.html':'/etk'};
+  var titles={'hakkimizda.html':'Hakkımızda','gizlilik.html':'KVKK','veri-rolu.html':'Veri Koruma','cerez-politikasi.html':'Çerez','teslimat.html':'Teslimat','mesafeli-satis.html':'Mesafeli Satış','on-bilgilendirme.html':'Ön Bilgilendirme','sss.html':'SSS','kullanim-kosullari.html':'Koşullar','etk.html':'ETK'};
+  box.innerHTML=LEGAL.map(function(f){
+    var path=paths[f]||('/'+f.replace('.html',''));
+    return '<div><a href="'+path+'" target="_blank" rel="noopener">'+path+'</a> — '+(titles[f]||f)+'</div>';
+  }).join('');
+}
+function testAdminMail(){
+  var el=document.getElementById('st-mail');el.style.display='block';el.style.background='#fffbe0';el.textContent='Gonderiliyor...';
+  api('/api/admin/mail-test',{method:'POST'}).then(function(r){return r.json();}).then(function(r){
+    el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.ok?'Test e-postasi gonderildi':('Hata: '+(r.error||r.message||'?'));
+  }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
+}
 
 /* ── Pane 6: Profil ── */
 function savePw(){var p0=document.getElementById('pw0').value,p1=document.getElementById('pw1').value,p2=document.getElementById('pw2').value,el=document.getElementById('st-pw');el.style.display='block';if(p1!==p2){el.style.background='#fee';el.textContent='Şifreler eşleşmiyor';return;}if(p1.length<8){el.style.background='#fee';el.textContent='En az 8 karakter';return;}el.style.background='#fffbe0';el.textContent='Kaydediliyor...';var body={currentPassword:p0,newKey:p1};if(TOTP_ENABLED)body.totp=document.getElementById('pw-totp').value.trim();api('/api/update-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(r){if(r.ok){el.style.background='#e0fce8';el.textContent='Şifre güncellendi.';document.getElementById('pw0').value='';document.getElementById('pw1').value='';document.getElementById('pw2').value='';document.getElementById('pw-totp').value='';}else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');}}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
@@ -725,6 +770,7 @@ fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(fu
 }).catch(function(){buildDemoGrid();renderFaq();});
 loadSeller();
 loadDemoDataAdmin();
+renderLegalUrlList();
 loadDashboard();
 loadFile();
 }
