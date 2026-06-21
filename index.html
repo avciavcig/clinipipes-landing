@@ -138,10 +138,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .demo-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:0}
 .demo-tab{padding:.6rem 1.1rem;font-size:.82rem;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
 .demo-tab.on{color:#fff;border-bottom-color:var(--g)}
-.demo-frame{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;min-height:420px}
-.demo-panel{display:none;background:#fff}
+.demo-frame{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;aspect-ratio:16/10;max-height:min(540px,56vw);background:#F8FAFC}
+.demo-panel{display:none;height:100%}
 .demo-panel.on{display:block}
-.demo-panel img{width:100%;display:block;border:0;background:#fff}
+.demo-panel img{width:100%;height:100%;display:block;border:0;background:#F8FAFC;object-fit:cover;object-position:top center}
 .demo-cap{padding:.85rem 1.25rem;font-size:.78rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.15)}
  
 /* ── FAQ ── */
@@ -466,23 +466,23 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     </div>
     <div class="demo-frame reveal">
       <div class="demo-panel on" data-demo="dashboard">
-        <img src="/demo/dashboard.png?v=9" alt="CliniPipes Dashboard" loading="lazy">
+        <img src="/demo/dashboard.png?v=10" alt="CliniPipes Dashboard" loading="lazy">
         <div class="demo-cap" data-tr="Yönetici dashboard — funnel, SLA, KPI ve operasyon uyarıları tek ekranda." data-en="Owner dashboard — funnel, SLA, KPIs and operational alerts in one view.">Yönetici dashboard — funnel, SLA, KPI ve operasyon uyarıları tek ekranda.</div>
       </div>
       <div class="demo-panel" data-demo="sales">
-        <img src="/demo/sales.png?v=9" alt="Satış Pipeline" loading="lazy">
+        <img src="/demo/sales.png?v=10" alt="Satış Pipeline" loading="lazy">
         <div class="demo-cap" data-tr="Lead Akışı — kanban görünümü, hasta durumu ve sorumlu takibi." data-en="Lead pipeline — kanban view, patient status and ownership tracking.">Lead Akışı — kanban görünümü, hasta durumu ve sorumlu takibi.</div>
       </div>
       <div class="demo-panel" data-demo="form">
-        <img src="/demo/form.png?v=9" alt="Hasta Formu" loading="lazy">
+        <img src="/demo/form.png?v=10" alt="Hasta Formu" loading="lazy">
         <div class="demo-cap" data-tr="Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme." data-en="Branded patient form — English, KVKK/GDPR consent and photo upload.">Markalı hasta formu — İngilizce, KVKK/GDPR onayı ve fotoğraf yükleme.</div>
       </div>
       <div class="demo-panel" data-demo="doctor">
-        <img src="/demo/doctor.png?v=9" alt="Doktor Paneli" loading="lazy">
+        <img src="/demo/doctor.png?v=10" alt="Doktor Paneli" loading="lazy">
         <div class="demo-cap" data-tr="Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda." data-en="Doctor panel — clinical assessment, treatment plan and patient images in one view.">Doktor paneli — klinik değerlendirme, tedavi planı ve hasta görselleri tek ekranda.</div>
       </div>
       <div class="demo-panel" data-demo="pdf">
-        <img src="/demo/pdf.png?v=9" alt="PDF Teklif" loading="lazy">
+        <img src="/demo/pdf.png?v=10" alt="PDF Teklif" loading="lazy">
         <div class="demo-cap" data-tr="Çok sayfalı tedavi teklifi — doktor mektubu, klinik plan, seyahat paketi ve yatırım özeti." data-en="Multi-page treatment proposal — doctor letter, clinical plan, travel package and investment summary.">Çok sayfalı tedavi teklifi — doktor mektubu, klinik plan, seyahat paketi ve yatırım özeti.</div>
       </div>
     </div>

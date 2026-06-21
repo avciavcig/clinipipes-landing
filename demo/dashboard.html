@@ -2,73 +2,53 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=1440, height=900">
 <title>CliniPipes — Yönetim Paneli</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--font:'Inter',-apple-system,sans-serif;--text:#111827;--text-secondary:#6B7280;--text-muted:#9CA3AF;--border:#E5E7EB;--bg-page:#F8FAFC;--bg-card:#fff;--header-bg:#111827;--focus:#2563EB;--shadow-sm:0 1px 3px rgba(0,0,0,.06);--radius:10px;--radius-sm:8px}
-*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg-page);color:var(--text);font-size:14px;line-height:1.5}
-.topbar{background:var(--header-bg);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between}
-.topbar h1{margin:0;font-size:15px;font-weight:600}.topbar nav{display:flex;gap:4px}
-.topbar nav a{color:#9CA3AF;text-decoration:none;font-size:13px;font-weight:500;padding:6px 10px;border-radius:6px}
-.topbar nav a.nav-active{color:#fff;background:rgba(255,255,255,.08)}
-.topbar-user{font-size:13px;color:#D1D5DB;padding-right:12px;border-right:1px solid #374151;margin-right:4px}
-.topbar-right{display:flex;align-items:center}
-.dash-wrap{max-width:1280px;margin:0 auto;padding:28px 32px 48px}
-.dash-header{margin-bottom:24px}.dash-header h2{margin:0 0 4px;font-size:20px;font-weight:700}.dash-header p{margin:0;color:var(--text-secondary);font-size:14px}
-.dash-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-.dash-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;box-shadow:var(--shadow-sm);border-left:4px solid var(--border)}
-.dash-card .kpi-num{font-size:28px;font-weight:700;line-height:1.1}.dash-card .kpi-label{font-size:12px;color:var(--text-secondary);margin-top:6px;font-weight:500}
-.dash-card[data-accent="amber"]{border-left-color:#F59E0B}.dash-card[data-accent="green"]{border-left-color:#16A34A}.dash-card[data-accent="blue"]{border-left-color:#2563EB}
-.dash-card[data-accent="teal"]{border-left-color:#0891B2}.dash-card[data-accent="purple"]{border-left-color:#7C3AED}.dash-card[data-accent="followup"]{border-left-color:#EA580C}
-.dash-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);margin-bottom:16px}
-.dash-panel h3{margin:0 0 14px;font-size:14px;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:10px}
-.funnel-step{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center}
-.funnel-step:last-child{border-bottom:none}.funnel-count{font-weight:700;text-align:right}.funnel-pct,.funnel-drop{color:var(--text-secondary);font-size:12px;text-align:right}
-.info-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.9rem;color:#1e3a8a}
-.info-banner a{color:#1d4ed8;font-weight:600;text-decoration:none}
-</style>
+<link rel="stylesheet" href="/demo/shared.css">
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-brand"><h1>CliniPipes</h1></div>
-  <div class="topbar-right">
-    <span class="topbar-user">Dentavera Owner</span>
-    <nav>
-      <a href="#" class="nav-active">Yönetim Paneli</a>
-      <a href="#">Doktor</a>
-      <a href="#">Satış</a>
-      <a href="#">Hasta Yolculuğu</a>
-      <a href="#">Ekip Performansı</a>
-      <a href="#">Kullanıcılar</a>
-      <a href="#">Form</a>
-      <a href="#">Form Linki</a>
-      <a href="#">Kurulum</a>
-      <a href="#">Rehber</a>
-      <a href="#">Çıkış</a>
-    </nav>
+<div class="demo-app">
+  <div class="topbar">
+    <div class="topbar-brand"><h1>CliniPipes</h1></div>
+    <div class="topbar-right">
+      <span class="topbar-user">Dentavera Owner</span>
+      <nav>
+        <a href="#" class="nav-active">Yönetim Paneli</a>
+        <a href="#">Doktor</a>
+        <a href="#">Satış</a>
+        <a href="#">Hasta Yolculuğu</a>
+        <a href="#">Ekip Performansı</a>
+        <a href="#">Kullanıcılar</a>
+        <a href="#">Form</a>
+        <a href="#">Kurulum</a>
+        <a href="#">Çıkış</a>
+      </nav>
+    </div>
   </div>
-</div>
-<div class="dash-wrap">
-  <div class="dash-header"><h2>Yönetim Paneli</h2><p>Operasyon optimizasyonu ve karar desteği</p></div>
-  <div class="info-banner">Kurulum ve bildirim ayarları için <a href="#">Kurulum Rehberi</a> sayfasını takip edin.</div>
-  <div class="dash-grid-4">
-    <div class="dash-card" data-accent="amber"><div class="kpi-num">24</div><div class="kpi-label">Bu Ay Lead</div></div>
-    <div class="dash-card" data-accent="green"><div class="kpi-num">8</div><div class="kpi-label">Onaylanan Hasta</div></div>
-    <div class="dash-card" data-accent="blue"><div class="kpi-num">33%</div><div class="kpi-label">Lead → Satış %</div></div>
-    <div class="dash-card" data-accent="blue"><div class="kpi-num">€142.500</div><div class="kpi-label">Toplam Teklif Hacmi</div></div>
-    <div class="dash-card" data-accent="green"><div class="kpi-num">€68.400</div><div class="kpi-label">Onaylanan Tedavi Hacmi</div></div>
-    <div class="dash-card" data-accent="teal"><div class="kpi-num">€8.550</div><div class="kpi-label">Ortalama Vaka Değeri</div></div>
-    <div class="dash-card" data-accent="purple"><div class="kpi-num">91%</div><div class="kpi-label">SLA Uyum Oranı</div></div>
-    <div class="dash-card" data-accent="followup"><div class="kpi-num">42 dk</div><div class="kpi-label">Ort. İlk Temas Süresi</div></div>
-  </div>
-  <div class="dash-panel">
-    <h3>Lead Funnel</h3>
-    <div class="funnel-step"><span>Lead</span><span class="funnel-count">24</span><span class="funnel-pct">—</span><span class="funnel-drop">Toplam: 100%</span></div>
-    <div class="funnel-step"><span>Değerlendirme</span><span class="funnel-count">18</span><span class="funnel-pct">Önceki: 75%</span><span class="funnel-drop">Toplam: 75%</span></div>
-    <div class="funnel-step"><span>Plan Hazır</span><span class="funnel-count">14</span><span class="funnel-pct">Önceki: 78%</span><span class="funnel-drop">Toplam: 58%</span></div>
-    <div class="funnel-step"><span>Teklif Verildi</span><span class="funnel-count">11</span><span class="funnel-pct">Önceki: 79%</span><span class="funnel-drop">Toplam: 46%</span></div>
-    <div class="funnel-step"><span>Onaylandı</span><span class="funnel-count">8</span><span class="funnel-pct">Önceki: 73%</span><span class="funnel-drop">Toplam: 33%</span></div>
+  <div class="demo-body">
+    <div class="dash-wrap">
+      <div class="dash-header"><h2>Yönetim Paneli</h2><p>Operasyon optimizasyonu ve karar desteği</p></div>
+      <div class="info-banner">Kurulum ve bildirim ayarları için <a href="#">Kurulum Rehberi</a> sayfasını takip edin.</div>
+      <div class="dash-grid-4">
+        <div class="dash-card" data-accent="amber"><div class="kpi-num">24</div><div class="kpi-label">Bu Ay Lead</div></div>
+        <div class="dash-card" data-accent="green"><div class="kpi-num">8</div><div class="kpi-label">Onaylanan Hasta</div></div>
+        <div class="dash-card" data-accent="blue"><div class="kpi-num">33%</div><div class="kpi-label">Lead → Satış %</div></div>
+        <div class="dash-card" data-accent="blue"><div class="kpi-num">€142.500</div><div class="kpi-label">Toplam Teklif Hacmi</div></div>
+        <div class="dash-card" data-accent="green"><div class="kpi-num">€68.400</div><div class="kpi-label">Onaylanan Tedavi Hacmi</div></div>
+        <div class="dash-card" data-accent="teal"><div class="kpi-num">€8.550</div><div class="kpi-label">Ortalama Vaka Değeri</div></div>
+        <div class="dash-card" data-accent="purple"><div class="kpi-num">91%</div><div class="kpi-label">SLA Uyum Oranı</div></div>
+        <div class="dash-card" data-accent="followup"><div class="kpi-num">42 dk</div><div class="kpi-label">Ort. İlk Temas Süresi</div></div>
+      </div>
+      <div class="dash-panel">
+        <h3>Lead Funnel</h3>
+        <div class="funnel-step"><span>Lead</span><span class="funnel-count">24</span><span class="funnel-pct">—</span><span class="funnel-drop">Toplam: 100%</span></div>
+        <div class="funnel-step"><span>Değerlendirme</span><span class="funnel-count">18</span><span class="funnel-pct">Önceki: 75%</span><span class="funnel-drop">Toplam: 75%</span></div>
+        <div class="funnel-step"><span>Plan Hazır</span><span class="funnel-count">14</span><span class="funnel-pct">Önceki: 78%</span><span class="funnel-drop">Toplam: 58%</span></div>
+        <div class="funnel-step"><span>Teklif Verildi</span><span class="funnel-count">11</span><span class="funnel-pct">Önceki: 79%</span><span class="funnel-drop">Toplam: 46%</span></div>
+        <div class="funnel-step"><span>Onaylandı</span><span class="funnel-count">8</span><span class="funnel-pct">Önceki: 73%</span><span class="funnel-drop">Toplam: 33%</span></div>
+      </div>
+    </div>
   </div>
 </div>
 <script>window.DEMO_PAGE='dashboard';</script>
