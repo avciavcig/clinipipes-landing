@@ -759,11 +759,12 @@ http.createServer(function(req,res){
   }
   fs.readFile(path.join(__dirname,file),function(err,data){
     if(err){auth.setSecurityHeaders(res);res.writeHead(404);res.end('Not found');return;}
-    if(LEGAL_PAGES.includes(file)){
+    if(LEGAL_PAGES.includes(file)||file==='index.html'){
       import('./lib/legal-seller.mjs').then(function(mod){
         try{
           var S=mod.loadLegalSeller(__dirname);
-          var html=mod.applyLegalHtml(data.toString('utf8'),S);
+          var raw=data.toString('utf8');
+          var html=file==='index.html'?mod.applyIndexContact(raw,S):mod.applyLegalHtml(raw,S);
           htmlRes(res,200,html,req,false);
         }catch(e){
           htmlRes(res,200,data,req,false);

@@ -236,12 +236,28 @@ function paintCard(id, listM, nowM, listY, nowY) {
   }
 }
 
+function openMailClient(email) {
+  email = String(email || '').trim();
+  if (!email) return;
+  var url = 'mailto:' + email;
+  try {
+    window.location.href = url;
+  } catch (e) {
+    var a = document.createElement('a');
+    a.href = url;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+}
+
 function applyContactEmail(email) {
   email = String(email || '').trim();
   if (!email) return;
   contactEmail = email;
   document.querySelectorAll('[data-contact-mail]').forEach(function (el) {
-    el.href = 'mailto:' + email;
+    el.setAttribute('href', 'mailto:' + email);
   });
   var footer = document.getElementById('footerSupportLink');
   if (footer) {
@@ -253,7 +269,24 @@ function applyContactEmail(email) {
   }
 }
 
+function initContactMailLinks() {
+  document.querySelectorAll('[data-contact-mail]').forEach(function (el) {
+    if (el.dataset.contactBound) return;
+    el.dataset.contactBound = '1';
+    el.addEventListener('click', function (e) {
+      var href = el.getAttribute('href') || '';
+      if (/^mailto:[^#]+/i.test(href)) return;
+      var mail = contactEmail || (href.match(/^mailto:(.+)$/i) || [])[1] || '';
+      mail = String(mail).trim();
+      if (!mail) return;
+      e.preventDefault();
+      openMailClient(mail);
+    });
+  });
+}
+
 function loadContactEmail() {
+  initContactMailLinks();
   fetch('/legal-seller.json?t=' + Date.now()).then(function (r) { return r.json(); }).then(function (s) {
     if (s && s.email) applyContactEmail(s.email);
   }).catch(function () {});
@@ -495,6 +528,7 @@ document.querySelectorAll('.reveal').forEach(function (el) {
 
 document.addEventListener('DOMContentLoaded', function () {
   renderCart();
+  initContactMailLinks();
   loadContactEmail();
   loadPrices();
   refreshCheckoutToken();
