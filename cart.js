@@ -1,4 +1,4 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, foundingActive = false, checkoutToken = '';
+var lang = 'tr', period = 'monthly', BUNDLE = 20, foundingActive = false, checkoutToken = '', contactEmail = '';
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
   pro: { monthly: 79, yearly: 790, recurring: true, tr: 'Professional Plan', en: 'Professional Plan' },
@@ -8,6 +8,23 @@ var cart = { starter: false, pro: false, setup: false };
 
 function t(tr, en) { return lang === 'en' ? en : tr; }
 function eur(n) { return '$' + n; }
+
+function applyContactEmail(email) {
+  if (!email) return;
+  contactEmail = email;
+  var mailto = 'mailto:' + email;
+  document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+    a.href = mailto;
+    var tr = a.getAttribute('data-tr') || '';
+    if (tr.indexOf('Destek:') === 0 || tr.indexOf('Support:') === 0) {
+      var trTxt = 'Destek: ' + email;
+      var enTxt = 'Support: ' + email;
+      a.setAttribute('data-tr', trTxt);
+      a.setAttribute('data-en', enTxt);
+      a.textContent = lang === 'en' ? enTxt : trTxt;
+    }
+  });
+}
 
 function toggleLang() {
   lang = lang === 'tr' ? 'en' : 'tr';
@@ -280,6 +297,8 @@ function loadPrices() {
     }
     if (c.demo) applyDemo(c.demo);
     if (c.landing) applyLanding(c.landing);
+    if (c.contact && c.contact.email) applyContactEmail(c.contact.email);
+    else if (contactEmail) applyContactEmail(contactEmail);
     loadDemoData();
   }).catch(function () { loadDemoData(); });
 }

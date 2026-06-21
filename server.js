@@ -566,8 +566,18 @@ http.createServer(function(req,res){
   }
 
   if(url==='/content.json'){
-    try{const d=fs.readFileSync(path.join(__dirname,'content.json'));auth.setSecurityHeaders(res);res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-cache'});res.end(d);}
-    catch(e){auth.setSecurityHeaders(res);res.writeHead(200,{'Content-Type':'application/json'});res.end('{}');}return;
+    try{
+      var payload=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));
+      try{
+        var seller=JSON.parse(fs.readFileSync(path.join(__dirname,'legal-seller.json'),'utf-8'));
+        var sellerEmail=String(seller.email||'').trim();
+        if(sellerEmail)payload.contact={email:sellerEmail};
+      }catch(e){}
+      auth.setSecurityHeaders(res);
+      res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-cache'});
+      res.end(JSON.stringify(payload));
+    }catch(e){auth.setSecurityHeaders(res);res.writeHead(200,{'Content-Type':'application/json'});res.end('{}');}
+    return;
   }
   if(url==='/demo-data.json'){
     try{const d=fs.readFileSync(path.join(__dirname,'demo-data.json'));auth.setSecurityHeaders(res);res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-cache'});res.end(d);}
