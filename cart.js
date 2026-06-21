@@ -128,6 +128,7 @@ function openCheckout() {
   document.getElementById('coPreInfo').checked = false;
   document.getElementById('coDigital').checked = false;
   document.getElementById('coKvkk').checked = false;
+  document.getElementById('coTerms').checked = false;
   updateCheckoutConfirm();
   closeCart();
   document.getElementById('coOverlay').classList.add('open');
@@ -137,6 +138,7 @@ function openCheckout() {
 function updateCheckoutConfirm() {
   var ok = document.getElementById('coPreInfo').checked
     && document.getElementById('coAgree').checked
+    && document.getElementById('coTerms').checked
     && document.getElementById('coDigital').checked
     && document.getElementById('coKvkk').checked;
   document.getElementById('coConfirm').disabled = !ok;
@@ -174,6 +176,7 @@ function confirmPurchase() {
       consents: {
         preInfo: document.getElementById('coPreInfo').checked,
         agree: document.getElementById('coAgree').checked,
+        terms: document.getElementById('coTerms').checked,
         digital: document.getElementById('coDigital').checked,
         kvkk: document.getElementById('coKvkk').checked
       }

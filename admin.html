@@ -241,6 +241,8 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
       <select id="fname" onchange="loadFile()" style="width:auto;min-width:250px">
         <option value="hakkimizda.html">Hakk&#305;m&#305;zda</option>
         <option value="gizlilik.html">Gizlilik / KVKK</option>
+        <option value="veri-rolu.html">Veri Koruma / Rol Ayr&#305;m&#305;</option>
+        <option value="cerez-politikasi.html">&#199;erez Politikas&#305;</option>
         <option value="teslimat.html">Teslimat ve &#304;ade</option>
         <option value="mesafeli-satis.html">Mesafeli Sat&#305;&#351; S&#246;zle&#351;mesi</option>
         <option value="on-bilgilendirme.html">&#214;n Bilgilendirme Formu</option>
@@ -369,7 +371,7 @@ var origHead='',isCode=false,codeMode=false,dirty=false;
 var demoData={items:[]},faqList=[],contentVer=1;
 var DEMO_IDS=['dashboard','sales','form','pdf','doctor'];
 var CODES=['index.html','content.json','legal-seller.json','demo-data.json','demo/dashboard.html','demo/sales.html','demo/form.html','demo/doctor.html','demo/pdf.html'];
-var LEGAL=['hakkimizda.html','gizlilik.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
+var LEGAL=['hakkimizda.html','gizlilik.html','veri-rolu.html','cerez-politikasi.html','teslimat.html','mesafeli-satis.html','on-bilgilendirme.html','sss.html','kullanim-kosullari.html','etk.html'];
 var LEGAL_CSS='*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,sans-serif;font-size:.96rem;background:#FAFAF8;color:#0E0E0C;line-height:1.75}.container{max-width:760px;margin:0 auto;padding:4rem 2rem}h1{font-size:1.9rem;margin-bottom:.4rem;font-weight:700}h2{font-size:1.05rem;font-weight:600;margin:1.8rem 0 .5rem;color:#333}p,li{margin-bottom:.75rem;color:#3D3D3A}ul{padding-left:1.4rem;margin-bottom:1rem}a{color:#1D9E75}.back{display:inline-block;margin-bottom:2rem;color:#1D9E75;text-decoration:none;font-size:.88rem}.date{color:#888;font-size:.83rem;margin-bottom:2rem;display:block}.seller-box{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin:1rem 0 1.5rem;font-size:.92rem}.q{font-weight:600;color:#0E0E0C;margin:1.5rem 0 .35rem;display:block}';
 function api(url,opts){
   opts=opts||{};opts.credentials='include';
@@ -457,7 +459,7 @@ function disable2fa(){
     }).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+title+' — CliniPipes</title><style>'+LEGAL_CSS+'</style></head><body><div class="container">'+body+'</div></body></html>';}
-function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
+function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','veri-rolu.html':'Veri Koruma ve Rol Ayr\u0131m\u0131','cerez-politikasi.html':'\u00c7erez Politikas\u0131','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
 function syncYearly(){
   var sm=+document.getElementById('p-sm').value||0,smf=+document.getElementById('p-sm-f').value||0;
   var pm=+document.getElementById('p-pm').value||0,pmf=+document.getElementById('p-pm-f').value||0;
