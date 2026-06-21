@@ -24,7 +24,7 @@ async function main() {
     { url: '/demo/sales.html', file: 'sales.png', fullPage: false },
     { url: '/demo/doctor.html', file: 'doctor.png', fullPage: false },
     { url: '/demo/form.html', file: 'form.png', fullPage: true, viewport: { width: 820, height: 900 } },
-    { url: '/demo/pdf.html', file: 'pdf.png', fullPage: true, viewport: { width: 920, height: 1100 } },
+    { url: '/demo/pdf.html', file: 'pdf.png', fullPage: true, viewport: { width: 820, height: 900 } },
   ];
 
   for (const p of pages) {

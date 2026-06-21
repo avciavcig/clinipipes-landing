@@ -2,86 +2,245 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Treatment Plan</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#2c2c2c;background:#f3f4f6;padding:24px}
-.document{max-width:794px;margin:0 auto;background:#fff;padding:32px 36px;box-shadow:0 2px 16px rgba(0,0,0,.08);border-radius:4px}
-.header{text-align:center;margin-bottom:28px;padding-bottom:20px;border-bottom:3px solid #2563eb}
-.header h1{font-size:24px;color:#1e40af;letter-spacing:.5px}
-.header p{color:#64748b;font-size:12px;margin-top:4px}
-.badge{display:inline-block;background:#2563eb;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-top:8px}
-.section{margin-bottom:22px}
-.section-title{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;padding:9px 16px;font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;border-radius:4px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.info-item{display:flex;gap:8px;padding:7px 10px;border-bottom:1px solid #f1f5f9;align-items:flex-start}
-.info-item:nth-child(odd){background:#fafbfc}
-.info-label{color:#64748b;font-size:11px;min-width:110px;flex-shrink:0;font-weight:600}
-.info-value{color:#1e293b;font-weight:500;word-break:break-word}
-.price-box{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;text-align:center;padding:22px;font-size:28px;font-weight:bold;border-radius:6px;letter-spacing:1px}
-.price-sub{font-size:12px;opacity:.8;margin-top:4px}
-.doctor-row{display:flex;gap:16px;align-items:flex-start;margin-top:8px}
-.doctor-row img{width:80px;height:80px;object-fit:cover;border-radius:50%;border:3px solid #2563eb;flex-shrink:0}
-.text-block{font-size:12px;line-height:1.7;color:#475569;padding:2px 10px}
-.footer{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #e2e8f0;font-size:11px;color:#94a3b8}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treatment Proposal — James Mitchell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/demo/treatment-proposal.css">
 </head>
 <body>
-<div class="document">
-  <div class="header">
-    <h1>Dentavera Dental Clinic</h1>
-    <p>İzmir, Turkey · +90 530 300 00 00</p>
-    <span class="badge">Treatment Plan &mdash; 06/06/2026</span>
-  </div>
-  <div class="section">
-    <div class="section-title">Patient Information</div>
-    <div class="info-grid">
-      <div class="info-item"><span class="info-label">Full Name</span><span class="info-value">James Mitchell</span></div>
-      <div class="info-item"><span class="info-label">Age</span><span class="info-value">42</span></div>
-      <div class="info-item"><span class="info-label">Country</span><span class="info-value">United Kingdom</span></div>
-      <div class="info-item"><span class="info-label">Treatment</span><span class="info-value">Hollywood Smile</span></div>
-      <div class="info-item"><span class="info-label">Preferred Date</span><span class="info-value">September 2026</span></div>
-      <div class="info-item"><span class="info-label">Channel</span><span class="info-value">Instagram</span></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-title">Doctor Assessment</div>
-    <div class="info-grid">
-      <div class="info-item" style="grid-column:1/-1"><span class="info-label">Clinical Assessment</span><span class="info-value">Patient suitable for full-arch aesthetic rehabilitation.</span></div>
-      <div class="info-item" style="grid-column:1/-1"><span class="info-label">Recommended Treatment</span><span class="info-value">20 zirconium crowns, whitening protocol</span></div>
-      <div class="info-item"><span class="info-label">Duration</span><span class="info-value">5 days in clinic</span></div>
-      <div class="info-item"><span class="info-label">Included</span><span class="info-value">Transfer, hotel, follow-up</span></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-title">Price Offer</div>
-    <div class="price-box">€6.500<div class="price-sub">All inclusive treatment price</div></div>
-  </div>
-  <div class="section">
-    <div class="section-title">Accommodation & Travel</div>
-    <div class="info-grid">
-      <div class="info-item"><span class="info-label">Hotel</span><span class="info-value">Swissôtel Büyük Efes</span></div>
-      <div class="info-item"><span class="info-label">Language</span><span class="info-value">English</span></div>
-      <div class="info-item"><span class="info-label">Check-In</span><span class="info-value">15 Sep 2026</span></div>
-      <div class="info-item"><span class="info-label">Check-Out</span><span class="info-value">20 Sep 2026</span></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-title">About the Clinic</div>
-    <div class="text-block" style="margin-bottom:10px;">Modern dental clinic for international patients.</div>
-  </div>
-  <div class="section">
-    <div class="section-title">Your Doctor</div>
-    <div class="doctor-row">
-      <div style="width:80px;height:80px;border-radius:50%;border:3px solid #2563eb;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">👨‍⚕️</div>
-      <div>
-        <strong style="font-size:14px;color:#1e293b;">Mehmet Kaan ERSOY</strong> <span style="color:#2563eb;font-size:12px;">&mdash; Diş Hekimi</span><br>
-        <span class="text-block" style="padding:0;">Implantology and aesthetic dentistry specialist.</span>
+
+<div class="proposal">
+
+  <!-- Page 1 -->
+  <div class="tp-page">
+    <section class="tp-hero tp-section">
+      <div class="tp-hero-top">
+        <div><span class="tp-logo-text">Dentavera</span></div>
+        <div class="tp-hero-meta">
+          <strong id="pdf-clinic">Dentavera Dental Clinic</strong>
+          18 June 2026
+        </div>
       </div>
-    </div>
+      <h1 class="tp-hero-title">Personalized Treatment Proposal</h1>
+      <p class="tp-hero-sub" id="pdf-patient">James Mitchell · United Kingdom</p>
+      <p class="tp-hero-sub" style="margin-bottom:14px;">Mehmet Kaan ERSOY · Dentist</p>
+      <p class="tp-hero-sub" style="font-size:12px;color:var(--tp-primary);font-weight:600;">Hollywood Smile · 20 Zirconium Crowns</p>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Doctor's Recommendation</h2>
+      <div class="tp-recommendation">
+        <div class="tp-doctor-portrait-empty">👨‍⚕️</div>
+        <div>
+          <div class="tp-letter">Dear James,
+
+After reviewing your clinical photos and health history, I recommend a full-arch aesthetic rehabilitation with 20 zirconium crowns. Your periodontal status is stable and you are an excellent candidate for a 5-day in-clinic protocol.
+
+We will prepare the upper and lower arches in two sessions, with temporary prosthetics between visits. Final zirconium restorations will deliver a natural, durable Hollywood Smile result.
+
+I look forward to welcoming you to our clinic in Izmir.</div>
+          <div class="tp-signature">
+            Mehmet Kaan ERSOY
+            <span>Dentist · Implantology & Aesthetic Dentistry</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Why This Treatment</h2>
+      <div class="tp-why-grid">
+        <div class="tp-why-card">
+          <h4>Problem</h4>
+          <p>Discoloured and misaligned anterior teeth affecting smile aesthetics and patient confidence.</p>
+        </div>
+        <div class="tp-why-arrow">↓</div>
+        <div class="tp-why-card">
+          <h4>Solution</h4>
+          <p>20 premium zirconium crowns with digital smile design and whitening protocol.</p>
+        </div>
+        <div class="tp-why-arrow">↓</div>
+        <div class="tp-why-card">
+          <h4>Expected Result</h4>
+          <ul>
+            <li>Harmonious, bright smile line</li>
+            <li>Natural translucency &amp; durability</li>
+            <li>5-day structured treatment plan</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Before / Clinical Records</h2>
+      <div class="tp-gallery">
+        <div class="tp-gallery-item">
+          <div class="tp-gallery-placeholder">📷</div>
+          <div class="tp-gallery-caption">Front smile — before</div>
+        </div>
+        <div class="tp-gallery-item">
+          <div class="tp-gallery-placeholder">📷</div>
+          <div class="tp-gallery-caption">Upper arch — clinical</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Treatment Summary</h2>
+      <div class="tp-clinical-grid tp-summary-grid">
+        <div class="tp-clinical-card"><div class="label">Main Treatment</div><div class="value">20 Zirconium Crowns</div></div>
+        <div class="tp-clinical-card"><div class="label">Duration</div><div class="value">5 days in clinic</div></div>
+        <div class="tp-clinical-card"><div class="label">Sessions</div><div class="value">2 clinical visits</div></div>
+        <div class="tp-clinical-card"><div class="label">Language</div><div class="value">English</div></div>
+      </div>
+    </section>
   </div>
-  <div class="footer">Dentavera Dental Clinic · İzmir</div>
+
+  <!-- Page 2 -->
+  <div class="tp-page">
+    <section class="tp-section">
+      <h2 class="tp-section-title">Clinical Treatment Plan</h2>
+      <div class="tp-timeline">
+        <div class="tp-timeline-step">
+          <div class="tp-step-num">1</div>
+          <div class="tp-step-body">
+            <h4>Consultation &amp; Digital Scan</h4>
+            <div class="tp-step-meta">Day 1 · 2 hours</div>
+            <p>Clinical exam, X-rays review, smile design and treatment confirmation.</p>
+          </div>
+        </div>
+        <div class="tp-timeline-step">
+          <div class="tp-step-num">2</div>
+          <div class="tp-step-body">
+            <h4>Preparation &amp; Temporaries</h4>
+            <div class="tp-step-meta">Day 2 · Full day</div>
+            <p>Tooth preparation, impressions and temporary prosthetics fitted.</p>
+          </div>
+        </div>
+        <div class="tp-timeline-step">
+          <div class="tp-step-num">3</div>
+          <div class="tp-step-body">
+            <h4>Lab &amp; Recovery</h4>
+            <div class="tp-step-meta">Days 3–4</div>
+            <p>Zirconium fabrication; rest and follow-up check if needed.</p>
+          </div>
+        </div>
+        <div class="tp-timeline-step">
+          <div class="tp-step-num">4</div>
+          <div class="tp-step-body">
+            <h4>Final Placement</h4>
+            <div class="tp-step-meta">Day 5 · 3 hours</div>
+            <p>Permanent crown cementation, bite adjustment and aftercare briefing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Clinical Details</h2>
+      <div class="tp-clinical-grid">
+        <div class="tp-clinical-card wide">
+          <div class="label">Clinical Assessment</div>
+          <div class="value">Patient suitable for full-arch aesthetic rehabilitation. Periodontal tissues healthy.</div>
+        </div>
+        <div class="tp-clinical-card">
+          <div class="label">Upper Arch</div>
+          <div class="value">10 zirconium crowns</div>
+        </div>
+        <div class="tp-clinical-card">
+          <div class="label">Lower Arch</div>
+          <div class="value">10 zirconium crowns</div>
+        </div>
+        <div class="tp-clinical-card">
+          <div class="label">Anaesthesia</div>
+          <div class="value">Local anaesthesia</div>
+        </div>
+        <div class="tp-clinical-card">
+          <div class="label">Follow-up</div>
+          <div class="value">Remote check · 12 months warranty</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="tp-page">
+    <section class="tp-section">
+      <h2 class="tp-section-title">Travel &amp; Stay</h2>
+      <div class="tp-travel-dates">
+        <div class="tp-travel-date"><span class="label">Arrival</span><span class="value">15 Sep 2026</span></div>
+        <div class="tp-travel-date"><span class="label">Departure</span><span class="value">20 Sep 2026</span></div>
+        <div class="tp-travel-date"><span class="label">Nights</span><span class="value">5</span></div>
+      </div>
+      <div class="tp-hotel-card">
+        <h4>Swissôtel Büyük Efes · 5★</h4>
+        <div class="tp-hotel-field"><div class="label">Address</div><div class="value">Gaziosmanpaşa Blv., Izmir</div></div>
+        <div class="tp-hotel-field"><div class="label">Distance to Clinic</div><div class="value">12 min by car</div></div>
+        <div class="tp-hotel-field"><div class="label">Check-In</div><div class="value">15 Sep 2026</div></div>
+        <div class="tp-hotel-field"><div class="label">Check-Out</div><div class="value">20 Sep 2026</div></div>
+      </div>
+      <div class="tp-services tp-services-inline" style="margin-top:14px;">
+        <div class="tp-service"><div class="label">Airport Pickup</div></div>
+        <div class="tp-service"><div class="label">Interpreter</div></div>
+        <div class="tp-service"><div class="label">VIP Transfer</div></div>
+        <div class="tp-service"><div class="label">Emergency Contact</div></div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Included Services</h2>
+      <div class="tp-included-grid">
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>All clinical procedures</div>
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>Hotel accommodation</div>
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>Airport transfers</div>
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>Local coordinator</div>
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>Medications</div>
+        <div class="tp-included-item"><span class="tp-included-check">✓</span>Follow-up support</div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Investment Summary</h2>
+      <div class="tp-price-card">
+        <div class="tp-price-lines">
+          <div class="tp-price-row"><span class="label">20 Zirconium Crowns</span><span class="value">€5.800</span></div>
+          <div class="tp-price-row"><span class="label">Hotel &amp; Transfers</span><span class="value">€450</span></div>
+          <div class="tp-price-row"><span class="label">Coordinator &amp; Support</span><span class="value">€250</span></div>
+        </div>
+        <div class="tp-price-total">
+          <span class="label">Total Investment</span>
+          <span class="value" id="pdf-price">€6.500</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-section">
+      <h2 class="tp-section-title">Next Steps</h2>
+      <ol class="tp-next-steps">
+        <li>Confirm your preferred arrival dates with our coordinator.</li>
+        <li>Complete the deposit to reserve your treatment slot.</li>
+        <li>Receive your travel itinerary and pre-op instructions.</li>
+        <li>Arrive in Izmir — we handle the rest.</li>
+      </ol>
+    </section>
+
+    <section class="tp-section tp-contact-footer">
+      <div class="tp-contact-grid">
+        <div>
+          <h4 id="pdf-clinic-footer">Dentavera Dental Clinic</h4>
+          <p id="pdf-location">İzmir, Turkey · +90 530 300 00 00</p>
+          <p>WhatsApp: +90 530 300 00 00</p>
+        </div>
+        <div class="tp-qr">Scan to<br>contact</div>
+      </div>
+      <p class="tp-disclaimer">This proposal is for informational purposes and does not replace a clinical consultation. Prices valid for 30 days from issue date.</p>
+    </section>
+  </div>
+
 </div>
+
 <script>window.DEMO_PAGE='pdf';</script>
 <script src="/demo/render.js"></script>
 </body>

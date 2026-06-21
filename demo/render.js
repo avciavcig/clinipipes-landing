@@ -40,26 +40,16 @@
   }
 
   function renderPdf(s) {
-    var h1 = document.querySelector('.header h1');
-    if (h1 && s.clinic) h1.textContent = s.clinic;
-    var sub = document.querySelector('.header p');
-    if (sub && s.location) sub.textContent = s.location;
-    var name = document.querySelector('.info-item .info-value');
-    if (name && s.patient) {
-      document.querySelectorAll('.info-item').forEach(function (item) {
-        var lbl = item.querySelector('.info-label');
-        if (lbl && lbl.textContent.indexOf('Full Name') >= 0) {
-          var v = item.querySelector('.info-value');
-          if (v) v.textContent = s.patient;
-        }
-      });
-    }
-    var price = document.querySelector('.price-box');
-    if (price && s.price) {
-      var sub = price.querySelector('.price-sub');
-      price.textContent = s.price;
-      if (sub) price.appendChild(sub);
-    }
+    var clinic = document.getElementById('pdf-clinic');
+    if (clinic && s.clinic) clinic.textContent = s.clinic;
+    var footer = document.getElementById('pdf-clinic-footer');
+    if (footer && s.clinic) footer.textContent = s.clinic;
+    var loc = document.getElementById('pdf-location');
+    if (loc && s.location) loc.textContent = s.location;
+    var patient = document.getElementById('pdf-patient');
+    if (patient && s.patient) patient.textContent = s.patient + (s.country ? ' · ' + s.country : '');
+    var price = document.getElementById('pdf-price');
+    if (price && s.price) price.textContent = s.price;
   }
 
   function renderForm(s) {
