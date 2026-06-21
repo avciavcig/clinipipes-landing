@@ -8,17 +8,17 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEMO = path.join(__dirname, '..', 'demo');
 const BASE = (process.env.PORTAL_URL || 'https://clinic-portal-production-3068.up.railway.app').replace(/\/$/, '');
-const OWNER_USER = process.env.DEMO_USER || 'owner';
-const OWNER_PASS = process.env.DEMO_PASS || 'DemoOwner123!';
-const DOCTOR_USER = process.env.DEMO_DOCTOR_USER || 'doctor';
+const OWNER_EMAIL = process.env.DEMO_USER || process.env.DEMO_EMAIL || '';
+const OWNER_PASS = process.env.DEMO_PASS || '';
+const DOCTOR_EMAIL = process.env.DEMO_DOCTOR_USER || process.env.DEMO_DOCTOR_EMAIL || '';
 const DOCTOR_PASS = process.env.DEMO_DOCTOR_PASS || OWNER_PASS;
 const FORM_PATH = process.env.DEMO_FORM_PATH || '/form/54d115ed98192cda23a85c1f413618fd';
 
-async function login(page, username, password) {
+async function login(page, email, password) {
+  if (!email || !password) throw new Error('DEMO_USER (e-posta) ve DEMO_PASS gerekli');
   await page.goto(`${BASE}/login`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('input[name="username"]');
-  await page.locator('input[name="username"]').evaluate(function (el) { el.type = 'text'; });
-  await page.fill('input[name="username"]', username);
+  await page.fill('input[name="username"]', email);
   await page.fill('input[name="password"]', password);
   await Promise.all([
     page.waitForNavigation({ waitUntil: 'networkidle' }).catch(function () {}),
@@ -35,14 +35,14 @@ async function login(page, username, password) {
   }
   if (page.url().includes('/login')) {
     const err = await page.locator('.error').first().textContent().catch(function () { return ''; });
-    throw new Error(`Login failed for ${username} at ${page.url()} ${(err || '').trim()}`);
+    throw new Error(`Login failed for ${email} at ${page.url()} ${(err || '').trim()}`);
   }
 }
 
 async function captureDoctor(browser) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   try {
-    await login(page, DOCTOR_USER, DOCTOR_PASS);
+    await login(page, DOCTOR_EMAIL, DOCTOR_PASS);
     await page.goto(`${BASE}/doctor`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
 
@@ -66,8 +66,8 @@ async function main() {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 
   try {
-    await login(page, OWNER_USER, OWNER_PASS);
-    console.log('Logged in as', OWNER_USER);
+    await login(page, OWNER_EMAIL, OWNER_PASS);
+    console.log('Logged in as', OWNER_EMAIL);
 
     await page.goto(`${BASE}/dashboard`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
@@ -85,11 +85,26 @@ async function main() {
       pdfUrl = await previewLink.getAttribute('href');
       if (pdfUrl.startsWith('/')) pdfUrl = BASE + pdfUrl;
     }
-    await page.setViewportSize({ width: 960, height: 1200 });
+    await page.setViewportSize({ width: 820, height: 900 });
     await page.goto(pdfUrl, { waitUntil: 'networkidle' });
     await page.waitForTimeout(400);
-    await page.screenshot({ path: path.join(DEMO, 'pdf.png'), type: 'png', fullPage: true });
-    console.log('saved pdf.png from', pdfUrl);
+    const firstPage = page.locator('.tp-page').first();
+    if (await firstPage.count()) {
+      const box = await firstPage.boundingBox();
+      if (box) {
+        await page.screenshot({
+          path: path.join(DEMO, 'pdf.png'), type: 'png',
+          clip: { x: box.x, y: box.y, width: box.width, height: box.height }
+        });
+        console.log('saved pdf.png (page 1) from', pdfUrl);
+      } else {
+        await page.screenshot({ path: path.join(DEMO, 'pdf.png'), type: 'png', fullPage: true });
+        console.log('saved pdf.png from', pdfUrl);
+      }
+    } else {
+      await page.screenshot({ path: path.join(DEMO, 'pdf.png'), type: 'png', fullPage: true });
+      console.log('saved pdf.png from', pdfUrl);
+    }
   } catch (e) {
     console.warn('Owner capture failed:', e.message);
     console.warn('Continuing with public pages only.');

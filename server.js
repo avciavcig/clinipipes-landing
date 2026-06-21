@@ -113,20 +113,32 @@ function saveDemoImage(id,b64,cb){
 }
 
 function captureDemoScreens(cb){
-  try{execSync('node scripts/capture-production-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:180000,env:process.env});
-  var c=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));
-  c.demo=c.demo||{};c.demo.version=(c.demo.version||1)+1;
-  fs.writeFileSync(path.join(__dirname,'content.json'),JSON.stringify(c));
-  if(!GITHUB_TOKEN){cb(true);return;}
-  var files=DEMO_IDS.map(function(id){return'demo/'+id+'.png';}).concat(['content.json']);
-  var pending=files.length,done=0,ok=true;
-  files.forEach(function(fn){
+  function finishCapture(source){
     try{
-      var content=fn==='content.json'?JSON.stringify(c):fs.readFileSync(path.join(__dirname,fn));
-      githubPut(fn,content,'Admin: capture demo',function(g){if(!g)ok=false;done++;if(done===pending)cb(ok);});
-    }catch(e){ok=false;done++;if(done===pending)cb(ok,e.message);}
-  });
-  }catch(e){cb(false,e.stderr?e.stderr.toString():e.message);}
+      var c=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));
+      c.demo=c.demo||{};c.demo.version=(c.demo.version||1)+1;
+      fs.writeFileSync(path.join(__dirname,'content.json'),JSON.stringify(c));
+      if(!GITHUB_TOKEN){cb(true,{source:source});return;}
+      var files=DEMO_IDS.map(function(id){return'demo/'+id+'.png';}).concat(['content.json']);
+      var pending=files.length,done=0,ok=true;
+      files.forEach(function(fn){
+        try{
+          var content=fn==='content.json'?JSON.stringify(c):fs.readFileSync(path.join(__dirname,fn));
+          githubPut(fn,content,'Admin: capture demo',function(g){if(!g)ok=false;done++;if(done===pending)cb(ok,{source:source});});
+        }catch(e){ok=false;done++;if(done===pending)cb(ok,e.message);}
+      });
+    }catch(e){cb(false,e.message);}
+  }
+  try{
+    execSync('node scripts/capture-production-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:180000,env:process.env});
+    finishCapture('production');
+  }catch(e){
+    console.warn('[capture] Production failed, using local demo HTML:',e.stderr?e.stderr.toString().slice(0,200):e.message);
+    try{
+      execSync('node scripts/capture-demo.mjs',{cwd:__dirname,stdio:'pipe',timeout:120000,env:Object.assign({},process.env,{PORT:process.env.PORT||8080})});
+      finishCapture('local');
+    }catch(e2){cb(false,e2.stderr?e2.stderr.toString():e2.message);}
+  }
 }
 
 function commitAnalytics(){
