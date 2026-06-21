@@ -680,6 +680,11 @@ http.createServer(function(req,res){
         if(data.filename==='legal-seller.json'){try{JSON.parse(content);}catch(e){return jsonRes(res,400,{ok:false,error:'invalid_json',message:'legal-seller.json geçerli JSON değil.'},req,true);}}
         commit(data.filename,content,function(ok,mode){
           if(!ok)return jsonRes(res,500,{ok:false,error:'write_failed',message:'Dosya kaydedilemedi. GITHUB_TOKEN veya yazma izni kontrol edin.'},req,true);
+          if(data.filename==='legal-seller.json'){
+            return rebuildLegalPages(function(result){
+              jsonRes(res,200,{ok:true,github:mode==='github',legal:result},req,true);
+            });
+          }
           jsonRes(res,200,{ok:true,github:mode==='github'},req,true);
         });
       }else{
@@ -750,6 +755,20 @@ http.createServer(function(req,res){
   }
   fs.readFile(path.join(__dirname,file),function(err,data){
     if(err){auth.setSecurityHeaders(res);res.writeHead(404);res.end('Not found');return;}
+    if(LEGAL_PAGES.includes(file)){
+      import('./lib/legal-seller.mjs').then(function(mod){
+        try{
+          var S=mod.loadLegalSeller(__dirname);
+          var html=mod.applyLegalHtml(data.toString('utf8'),S);
+          htmlRes(res,200,html,req,false);
+        }catch(e){
+          htmlRes(res,200,data,req,false);
+        }
+      }).catch(function(){
+        htmlRes(res,200,data,req,false);
+      });
+      return;
+    }
     htmlRes(res,200,data,req,url==='/admin');
   });
 }).listen(PORT,function(){

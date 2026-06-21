@@ -1,19 +1,8 @@
 /** CliniPipes yasal metin gövdeleri — scripts/build-legal-pages.mjs tarafından HTML'e dönüştürülür. */
 
-export function sellerBlock(S) {
-  const type = S.sellerType ? ` (${S.sellerType})` : '';
-  let h = `<div class="seller-box"><strong>Hizmet Sağlayıcı / Satıcı:</strong> ${S.sellerName}${type}<br>`;
-  h += `<strong>Marka:</strong> ${S.brand}<br>`;
-  h += `<strong>Adres:</strong> ${S.address}<br>`;
-  if (S.phone) h += `<strong>Telefon:</strong> ${S.phone}<br>`;
-  h += `<strong>E-posta:</strong> <a href="mailto:${S.email}">${S.email}</a><br>`;
-  if (S.taxOffice && S.taxNumber) {
-    h += `<strong>Vergi Dairesi / No:</strong> ${S.taxOffice} — ${S.taxNumber}<br>`;
-  } else if (S.taxNumber) h += `<strong>Vergi / T.C. Kimlik No:</strong> ${S.taxNumber}<br>`;
-  if (S.mersis) h += `<strong>MERSİS:</strong> ${S.mersis}<br>`;
-  h += `</div>`;
-  return h;
-}
+import { sellerBlock } from '../lib/legal-seller.mjs';
+
+export { sellerBlock };
 
 export function medicalDisclaimer() {
   return `
@@ -539,6 +528,8 @@ ${sb}
 
     'sss.html': `
 <h1>Sıkça Sorulan Sorular</h1>
+<p class="date">Son Güncelleme: ${updated}</p>
+${sb}
 
 <p><strong>CliniPipes nedir?</strong></p>
 <p>Sağlık kuruluşlarının hasta yönetimi, satış ve operasyon takibini tek platformda sunan bulut tabanlı <strong>yazılımdır</strong>. Sağlık hizmeti veya teşhis/tedavi sunmaz.</p>
