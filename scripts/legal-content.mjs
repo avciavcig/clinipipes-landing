@@ -15,10 +15,6 @@ export function sellerBlock(S) {
   return h;
 }
 
-export function legalNotice() {
-  return `<div class="legal-notice"><strong>Önemli:</strong> Bu metinler CliniPipes SaaS hizmeti için hazırlanmıştır; emredici kanun hükümleri saklıdır. Avukat incelemesi yine de önerilir. Metinler; <strong>rol ayrımı</strong> (hasta verisinde sorumluluk klinikte), <strong>sorumluluk sınırı</strong>, <strong>tazminat</strong> ve <strong>sağlık hizmeti sunulmadığı</strong> ilkelerini açıkça düzenlemeyi amaçlar.</div>`;
-}
-
 export function medicalDisclaimer() {
   return `
 <p>CliniPipes <strong>sağlık kuruluşu değildir</strong>; tıbbi teşhis, tedavi, reçete, acil müdahale veya sağlık danışmanlığı <strong>sunmaz ve sunamaz</strong>. Platformdaki içerik, form alanları, PDF teklif şablonları ve raporlar yalnızca idari/operasyonel amaçlıdır; tıbbi karar niteliği taşımaz. Tüm klinik, etik ve mesleki sorumluluk <strong>Müşteri / Klinik</strong>’e aittir.</p>`;
@@ -103,7 +99,6 @@ export function consumerDispute() {
 
 export function pages(S) {
   const sb = sellerBlock(S);
-  const ln = legalNotice();
   const rs = roleSummary(S);
   const lc = liabilityCap();
   const ind = indemnificationClause(S);
@@ -142,7 +137,6 @@ ${sb}`,
     'veri-rolu.html': `
 <h1>Veri Koruma, Rol Ayrımı ve Veri İşleme Şartları</h1>
 <p class="date">Son Güncelleme: ${updated}</p>
-${ln}
 ${sb}
 <p>Bu belge; CliniPipes yazılımının <strong>kişisel veri toplayıcısı olmadığını</strong>, hasta verilerinde asıl sorumluluğun <strong>klinikte</strong> olduğunu ve Hizmet Sağlayıcı’nın yalnızca sınırlı teknik rol üstlendiğini açıklar. <a href="/kullanim-kosullari">Kullanım Koşulları</a> ve <a href="/mesafeli-satis">Mesafeli Hizmet Sözleşmesi</a>’nin ayrılmaz parçasıdır.</p>
 
@@ -219,7 +213,6 @@ ${fm}
     'gizlilik.html': `
 <h1>Gizlilik Politikası ve KVKK Aydınlatma Metni</h1>
 <p class="date">Son Güncelleme: ${updated}</p>
-${ln}
 ${rs}
 
 <h2>1. Kapsam — iki ayrı rejim</h2>
@@ -313,7 +306,6 @@ ${sb}
     'kullanim-kosullari.html': `
 <h1>Kullanım Koşulları</h1>
 <p class="date">Son Güncelleme: ${updated}</p>
-${ln}
 ${sb}
 <p>CliniPipes platformunu kullanan tüm Müşteri ve kullanıcılar bu koşulları kabul etmiş sayılır. <a href="/veri-rolu">Veri Koruma ve Rol Ayrımı</a> ayrılmaz parçadır.</p>
 
@@ -377,7 +369,6 @@ ${cdisp}
     'mesafeli-satis.html': `
 <h1>Mesafeli Hizmet Sözleşmesi</h1>
 <p class="date">Son Güncelleme: ${updated}</p>
-${ln}
 <h2>1. Taraflar</h2>
 ${sb}
 <p><strong>Müşteri:</strong> Platform üzerinden hizmet satın alan gerçek veya tüzel kişi (sağlık kuruluşu / yetkili temsilcisi).</p>
