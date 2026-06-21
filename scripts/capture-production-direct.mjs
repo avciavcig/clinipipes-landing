@@ -14,7 +14,7 @@ const OWNER_EMAIL = process.env.DEMO_USER || process.env.DEMO_EMAIL || '';
 const OWNER_PASS = process.env.DEMO_PASS || '';
 const DOCTOR_EMAIL = process.env.DEMO_DOCTOR_USER || process.env.DEMO_DOCTOR_EMAIL || '';
 const DOCTOR_PASS = process.env.DEMO_DOCTOR_PASS || OWNER_PASS;
-const FORM_PATH = process.env.DEMO_FORM_PATH || '/form/54d115ed98192cda23a85c1f413618fd';
+const FORM_PATH = process.env.DEMO_FORM_PATH || '/form/your-clinic-token';
 const VIEWPORT = { width: 1440, height: 900 };
 
 async function waitStyled(page, selector, label) {

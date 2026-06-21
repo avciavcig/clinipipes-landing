@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEMO = path.join(__dirname, '..', 'demo');
 const BASE = process.env.DEMO_BASE || 'http://127.0.0.1:8080';
-const FORM_URL = 'https://clinic-portal-production-3068.up.railway.app/form/54d115ed98192cda23a85c1f413618fd';
+const FORM_URL = process.env.DEMO_FORM_URL || 'https://app.clinipipes.com/form/your-clinic-token';
 
 async function shot(page, file, opts = {}) {
   await page.screenshot({ path: path.join(DEMO, file), type: 'png', ...opts });

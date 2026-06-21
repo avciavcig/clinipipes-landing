@@ -58,7 +58,7 @@ function seedDb() {
   const sql = `
 UPDATE users SET "mustChangePassword"=false WHERE username='owner';
 UPDATE clinic_settings SET
-  "clinicName"='Dentavera Dental Clinic',
+  "clinicName"='CliniPipes Demo Clinic',
   "clinicWhatsapp"='+90 530 300 00 00',
   "clinicAddress"='İzmir, Turkey',
   "clinicAbout"='Modern dental clinic for international patients.',

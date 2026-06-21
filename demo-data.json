@@ -16,7 +16,7 @@
     ]
   },
   "dashboard": {
-    "owner": "Dentavera Owner",
+    "owner": "Demo Owner",
     "kpis": [
       {"v": "24", "label": "Bu Ay Lead"},
       {"v": "8", "label": "Onaylanan Hasta"},
@@ -37,16 +37,16 @@
   },
   "sales": {
     "user": "Ayşe Satış",
-    "formUrl": "https://app.clinipipes.com/form/54d115ed98192cda23a85c1f413618fd"
+    "formUrl": "https://app.clinipipes.com/form/your-clinic-token"
   },
   "pdf": {
-    "clinic": "Dentavera Dental Clinic",
-    "location": "İzmir, Turkey · +90 530 300 00 00",
+    "clinic": "CliniPipes Demo Clinic",
+    "location": "İzmir, Turkey · +90 530 000 00 00",
     "patient": "James Mitchell",
     "price": "€6.500"
   },
   "form": {
-    "clinic": "Dentavera Dental Clinic",
+    "clinic": "CliniPipes Demo Clinic",
     "title": "Patient Pre-Assessment Form",
     "subtitle": "Please complete all sections. Fields marked * are required."
   },
