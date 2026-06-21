@@ -50,10 +50,10 @@ async function main() {
     const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: 1 });
 
     for (const p of PAGES) {
-      await page.goto(BASE + p.url, { waitUntil: 'load', timeout: 30000 });
+      await page.goto(BASE + p.url, { waitUntil: 'networkidle', timeout: 30000 });
       await page.waitForSelector(p.ready, { timeout: 15000 });
       await page.evaluate(function () { return document.fonts && document.fonts.ready; }).catch(function () {});
-      await page.waitForTimeout(400);
+      await page.waitForTimeout(600);
       await page.screenshot({
         path: path.join(demoDir, p.file),
         type: 'png',

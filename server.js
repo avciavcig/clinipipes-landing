@@ -635,7 +635,7 @@ http.createServer(function(req,res){
     if(!rel||rel.indexOf('..')>=0){res.writeHead(403);res.end('');return;}
     const fp=path.join(__dirname,'demo',rel);
     const ext=path.extname(fp).toLowerCase();
-    const ct={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp'}[ext];
+    const ct={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp'}[ext];
     if(!ct){res.writeHead(403);res.end('');return;}
     fs.readFile(fp,function(err,data){
       if(err){res.writeHead(404);res.end('');return;}
