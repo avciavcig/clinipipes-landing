@@ -107,8 +107,8 @@ function renderCart() {
   f += '<div class="cart-line"><span>' + t('Ara toplam', 'Subtotal') + '</span><span>' + eur(subtotal) + '</span></div>';
   if (bundle) f += '<div class="cart-line discount"><span>' + t('Paket indirimi', 'Bundle discount') + '</span><span>−' + eur(bundle) + '</span></div>';
   f += '<div class="cart-total"><span>' + t('Toplam', 'Total') + '</span><span>' + eur(total) + '</span></div>';
-  f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Satın Al', 'Buy Now') + '</button>';
-  f += '<div class="cart-note">' + t('Güvenli sipariş formu. Siparişiniz alındıktan sonra ödeme bağlantısı e-posta ile iletilecektir.', 'Secure order form. After your order is received, a payment link will be sent by email.') + '</div>';
+  f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Başvuruyu Tamamla', 'Complete Application') + '</button>';
+  f += '<div class="cart-note">' + t('Kurucu Klinik başvurusu. Uygunluk ve ödeme adımları için 1 iş günü içinde dönüş yapılır.', 'Founding Clinic application. We respond within 1 business day with next steps.') + '</div>';
   footEl.innerHTML = f;
 }
 
@@ -184,27 +184,19 @@ function confirmPurchase() {
     })
   }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
     .then(function (res) {
-      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Order' : 'Siparişi Gönder'; }
+      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Application' : 'Başvuruyu Gönder'; }
       if (!res.data.ok) {
-        alert((lang === 'en' ? 'Order failed: ' : 'Sipariş gönderilemedi: ') + (res.data.error || '?'));
+        alert((lang === 'en' ? 'Application failed: ' : 'Başvuru gönderilemedi: ') + (res.data.error || '?'));
         return;
       }
       closeCheckout();
       alert(res.data.mode === 'provisioned'
         ? (lang === 'en' ? 'Account created! Check your email for login details.' : 'Hesabınız oluşturuldu! Giriş bilgileri e-postanıza gönderildi.')
-        : (lang === 'en' ? 'Order received. We will contact you shortly with payment details.' : 'Siparişiniz alındı. Ödeme detayları için kısa süre içinde sizinle iletişime geçeceğiz.'));
-      if (foundingActive) {
-        fetch('/api/claim-slot', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ checkoutToken: checkoutToken })
-        }).catch(function () {});
-        foundingActive = false;
-      }
+        : (lang === 'en' ? 'Application received. We will contact you within 1 business day with onboarding and payment details.' : 'Başvurunuz alındı. Onboarding ve ödeme adımları için 1 iş günü içinde sizinle iletişime geçeceğiz.'));
       refreshCheckoutToken();
     })
     .catch(function () {
-      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Order' : 'Siparişi Gönder'; }
+      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Application' : 'Başvuruyu Gönder'; }
       alert(lang === 'en' ? 'Connection error. Please try again.' : 'Bağlantı hatası. Lütfen tekrar deneyin.');
     });
 }
@@ -360,23 +352,72 @@ function loadContactEmail() {
   }).catch(function () {});
 }
 
+function isFoundingProgramActive(founding) {
+  if (!founding) return false;
+  if (founding.program_active === false) return false;
+  if (founding.program_active === true) return true;
+  return (founding.slots_remaining || 0) > 0;
+}
+
+function applyFounding(f) {
+  if (!f) return;
+  var stripEl = document.querySelector('.founding-strip span:first-child');
+  if (stripEl) {
+    var st = lang === 'en' ? (f.strip_en || f.strip_tr) : f.strip_tr;
+    if (st) {
+      stripEl.setAttribute('data-tr', f.strip_tr || st);
+      stripEl.setAttribute('data-en', f.strip_en || f.strip_tr || st);
+      stripEl.textContent = st;
+    }
+  }
+  var sub = document.getElementById('foundingStripSub');
+  if (sub) {
+    var subTxt = lang === 'en' ? (f.strip_sub_en || f.strip_sub_tr) : (f.strip_sub_tr || f.strip_sub_en);
+    if (subTxt) {
+      sub.setAttribute('data-tr', f.strip_sub_tr || subTxt);
+      sub.setAttribute('data-en', f.strip_sub_en || f.strip_sub_tr || subTxt);
+      sub.textContent = subTxt;
+    }
+  }
+  var banner = document.getElementById('foundingBanner');
+  if (banner) banner.style.display = isFoundingProgramActive(f) ? '' : 'none';
+  var title = document.getElementById('foundingBannerTitle');
+  if (title && f.banner_title_tr) {
+    setBi(title, f.banner_title_tr, f.banner_title_en);
+  }
+  var desc = document.getElementById('foundingBannerDesc');
+  if (desc && f.banner_desc_tr) {
+    setBi(desc, f.banner_desc_tr, f.banner_desc_en);
+  }
+  var badge = document.getElementById('foundingBadge');
+  if (badge && f.badge_tr) {
+    setBi(badge, f.badge_tr, f.badge_en);
+  }
+  var benefits = document.getElementById('foundingBenefits');
+  if (benefits) {
+    var list = lang === 'en' ? (f.benefits_en || f.benefits_tr) : (f.benefits_tr || f.benefits_en);
+    if (list && list.length) {
+      benefits.innerHTML = list.map(function (item) { return '<li>' + item + '</li>'; }).join('');
+    }
+  }
+}
+
 function loadPrices() {
   fetch('/content.json').then(function (r) { return r.json(); }).then(function (c) {
     if (!c) return;
     if (c.prices) {
-      var p = c.prices, rem = 0;
+      var p = c.prices;
       var sm = +p.sm, pm = +p.pm, su = +p.setup;
       var sy = +(p.sy || sm * 10), py = +(p.py || pm * 10);
       var smN = sm, syN = sy, pmN = pm, pyN = py, suN = su;
-      if (c.founding && c.founding.slots_remaining > 0) {
-        rem = c.founding.slots_remaining;
-        foundingActive = true;
+      foundingActive = isFoundingProgramActive(c.founding);
+      if (foundingActive) {
         smN = +(p.sm_f != null ? p.sm_f : sm);
         syN = +(p.sy_f != null ? p.sy_f : sy);
         pmN = +(p.pm_f != null ? p.pm_f : pm);
         pyN = +(p.py_f != null ? p.py_f : py);
         suN = +(p.setup_f != null ? p.setup_f : su);
-      } else foundingActive = false;
+      }
       BUNDLE = +(p.bundle || 0);
       PRICES.starter.monthly = smN; PRICES.starter.yearly = syN;
       PRICES.pro.monthly = pmN; PRICES.pro.yearly = pyN;
@@ -384,17 +425,8 @@ function loadPrices() {
       paintCard('Starter', sm, smN, sy, syN);
       paintCard('Pro', pm, pmN, py, pyN);
       paintCard('Setup', su, suN, su, suN);
-      var strip = document.getElementById('foundingStripSlots');
-      var txt = rem + (lang === 'en' ? ' spots remaining' : ' slot kaldı');
-      if (strip) strip.textContent = txt;
     }
-    if (c.founding) {
-      var stripEl = document.querySelector('.founding-strip span:first-child');
-      if (stripEl) {
-        var st = lang === 'en' ? (c.founding.strip_en || c.founding.strip_tr) : c.founding.strip_tr;
-        if (st) stripEl.textContent = st;
-      }
-    }
+    if (c.founding) applyFounding(c.founding);
     if (c.demo) applyDemo(c.demo);
     if (c.landing) applyLanding(c.landing);
     loadDemoData();
@@ -467,13 +499,13 @@ function applyDemo(d) {
 function applyLanding(l) {
   if (l.hero) {
     var h = l.hero;
-    var map = [['.h-eyebrow', 'eyebrow'], ['.hero h1', 'title'], ['.hero-desc', 'desc']];
+    var map = [['.h-eyebrow', 'eyebrow'], ['.hero h1', 'title'], ['.hero-desc', 'desc'], ['.h-actions .btn-g', 'btn_primary']];
     map.forEach(function (pair) {
       var el = document.querySelector(pair[0]);
       var k = pair[1];
       if (!el || !h[k + '_tr']) return;
       el.setAttribute('data-tr', h[k + '_tr']); el.setAttribute('data-en', h[k + '_en'] || '');
-      if (k === 'title') el.innerHTML = lang === 'en' ? (h[k + '_en'] || h[k + '_tr']) : h[k + '_tr'];
+      if (k === 'title' || k === 'btn_primary') el.innerHTML = lang === 'en' ? (h[k + '_en'] || h[k + '_tr']) : h[k + '_tr'];
       else el.textContent = lang === 'en' ? (h[k + '_en'] || h[k + '_tr']) : h[k + '_tr'];
     });
   }

@@ -175,12 +175,18 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#127942; Kurucu M&#252;&#351;teri Metinleri</h2>
     <label>&#220;st &#351;erit (TR)</label><input type="text" id="f-st-tr">
     <label>&#220;st &#351;erit (EN)</label><input type="text" id="f-st-en">
+    <label>Üst şerit alt metin (TR)</label><input type="text" id="f-ss-tr">
+    <label>Üst şerit alt metin (EN)</label><input type="text" id="f-ss-en">
     <div class="g2" style="margin-top:.5rem">
       <div><label>Banner ba&#351;l&#305;k (TR)</label><input type="text" id="f-bt-tr"></div>
       <div><label>Banner ba&#351;l&#305;k (EN)</label><input type="text" id="f-bt-en"></div>
     </div>
-    <label>Banner a&#231;&#305;klama (TR)</label><input type="text" id="f-bd-tr">
-    <label>Banner a&#231;&#305;klama (EN)</label><input type="text" id="f-bd-en">
+    <label>Banner açıklama (TR)</label><input type="text" id="f-bd-tr">
+    <label>Banner açıklama (EN)</label><input type="text" id="f-bd-en">
+    <div class="g2" style="margin-top:.5rem">
+      <div><label>Rozet (TR)</label><input type="text" id="f-badge-tr"></div>
+      <div><label>Rozet (EN)</label><input type="text" id="f-badge-en"></div>
+    </div>
   </div>
   <div class="card">
     <h2>&#128203; Landing B&#246;l&#252;mleri</h2>
@@ -200,7 +206,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <div class="pane" id="pane3">
   <div class="card">
     <h2>&#128176; Fiyatlar (USD)</h2>
-    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Normal fiyatlar &#252;st&#252; &#231;izili g&#246;sterilir. Kurucu fiyatlar&#305; yaln&#305;zca kalan slot &gt; 0 iken uygulan&#305;r. Y&#305;ll&#305;k = ayl&#305;k &#215; 10 (2 ay bedava).</p>
+    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Normal fiyatlar üstü çizili gösterilir. Kurucu fiyatlar yalnızca program aktifken uygulanır. Yıllık = aylık × 10 (2 ay bedava).</p>
     <div class="g2">
       <div>
         <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Starter</h3>
@@ -224,9 +230,10 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
         <label>Kurucu ($)</label><input type="number" id="p-setup-f">
       </div>
       <div>
-        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Kurucu Klinikler Program&#305;</h3>
-        <label>Kalan slot (0 = indirim bitti)</label><input type="number" id="f-slots" min="0" max="100">
-        <p style="font-size:.78rem;color:#888;margin:.5rem 0 0">Banner metinleri &#304;&#231;erik sekmesinde d&#252;zenlenir.</p>
+        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Kurucu Klinik Programı</h3>
+        <label style="display:flex;align-items:center;gap:.5rem;margin:.35rem 0"><input type="checkbox" id="f-program-active" checked> Program aktif (kurucu fiyat)</label>
+        <label style="display:flex;align-items:center;gap:.5rem;margin:.35rem 0"><input type="checkbox" id="f-trial-enabled"> 14 gün trial açık</label>
+        <p style="font-size:.78rem;color:#888;margin:.5rem 0 0">Slot sayacı yok — metinler İçerik sekmesinden düzenlenir.</p>
       </div>
     </div>
   </div>
@@ -686,7 +693,7 @@ function saveContent(){
   var sections=null;
   try{sections=JSON.parse(document.getElementById('landing-sections-json').value);}catch(e){var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fee';el.textContent='Landing JSON gecersiz: '+e.message;return;}
   var payload={
-    founding:{strip_tr:document.getElementById('f-st-tr').value,strip_en:document.getElementById('f-st-en').value,banner_title_tr:document.getElementById('f-bt-tr').value,banner_title_en:document.getElementById('f-bt-en').value,banner_desc_tr:document.getElementById('f-bd-tr').value,banner_desc_en:document.getElementById('f-bd-en').value},
+    founding:{strip_tr:document.getElementById('f-st-tr').value,strip_en:document.getElementById('f-st-en').value,strip_sub_tr:document.getElementById('f-ss-tr').value,strip_sub_en:document.getElementById('f-ss-en').value,banner_title_tr:document.getElementById('f-bt-tr').value,banner_title_en:document.getElementById('f-bt-en').value,banner_desc_tr:document.getElementById('f-bd-tr').value,banner_desc_en:document.getElementById('f-bd-en').value,badge_tr:document.getElementById('f-badge-tr').value,badge_en:document.getElementById('f-badge-en').value},
     landing:{hero:{eyebrow_tr:document.getElementById('h-ey-tr').value,eyebrow_en:document.getElementById('h-ey-en').value,title_tr:document.getElementById('h-ti-tr').value,title_en:document.getElementById('h-ti-en').value,desc_tr:document.getElementById('h-de-tr').value,desc_en:document.getElementById('h-de-en').value},faq:faqList,sections:sections}
   };
   var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
@@ -698,7 +705,7 @@ function savePrices(){
   syncYearly();
   var sm=+document.getElementById('p-sm').value,smf=+document.getElementById('p-sm-f').value;
   var pm=+document.getElementById('p-pm').value,pmf=+document.getElementById('p-pm-f').value;
-  var payload={prices:{sm:sm,sy:sm*10,sm_f:smf,sy_f:smf*10,pm:pm,py:pm*10,pm_f:pmf,py_f:pmf*10,setup:+document.getElementById('p-setup').value,setup_f:+document.getElementById('p-setup-f').value,bundle:0},founding:{slots_remaining:+document.getElementById('f-slots').value}};
+  var payload={prices:{sm:sm,sy:sm*10,sm_f:smf,sy_f:smf*10,pm:pm,py:pm*10,pm_f:pmf,py_f:pmf*10,setup:+document.getElementById('p-setup').value,setup_f:+document.getElementById('p-setup-f').value,bundle:0},founding:{program_active:!!document.getElementById('f-program-active').checked,trial_enabled:!!document.getElementById('f-trial-enabled').checked}};
   var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
   api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
@@ -780,10 +787,14 @@ fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(fu
     document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-setup-f').value=c.prices.setup_f||'';
   }
   if(c.founding){
-    var fs=document.getElementById('f-slots');
-    if(fs)fs.value=c.founding.slots_remaining;
+    var fpa=document.getElementById('f-program-active');
+    if(fpa)fpa.checked=c.founding.program_active!==false;
+    var fte=document.getElementById('f-trial-enabled');
+    if(fte)fte.checked=!!c.founding.trial_enabled;
     if(c.founding.strip_tr){document.getElementById('f-st-tr').value=c.founding.strip_tr;document.getElementById('f-st-en').value=c.founding.strip_en||'';}
+    if(c.founding.strip_sub_tr){document.getElementById('f-ss-tr').value=c.founding.strip_sub_tr;document.getElementById('f-ss-en').value=c.founding.strip_sub_en||'';}
     if(c.founding.banner_title_tr){document.getElementById('f-bt-tr').value=c.founding.banner_title_tr;document.getElementById('f-bt-en').value=c.founding.banner_title_en||'';document.getElementById('f-bd-tr').value=c.founding.banner_desc_tr||'';document.getElementById('f-bd-en').value=c.founding.banner_desc_en||'';}
+    if(c.founding.badge_tr){document.getElementById('f-badge-tr').value=c.founding.badge_tr;document.getElementById('f-badge-en').value=c.founding.badge_en||'';}
   }
   if(c.demo){
     demoData=c.demo;
