@@ -544,7 +544,7 @@ ${sb}
 <hr>
 
 <p><strong>Kurulum ne kadar sürer?</strong></p>
-<p>Standart kurulumlar genellikle 1 iş günü içinde tamamlanır. Kurulum hizmeti ayrı satın alınabilir.</p>
+<p>Başvurunuzdan sonra 1 iş günü içinde hesabınız açılır ve birlikte kuruluma başlarız. Kurulum paketi alan kliniklerde logo, hasta formu ve ekip eğitimi dahil — çoğu klinik aynı gün canlıya geçer.</p>
 <hr>
 
 <p><strong>Verilerim güvende mi?</strong></p>
