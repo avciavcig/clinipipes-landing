@@ -1,4 +1,4 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, foundingActive = false, checkoutToken = '', contactEmail = '';
+var lang = 'tr', period = 'monthly', BUNDLE = 20, promoActive = false, checkoutToken = '', contactEmail = '';
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
   pro: { monthly: 79, yearly: 790, recurring: true, tr: 'Professional Plan', en: 'Professional Plan' },
@@ -107,8 +107,8 @@ function renderCart() {
   f += '<div class="cart-line"><span>' + t('Ara toplam', 'Subtotal') + '</span><span>' + eur(subtotal) + '</span></div>';
   if (bundle) f += '<div class="cart-line discount"><span>' + t('Paket indirimi', 'Bundle discount') + '</span><span>−' + eur(bundle) + '</span></div>';
   f += '<div class="cart-total"><span>' + t('Toplam', 'Total') + '</span><span>' + eur(total) + '</span></div>';
-  f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Başvuruyu Tamamla', 'Complete Application') + '</button>';
-  f += '<div class="cart-note">' + t('Kurucu Klinik başvurusu. Uygunluk ve ödeme adımları için 1 iş günü içinde dönüş yapılır.', 'Founding Clinic application. We respond within 1 business day with next steps.') + '</div>';
+  f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Devam Et', 'Continue') + '</button>';
+  f += '<div class="cart-note">' + t('1 iş günü içinde kurulum ve ödeme adımları için dönüş yapılır.', 'We respond within 1 business day with onboarding and payment steps.') + '</div>';
   footEl.innerHTML = f;
 }
 
@@ -184,7 +184,7 @@ function confirmPurchase() {
     })
   }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
     .then(function (res) {
-      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Application' : 'Başvuruyu Gönder'; }
+      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit' : 'Gönder'; }
       if (!res.data.ok) {
         alert((lang === 'en' ? 'Application failed: ' : 'Başvuru gönderilemedi: ') + (res.data.error || '?'));
         return;
@@ -196,7 +196,7 @@ function confirmPurchase() {
       refreshCheckoutToken();
     })
     .catch(function () {
-      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit Application' : 'Başvuruyu Gönder'; }
+      if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit' : 'Gönder'; }
       alert(lang === 'en' ? 'Connection error. Please try again.' : 'Bağlantı hatası. Lütfen tekrar deneyin.');
     });
 }
@@ -211,22 +211,22 @@ function fmtUsd(n) {
   return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function paintCard(id, listM, nowM, listY, nowY, foundingOn) {
+function paintCard(id, listM, nowM, listY, nowY, promoOn) {
   var w = document.getElementById('was' + id);
   var n = document.getElementById('now' + id);
   var solo = document.getElementById('now' + id + 'Solo');
-  var block = id === 'Starter' ? document.getElementById('starterFoundingBlock')
-    : id === 'Pro' ? document.getElementById('proFoundingBlock') : null;
+  var block = id === 'Starter' ? document.getElementById('starterPromoBlock')
+    : id === 'Pro' ? document.getElementById('proPromoBlock') : null;
   var y = document.getElementById('yr' + id);
   if (n) n.textContent = fmtUsd(nowM);
   if (solo) solo.textContent = fmtUsd(listM);
   if (w) w.textContent = fmtUsd(listM);
-  if (block) block.classList.toggle('is-off', !foundingOn);
+  if (block) block.classList.toggle('is-off', !promoOn);
   if (y) {
     var save = lang === 'en' ? ' — Save 2 months.' : ' — 2 ay bedava';
     var yrSuffix = lang === 'en' ? '/year' : '/yıl';
-    var showListY = foundingOn ? listY : listY;
-    var showNowY = foundingOn ? nowY : listY;
+    var showListY = promoOn ? listY : listY;
+    var showNowY = promoOn ? nowY : listY;
     if (showListY !== showNowY) y.innerHTML = '<s>' + fmtUsd(showListY) + yrSuffix + '</s> ' + fmtUsd(showNowY) + yrSuffix + save;
     else y.textContent = fmtUsd(showNowY) + yrSuffix + save;
   }
@@ -356,54 +356,31 @@ function loadContactEmail() {
   }).catch(function () {});
 }
 
-function isFoundingProgramActive(founding) {
-  if (!founding) return false;
-  if (founding.program_active === false) return false;
-  if (founding.program_active === true) return true;
-  return (founding.slots_remaining || 0) > 0;
+function isPromoActive(promo, prices) {
+  if (promo && promo.active === false) return false;
+  if (promo && promo.active === true) return true;
+  var p = prices || {};
+  return p.sm_f != null && +p.sm_f < +p.sm;
 }
 
-function applyFounding(f) {
-  if (!f) return;
-  var stripEl = document.querySelector('.founding-strip span:first-child');
-  if (stripEl) {
-    var st = lang === 'en' ? (f.strip_en || f.strip_tr) : f.strip_tr;
-    if (st) {
-      stripEl.setAttribute('data-tr', f.strip_tr || st);
-      stripEl.setAttribute('data-en', f.strip_en || f.strip_tr || st);
-      stripEl.textContent = st;
+function applyPromo(promo) {
+  if (!promo) return;
+  var strip = document.getElementById('promoStrip');
+  if (strip) {
+    var txt = lang === 'en' ? (promo.strip_en || promo.strip_tr) : (promo.strip_tr || promo.strip_en);
+    if (txt) {
+      strip.setAttribute('data-tr', promo.strip_tr || txt);
+      strip.setAttribute('data-en', promo.strip_en || promo.strip_tr || txt);
+      strip.textContent = txt;
+      strip.style.display = isPromoActive(promo) ? '' : 'none';
     }
   }
-  var sub = document.getElementById('foundingStripSub');
-  if (sub) {
-    var subTxt = lang === 'en' ? (f.strip_sub_en || f.strip_sub_tr) : (f.strip_sub_tr || f.strip_sub_en);
-    if (subTxt) {
-      sub.setAttribute('data-tr', f.strip_sub_tr || subTxt);
-      sub.setAttribute('data-en', f.strip_sub_en || f.strip_sub_tr || subTxt);
-      sub.textContent = subTxt;
-    }
-  }
-  var banner = document.getElementById('foundingBanner');
-  if (banner) banner.style.display = isFoundingProgramActive(f) ? '' : 'none';
-  var title = document.getElementById('foundingBannerTitle');
-  if (title && f.banner_title_tr) {
-    setBi(title, f.banner_title_tr, f.banner_title_en);
-  }
-  var desc = document.getElementById('foundingBannerDesc');
-  if (desc && f.banner_desc_tr) {
-    setBi(desc, f.banner_desc_tr, f.banner_desc_en);
-  }
-  var badge = document.getElementById('foundingBadge');
-  if (badge && f.badge_tr) {
-    setBi(badge, f.badge_tr, f.badge_en);
-  }
-  var benefits = document.getElementById('foundingBenefits');
-  if (benefits) {
-    var list = lang === 'en' ? (f.benefits_en || f.benefits_tr) : (f.benefits_tr || f.benefits_en);
-    if (list && list.length) {
-      benefits.innerHTML = list.map(function (item) { return '<li>' + item + '</li>'; }).join('');
-    }
-  }
+  var labelTr = promo.label_tr || 'Özel fiyat';
+  var labelEn = promo.label_en || 'Special price';
+  ['promoLabelStarter', 'promoLabelPro'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) setBi(el, labelTr, labelEn);
+  });
 }
 
 function loadPrices() {
@@ -414,8 +391,8 @@ function loadPrices() {
       var sm = +p.sm, pm = +p.pm, su = +p.setup;
       var sy = +(p.sy || sm * 10), py = +(p.py || pm * 10);
       var smN = sm, syN = sy, pmN = pm, pyN = py, suN = su;
-      foundingActive = isFoundingProgramActive(c.founding);
-      if (foundingActive) {
+      promoActive = isPromoActive(c.promo, p);
+      if (promoActive) {
         smN = +(p.sm_f != null ? p.sm_f : sm);
         syN = +(p.sy_f != null ? p.sy_f : sy);
         pmN = +(p.pm_f != null ? p.pm_f : pm);
@@ -426,11 +403,11 @@ function loadPrices() {
       PRICES.starter.monthly = smN; PRICES.starter.yearly = syN;
       PRICES.pro.monthly = pmN; PRICES.pro.yearly = pyN;
       PRICES.setup.oneoff = suN;
-      paintCard('Starter', sm, smN, sy, syN, foundingActive);
-      paintCard('Pro', pm, pmN, py, pyN, foundingActive);
-      paintCard('Setup', su, suN, su, suN, foundingActive);
+      paintCard('Starter', sm, smN, sy, syN, promoActive);
+      paintCard('Pro', pm, pmN, py, pyN, promoActive);
+      paintCard('Setup', su, suN, su, suN, promoActive);
     }
-    if (c.founding) applyFounding(c.founding);
+    if (c.promo) applyPromo(c.promo);
     if (c.demo) applyDemo(c.demo);
     if (c.landing) applyLanding(c.landing);
     loadDemoData();

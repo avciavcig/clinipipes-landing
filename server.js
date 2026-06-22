@@ -162,7 +162,10 @@ function mergeContent(inc){
   var ex={};
   try{ex=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));}catch(e){}
   if(inc.prices)ex.prices=inc.prices;
-  if(inc.founding)ex.founding=Object.assign(ex.founding||{},inc.founding);
+  if(inc.promo)ex.promo=Object.assign(ex.promo||{},inc.promo);
+  if(inc.founding&&!inc.promo){
+    ex.promo=Object.assign(ex.promo||{},{active:inc.founding.program_active!==false,strip_tr:inc.founding.strip_sub_tr||inc.founding.strip_tr,strip_en:inc.founding.strip_sub_en||inc.founding.strip_en});
+  }
   if(inc.demo)ex.demo=Object.assign(ex.demo||{},inc.demo);
   if(inc.landing){
     ex.landing=ex.landing||{};
@@ -697,31 +700,6 @@ http.createServer(function(req,res){
         if(GITHUB_TOKEN){githubPut('content.json',merged,'Admin: content.json',function(ok){jsonRes(res,200,{ok:true,github:ok},req,true);});}
         else{jsonRes(res,200,{ok:true,github:false},req,true);}
       }}catch(e){jsonRes(res,400,{ok:false,error:e.message},req,true);}
-    });return;
-  }
-  if(url==='/api/claim-slot'&&req.method==='POST'){
-    return auth.readBody(req,function(err,body){
-      if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,false);}
-      var ip=pubSec.getClientIp(req);
-      var allowed=pubSec.checkClaimAllowed(ip);
-      if(!allowed.ok){return jsonRes(res,429,{ok:false,error:'rate_limited',retryAfter:allowed.retryAfter},req,false);}
-      try{
-        var data=JSON.parse(body||'{}');
-        if(!pubSec.consumeCheckoutToken(data.checkoutToken)){
-          return jsonRes(res,403,{ok:false,error:'invalid_token'},req,false);
-        }
-        var cd=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));
-        if(!cd.founding)cd.founding={slots_remaining:0,discount:50};
-        if(cd.founding.slots_remaining>0){
-          cd.founding.slots_remaining--;
-          var upd=JSON.stringify(cd);
-          commit('content.json',upd,function(ok){
-            jsonRes(res,200,{ok:true,remaining:cd.founding.slots_remaining},req,false);
-          });
-        }else{
-          jsonRes(res,200,{ok:false,remaining:0},req,false);
-        }
-      }catch(e){jsonRes(res,400,{ok:false,error:'bad_request'},req,false);}
     });return;
   }
   if(url==='/cart.js'){

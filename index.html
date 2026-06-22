@@ -41,12 +41,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .nav-cta{background:var(--g);color:#fff;padding:.5rem 1.2rem;border-radius:7px;font-size:.83rem;font-weight:600;transition:background .2s}
 .nav-cta:hover{background:var(--g2)}
  
-/* ── FOUNDING STRIP ── */
-.founding-strip{background:var(--g);color:#fff;text-align:center;padding:.6rem 1rem;font-size:.8rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.75rem}
-.strip-sub{background:rgba(0,0,0,.2);padding:.25rem .75rem;border-radius:12px;font-size:.75rem;font-weight:500;opacity:.95}
-.founding-benefits{margin:.65rem 0 0;padding-left:1.1rem;font-size:.82rem;color:var(--muted);line-height:1.65}
-.founding-benefits li{margin:.15rem 0}
-.founding-badge{background:var(--g-dim);color:var(--g2);font-size:.75rem;font-weight:700;padding:.35rem .95rem;border-radius:20px;white-space:nowrap;border:1px solid rgba(29,158,117,.2);align-self:flex-start}
+/* ── PROMO STRIP ── */
+.promo-strip{background:var(--g);color:#fff;text-align:center;padding:.6rem 1rem;font-size:.8rem;font-weight:500}
  
 /* ── HERO ── */
 .hero{background:var(--ink);min-height:78vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 4%}
@@ -169,12 +165,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-price-compact .p-price-old .p-price s{color:var(--muted)}
 .p-card.hot .p-price-compact .p-price-old .p-price s{color:rgba(255,255,255,.45)}
 .p-card.hot .p-price-compact .p-price-old .p-price-label{color:rgba(255,255,255,.4)}
-.p-price-compact .p-price-founding{margin-top:.15rem}
+.p-price-compact .p-price-promo{margin-top:.15rem}
 .p-price-compact .p-price-main{display:flex;align-items:baseline;gap:.35rem;margin:.15rem 0 .45rem}
 .p-price-compact .p-price-main span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--g);line-height:1}
 .p-card.hot .p-price-compact .p-price-main span{color:var(--g)}
-.p-price-compact .p-price-founding.is-off{display:none}
-.p-price-compact .p-price-founding.is-off + .p-price-main-solo{display:flex}
+.p-price-compact .p-price-promo.is-off{display:none}
+.p-price-compact .p-price-promo.is-off + .p-price-main-solo{display:flex}
 .p-price-compact .p-price-main-solo{display:none;align-items:baseline;gap:.35rem;margin:.25rem 0 .5rem}
 .p-price-compact .p-price-main-solo span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
 .p-card.hot .p-price-compact .p-price-main-solo span{color:#fff}
@@ -183,10 +179,6 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .setup-service-compact{margin-top:1.25rem;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .setup-service-compact p{font-size:.88rem;color:var(--muted);margin:0;flex:1;min-width:200px}
 .setup-service-compact .p-btn{width:auto;padding:.65rem 1.1rem;font-size:.82rem;margin:0}
-.founding-banner{background:#fff;border:1px solid rgba(29,158,117,.25);border-radius:var(--r);padding:1rem 1.5rem;margin-bottom:2.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.founding-banner p{font-size:.85rem;color:var(--ink)}
-.founding-banner strong{color:var(--g)}
-.slots-badge{background:var(--g-dim);color:var(--g2);font-size:.75rem;font-weight:700;padding:.3rem .9rem;border-radius:20px;white-space:nowrap;border:1px solid rgba(29,158,117,.2)}
 .price-grid{display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:1.25rem}
 .p-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:2rem;position:relative}
 .p-card.hot{background:var(--ink);border-color:var(--ink)}
@@ -255,9 +247,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-card.hot .p-btn:hover{background:var(--g2)}
 .p-note{text-align:center;margin-top:1.25rem;font-size:.78rem;color:var(--muted)}
 .p-price-label{font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem}
-.p-price-label.founding{color:var(--g2);margin-top:.5rem}
+.p-price-label.promo{color:var(--g2);margin-top:.5rem}
 .p-card.hot .p-price-label{color:rgba(255,255,255,.35)}
-.p-card.hot .p-price-label.founding{color:var(--g)}
+.p-card.hot .p-price-label.promo{color:var(--g)}
 .p-price-contact{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:700;color:var(--g);line-height:1.2;margin:.35rem 0 .5rem}
 a.p-price-contact{display:block;text-decoration:none;cursor:pointer}
 a.p-price-contact:hover{opacity:.85}
@@ -333,11 +325,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 </head>
 <body>
  
-<!-- FOUNDING STRIP -->
-<div class="founding-strip">
-  <span data-tr="🏆 Kurucu Klinik Programı" data-en="🏆 Founding Clinic Program">🏆 Kurucu Klinik Programı</span>
-  <span class="strip-sub" id="foundingStripSub" data-tr="İlk 10 klinik için kurucu fiyat · trial şu an kapalı" data-en="Founding price for the first 10 clinics · trial not open yet">İlk 10 klinik için kurucu fiyat · trial şu an kapalı</span>
-</div>
+<!-- PROMO STRIP -->
+<div class="promo-strip" id="promoStrip" data-tr="İlk 10 klinik için özel fiyat — Starter $45 · Pro $79" data-en="Special pricing for the first 10 clinics — Starter $45 · Pro $79">İlk 10 klinik için özel fiyat — Starter $45 · Pro $79</div>
  
 <!-- NAV -->
 <nav>
@@ -349,7 +338,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
   </div>
   <div class="nav-r">
     <button class="lang-btn" onclick="toggleLang()">EN</button>
-    <a href="#fiyat" class="nav-cta" data-tr="Kurucu Klinik Başvurusu" data-en="Apply as Founding Clinic">Kurucu Klinik Başvurusu</a>
+    <a href="#fiyat" class="nav-cta" data-tr="Hemen Başlayın" data-en="Get Started">Hemen Başlayın</a>
   </div>
 </nav>
  
@@ -364,7 +353,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       Lead formundan PDF teklife — hasta takibi tek panelde. WhatsApp ve Excel karmaşasına gerek yok.
     </p>
     <div class="h-actions">
-      <a href="#fiyat" class="btn-g" data-tr="Kurucu Klinik Başvurusu →" data-en="Apply as Founding Clinic →">Kurucu Klinik Başvurusu →</a>
+      <a href="#fiyat" class="btn-g" data-tr="Plan Seçin →" data-en="Choose Your Plan →">Plan Seçin →</a>
       <a href="#demo" class="btn-ghost-w" data-tr="Sistemi görün ↓" data-en="See the product ↓">Sistemi görün ↓</a>
     </div>
     <div class="h-trust">
@@ -449,16 +438,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
   <div class="wrap">
     <div class="reveal text-center" style="text-align:center">
       <div class="eyebrow" style="justify-content:center;display:flex" data-tr="Fiyatlandırma" data-en="Pricing">Fiyatlandırma</div>
-      <h2 class="section-h" data-tr="Planınızı seçin, başvurun." data-en="Pick your plan and apply.">Planınızı seçin, başvurun.</h2>
-      <p class="section-p" style="margin:0 auto 1.75rem;text-align:center" data-tr="USD · kurucu fiyat kilidi · yıllık ödemede 2 ay bedava · trial şu an kapalı" data-en="USD · founding price lock · save 2 months yearly · trial not open yet">USD · kurucu fiyat kilidi · yıllık ödemede 2 ay bedava · trial şu an kapalı</p>
-    </div>
-    <div class="founding-banner reveal" id="foundingBanner">
-      <div>
-        <strong id="foundingBannerTitle" data-tr="Kurucu Klinik Programı" data-en="Founding Clinic Program">Kurucu Klinik Programı</strong>
-        <p id="foundingBannerDesc" data-tr="Kalıcı kurucu fiyat kilidi ve öncelikli onboarding. Başvurular sırayla değerlendirilir." data-en="Permanent founding price lock and priority onboarding. Applications are reviewed in order.">Kalıcı kurucu fiyat kilidi ve öncelikli onboarding. Başvurular sırayla değerlendirilir.</p>
-        <ul class="founding-benefits" id="foundingBenefits"></ul>
-      </div>
-      <span class="founding-badge" id="foundingBadge" data-tr="İlk 10 klinik · kurucu fiyat" data-en="First 10 clinics · founding price">İlk 10 klinik · kurucu fiyat</span>
+      <h2 class="section-h" data-tr="Planınızı seçin, hemen başlayın." data-en="Pick your plan and get started.">Planınızı seçin, hemen başlayın.</h2>
+      <p class="section-p" style="margin:0 auto 1.75rem;text-align:center" data-tr="USD · ilk 10 klinik için özel fiyat · yıllık ödemede 2 ay bedava" data-en="USD · special pricing for the first 10 clinics · save 2 months yearly">USD · ilk 10 klinik için özel fiyat · yıllık ödemede 2 ay bedava</p>
     </div>
     <div class="price-grid reveal">
       <div class="p-card p-price-compact">
@@ -468,8 +449,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
           <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
           <div class="p-price"><s id="wasStarter">$69</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
-        <div class="p-price-founding" id="starterFoundingBlock">
-          <div class="p-price-label founding" data-tr="Kurucu fiyat · ilk 10 klinik" data-en="Founding price · first 10 clinics">Kurucu fiyat · ilk 10 klinik</div>
+        <div class="p-price-promo" id="starterPromoBlock">
+          <div class="p-price-label promo" id="promoLabelStarter" data-tr="Özel fiyat" data-en="Special price">Özel fiyat</div>
           <div class="p-price-main"><span id="nowStarter">$45</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
         <div class="p-price-main-solo"><span id="nowStarterSolo">$69</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
@@ -480,7 +461,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
           <li data-tr="Hasta formu & PDF teklif" data-en="Patient form & PDF quote">Hasta formu & PDF teklif</li>
           <li data-tr="Temel dashboard" data-en="Basic dashboard">Temel dashboard</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Starter — Başvur" data-en="Apply — Starter">Starter — Başvur</button>
+        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Starter — Başla" data-en="Get Starter">Starter — Başla</button>
       </div>
       <div class="p-card hot p-price-compact">
         <div class="hot-label" data-tr="ÖNERİLEN" data-en="Recommended">ÖNERİLEN</div>
@@ -490,8 +471,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
           <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
           <div class="p-price"><s id="wasPro">$119</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
-        <div class="p-price-founding" id="proFoundingBlock">
-          <div class="p-price-label founding" data-tr="Kurucu fiyat · ilk 10 klinik" data-en="Founding price · first 10 clinics">Kurucu fiyat · ilk 10 klinik</div>
+        <div class="p-price-promo" id="proPromoBlock">
+          <div class="p-price-label promo" id="promoLabelPro" data-tr="Özel fiyat" data-en="Special price">Özel fiyat</div>
           <div class="p-price-main"><span id="nowPro">$79</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
         <div class="p-price-main-solo"><span id="nowProSolo">$119</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
@@ -502,7 +483,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
           <li data-tr="Pipeline & doktor iş akışı" data-en="Pipeline & doctor workflow">Pipeline & doktor iş akışı</li>
           <li data-tr="WhatsApp & gelişmiş raporlar" data-en="WhatsApp & advanced reports">WhatsApp & gelişmiş raporlar</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('pro')" data-tr="Professional — Başvur" data-en="Apply — Professional">Professional — Başvur</button>
+        <button type="button" class="p-btn" onclick="addToCart('pro')" data-tr="Professional — Başla" data-en="Get Professional">Professional — Başla</button>
       </div>
       <div class="p-card p-price-compact">
         <span class="p-tag" data-tr="Enterprise" data-en="Enterprise">Enterprise</span>
@@ -517,7 +498,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       </div>
     </div>
     <div class="setup-service-compact reveal">
-      <p data-tr="Opsiyonel kurulum — logo, form, eğitim dahil. Kurucu fiyat: " data-en="Optional setup — logo, forms, training. Founding price: ">Opsiyonel kurulum — logo, form, eğitim dahil. Kurucu fiyat: <strong id="nowSetup">$99</strong> (<s id="wasSetup">$149</s>)</p>
+      <p data-tr="Opsiyonel kurulum — logo, form, eğitim dahil. Özel fiyat: " data-en="Optional setup — logo, forms, training. Special price: ">Opsiyonel kurulum — logo, form, eğitim dahil. Özel fiyat: <strong id="nowSetup">$99</strong> (<s id="wasSetup">$149</s>)</p>
       <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Kurulum Ekle" data-en="Add Setup">Kurulum Ekle</button>
     </div>
   </div>
@@ -541,7 +522,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)" data-tr="Ücretsiz deneme var mı?" data-en="Is there a free trial?">Ücretsiz deneme var mı?</div>
-        <div class="faq-a" data-tr="Şu an ücretsiz trial açık değil. Kurucu Klinik Programı ile $45 / $79 kurucu fiyatından başvurabilirsiniz. Program tamamlandıktan sonra 14 günlük Pro denemesi açılacaktır." data-en="Free trial is not open yet. Apply via the Founding Clinic Program at $45 / $79. A 14-day Pro trial will launch after the founding program closes.">Şu an ücretsiz trial açık değil. Kurucu Klinik Programı ile $45 / $79 kurucu fiyatından başvurabilirsiniz. Program tamamlandıktan sonra 14 günlük Pro denemesi açılacaktır.</div>
+        <div class="faq-a" data-tr="Şu an ücretsiz trial yok. İlk 10 klinik için Starter $45 / Pro $79 özel fiyat geçerli." data-en="No free trial yet. Special pricing for the first 10 clinics: Starter $45 / Pro $79.">Şu an ücretsiz trial yok. İlk 10 klinik için Starter $45 / Pro $79 özel fiyat geçerli.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)" data-tr="İptal edebilir miyim?" data-en="Can I cancel?">İptal edebilir miyim?</div>
@@ -555,11 +536,11 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <!-- FINAL CTA -->
 <section class="cta-fin">
   <div class="wrap reveal">
-    <div class="eyebrow" style="color:var(--g);justify-content:center;display:flex;margin-bottom:1.25rem" data-tr="Kurucu Klinik Programı" data-en="Founding Clinic Program">Kurucu Klinik Programı</div>
-    <h2 data-tr="Başvurun, <em>birlikte kuralım.</em>" data-en="Apply and <em>let's build together.</em>">Başvurun, <em>birlikte kuralım.</em></h2>
-    <p data-tr="Planınızı seçin, başvurunuzu gönderin — uygunluk ve onboarding için 1 iş günü içinde dönüş yapılır." data-en="Choose your plan and submit your application — we respond within 1 business day.">Planınızı seçin, başvurunuzu gönderin — uygunluk ve onboarding için 1 iş günü içinde dönüş yapılır.</p>
+    <div class="eyebrow" style="color:var(--g);justify-content:center;display:flex;margin-bottom:1.25rem" data-tr="İlk 10 klinik için özel fiyat" data-en="Special pricing — first 10 clinics">İlk 10 klinik için özel fiyat</div>
+    <h2 data-tr="Bugün <em>başlayın.</em>" data-en="Get started <em>today.</em>">Bugün <em>başlayın.</em></h2>
+    <p data-tr="Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz." data-en="Pick your plan — we start onboarding within 1 business day.">Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz.</p>
     <div class="cta-group">
-      <a href="#fiyat" class="btn-w" data-tr="Kurucu Klinik Başvurusu →" data-en="Apply as Founding Clinic →">Kurucu Klinik Başvurusu →</a>
+      <a href="#fiyat" class="btn-w" data-tr="Plan Seçin →" data-en="Choose Your Plan →">Plan Seçin →</a>
     </div>
   </div>
 </section>
@@ -604,7 +585,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 </aside>
 <div class="co-overlay" id="coOverlay" onclick="closeCheckout()"></div>
 <div class="co-modal" id="coModal">
-  <div class="co-head"><h3 data-tr="Kurucu Klinik Başvurusu" data-en="Founding Clinic Application">Kurucu Klinik Başvurusu</h3><button class="co-close" onclick="closeCheckout()">&times;</button></div>
+  <div class="co-head"><h3 data-tr="Hemen Başlayın" data-en="Get Started">Hemen Başlayın</h3><button class="co-close" onclick="closeCheckout()">&times;</button></div>
   <div class="co-body">
     <div class="co-summary" id="coSummary"></div>
     <label data-tr="Klinik adı" data-en="Clinic name">Klinik adı</label>
@@ -620,7 +601,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     <label class="co-check"><input type="checkbox" id="coTerms" onchange="updateCheckoutConfirm()"><span data-tr="Kullanım Koşulları ile Veri Koruma / Rol Ayrımı metnini okudum; kliniğin veri sorumlusu olduğunu ve CliniPipes'ın yazılım sağlayıcısı olduğunu kabul ediyorum." data-en="I accept the Terms and Data Protection notice; I acknowledge the clinic is data controller and CliniPipes is software provider only.">Kullanım Koşulları ile Veri Koruma / Rol Ayrımı metnini okudum; kliniğin veri sorumlusu olduğunu ve CliniPipes'ın yazılım sağlayıcısı olduğunu kabul ediyorum.</span> <a href="/kullanim-kosullari" target="_blank" rel="noopener">↗</a> · <a href="/veri-rolu" target="_blank" rel="noopener">↗</a></label>
     <label class="co-check"><input type="checkbox" id="coDigital" onchange="updateCheckoutConfirm()"><span data-tr="Dijital hizmetin derhal ifasına onay veriyorum; cayma hakkımı kaybedeceğimi kabul ediyorum." data-en="I agree to immediate delivery of the digital service and accept loss of withdrawal right.">Dijital hizmetin derhal ifasına onay veriyorum; cayma hakkımı kaybedeceğimi kabul ediyorum.</span></label>
     <label class="co-check"><input type="checkbox" id="coKvkk" onchange="updateCheckoutConfirm()"><span data-tr="KVKK Aydınlatma Metni'ni okudum." data-en="I have read the Privacy / KVKK notice.">KVKK Aydınlatma Metni'ni okudum.</span> <a href="/gizlilik" target="_blank" rel="noopener">↗</a></label>
-    <button class="co-confirm" id="coConfirm" disabled onclick="confirmPurchase()" data-tr="Başvuruyu Gönder" data-en="Submit Application">Başvuruyu Gönder</button>
+    <button class="co-confirm" id="coConfirm" disabled onclick="confirmPurchase()" data-tr="Gönder" data-en="Submit">Gönder</button>
   </div>
 </div>
 
