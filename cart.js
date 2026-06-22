@@ -236,28 +236,113 @@ function paintCard(id, listM, nowM, listY, nowY) {
   }
 }
 
-function openMailClient(email) {
+function contactMailAddress(el) {
+  var href = (el && el.getAttribute('href')) || '';
+  return String(contactEmail || href.replace(/^mailto:/i, '').split('?')[0] || '').trim();
+}
+
+function buildMailtoUrl(email) {
+  var subject = encodeURIComponent('CliniPipes Destek');
+  var body = encodeURIComponent('Merhaba,\n\n');
+  return 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+}
+
+function attemptMailto(email) {
   email = String(email || '').trim();
   if (!email) return;
-  var url = 'mailto:' + email;
+  var url = buildMailtoUrl(email);
   try {
-    window.location.href = url;
-  } catch (e) {
+    var frame = document.createElement('iframe');
+    frame.style.display = 'none';
+    frame.src = url;
+    document.body.appendChild(frame);
+    setTimeout(function () { frame.remove(); }, 3000);
+  } catch (e) {}
+  try {
     var a = document.createElement('a');
     a.href = url;
     a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
+  } catch (e2) {}
+}
+
+function closeContactChooser() {
+  var box = document.getElementById('contactChooser');
+  if (!box) return;
+  box.classList.remove('open');
+  box.setAttribute('aria-hidden', 'true');
+}
+
+function showContactChooser(email) {
+  email = String(email || '').trim();
+  if (!email) return;
+  var box = document.getElementById('contactChooser');
+  if (!box) {
+    attemptMailto(email);
+    return;
   }
+  var mailto = buildMailtoUrl(email);
+  var gmail = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email);
+  var outlook = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(email);
+  var emailEl = document.getElementById('contactChooserEmail');
+  var mailApp = document.getElementById('contactChooserMailApp');
+  var gmailEl = document.getElementById('contactChooserGmail');
+  var outlookEl = document.getElementById('contactChooserOutlook');
+  var copyBtn = document.getElementById('contactChooserCopy');
+  if (emailEl) emailEl.textContent = email;
+  if (mailApp) {
+    mailApp.href = mailto;
+    mailApp.onclick = function (e) {
+      e.preventDefault();
+      attemptMailto(email);
+      closeContactChooser();
+      return false;
+    };
+  }
+  if (gmailEl) gmailEl.href = gmail;
+  if (outlookEl) outlookEl.href = outlook;
+  if (copyBtn) {
+    copyBtn.onclick = function () {
+      var done = function () {
+        copyBtn.textContent = lang === 'en' ? 'Copied!' : 'Kopyalandı!';
+        setTimeout(function () {
+          copyBtn.textContent = lang === 'en' ? 'Copy email' : 'E-postayı kopyala';
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(done).catch(function () {
+          window.prompt(lang === 'en' ? 'Copy email:' : 'E-postayı kopyalayın:', email);
+        });
+      } else {
+        window.prompt(lang === 'en' ? 'Copy email:' : 'E-postayı kopyalayın:', email);
+      }
+    };
+  }
+  box.classList.add('open');
+  box.setAttribute('aria-hidden', 'false');
+}
+
+function openContactMail(e, el) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  var mail = contactMailAddress(el || (e && e.currentTarget));
+  if (!mail) return false;
+  attemptMailto(mail);
+  showContactChooser(mail);
+  return false;
 }
 
 function applyContactEmail(email) {
   email = String(email || '').trim();
   if (!email) return;
   contactEmail = email;
+  var mailto = buildMailtoUrl(email);
   document.querySelectorAll('[data-contact-mail]').forEach(function (el) {
-    el.setAttribute('href', 'mailto:' + email);
+    el.setAttribute('href', mailto);
   });
   var footer = document.getElementById('footerSupportLink');
   if (footer) {
@@ -269,24 +354,7 @@ function applyContactEmail(email) {
   }
 }
 
-function initContactMailLinks() {
-  document.querySelectorAll('[data-contact-mail]').forEach(function (el) {
-    if (el.dataset.contactBound) return;
-    el.dataset.contactBound = '1';
-    el.addEventListener('click', function (e) {
-      var href = el.getAttribute('href') || '';
-      if (/^mailto:[^#]+/i.test(href)) return;
-      var mail = contactEmail || (href.match(/^mailto:(.+)$/i) || [])[1] || '';
-      mail = String(mail).trim();
-      if (!mail) return;
-      e.preventDefault();
-      openMailClient(mail);
-    });
-  });
-}
-
 function loadContactEmail() {
-  initContactMailLinks();
   fetch('/legal-seller.json?t=' + Date.now()).then(function (r) { return r.json(); }).then(function (s) {
     if (s && s.email) applyContactEmail(s.email);
   }).catch(function () {});
@@ -528,8 +596,10 @@ document.querySelectorAll('.reveal').forEach(function (el) {
 
 document.addEventListener('DOMContentLoaded', function () {
   renderCart();
-  initContactMailLinks();
   loadContactEmail();
   loadPrices();
   refreshCheckoutToken();
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeContactChooser();
+  });
 });
