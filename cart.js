@@ -211,20 +211,24 @@ function fmtUsd(n) {
   return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function paintCard(id, listM, nowM, listY, nowY) {
+function paintCard(id, listM, nowM, listY, nowY, foundingOn) {
   var w = document.getElementById('was' + id);
   var n = document.getElementById('now' + id);
+  var solo = document.getElementById('now' + id + 'Solo');
+  var block = id === 'Starter' ? document.getElementById('starterFoundingBlock')
+    : id === 'Pro' ? document.getElementById('proFoundingBlock') : null;
   var y = document.getElementById('yr' + id);
   if (n) n.textContent = fmtUsd(nowM);
-  if (w) {
-    if (listM !== nowM) { w.textContent = fmtUsd(listM); w.style.display = 'inline'; }
-    else w.style.display = 'none';
-  }
+  if (solo) solo.textContent = fmtUsd(listM);
+  if (w) w.textContent = fmtUsd(listM);
+  if (block) block.classList.toggle('is-off', !foundingOn);
   if (y) {
     var save = lang === 'en' ? ' — Save 2 months.' : ' — 2 ay bedava';
     var yrSuffix = lang === 'en' ? '/year' : '/yıl';
-    if (listY !== nowY) y.innerHTML = '<s>' + fmtUsd(listY) + yrSuffix + '</s> ' + fmtUsd(nowY) + yrSuffix + save;
-    else y.textContent = fmtUsd(nowY) + yrSuffix + save;
+    var showListY = foundingOn ? listY : listY;
+    var showNowY = foundingOn ? nowY : listY;
+    if (showListY !== showNowY) y.innerHTML = '<s>' + fmtUsd(showListY) + yrSuffix + '</s> ' + fmtUsd(showNowY) + yrSuffix + save;
+    else y.textContent = fmtUsd(showNowY) + yrSuffix + save;
   }
 }
 
@@ -422,9 +426,9 @@ function loadPrices() {
       PRICES.starter.monthly = smN; PRICES.starter.yearly = syN;
       PRICES.pro.monthly = pmN; PRICES.pro.yearly = pyN;
       PRICES.setup.oneoff = suN;
-      paintCard('Starter', sm, smN, sy, syN);
-      paintCard('Pro', pm, pmN, py, pyN);
-      paintCard('Setup', su, suN, su, suN);
+      paintCard('Starter', sm, smN, sy, syN, foundingActive);
+      paintCard('Pro', pm, pmN, py, pyN, foundingActive);
+      paintCard('Setup', su, suN, su, suN, foundingActive);
     }
     if (c.founding) applyFounding(c.founding);
     if (c.demo) applyDemo(c.demo);

@@ -164,10 +164,20 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
  
 /* ── PRICING ── */
 .pricing{padding:4.5rem 0;background:var(--off)}
-.p-price-compact .p-price-old{display:none}
-.p-price-compact .p-price-main{display:flex;align-items:baseline;gap:.35rem;margin:.25rem 0 .5rem}
-.p-price-compact .p-price-main span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
-.p-card.hot .p-price-compact .p-price-main span{color:#fff}
+.p-price-compact .p-price-old{display:block;margin-bottom:.5rem}
+.p-price-compact .p-price-old .p-price{font-size:1.35rem;color:var(--muted);line-height:1.2}
+.p-price-compact .p-price-old .p-price s{color:var(--muted)}
+.p-card.hot .p-price-compact .p-price-old .p-price s{color:rgba(255,255,255,.45)}
+.p-card.hot .p-price-compact .p-price-old .p-price-label{color:rgba(255,255,255,.4)}
+.p-price-compact .p-price-founding{margin-top:.15rem}
+.p-price-compact .p-price-main{display:flex;align-items:baseline;gap:.35rem;margin:.15rem 0 .45rem}
+.p-price-compact .p-price-main span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--g);line-height:1}
+.p-card.hot .p-price-compact .p-price-main span{color:var(--g)}
+.p-price-compact .p-price-founding.is-off{display:none}
+.p-price-compact .p-price-founding.is-off + .p-price-main-solo{display:flex}
+.p-price-compact .p-price-main-solo{display:none;align-items:baseline;gap:.35rem;margin:.25rem 0 .5rem}
+.p-price-compact .p-price-main-solo span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
+.p-card.hot .p-price-compact .p-price-main-solo span{color:#fff}
 .p-price-compact .p-yr{font-size:.78rem;color:var(--muted);margin-bottom:.5rem}
 .p-card.hot .p-price-compact .p-yr{color:rgba(255,255,255,.45)}
 .setup-service-compact{margin-top:1.25rem;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
@@ -326,7 +336,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <!-- FOUNDING STRIP -->
 <div class="founding-strip">
   <span data-tr="🏆 Kurucu Klinik Programı" data-en="🏆 Founding Clinic Program">🏆 Kurucu Klinik Programı</span>
-  <span class="strip-sub" id="foundingStripSub" data-tr="$45 / $79 fiyat kilidi · kurulum desteği · trial şu an kapalı" data-en="$45 / $79 price lock · setup support · trial not open yet">$45 / $79 fiyat kilidi · kurulum desteği · trial şu an kapalı</span>
+  <span class="strip-sub" id="foundingStripSub" data-tr="İlk 10 klinik için kurucu fiyat · trial şu an kapalı" data-en="Founding price for the first 10 clinics · trial not open yet">İlk 10 klinik için kurucu fiyat · trial şu an kapalı</span>
 </div>
  
 <!-- NAV -->
@@ -448,15 +458,21 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
         <p id="foundingBannerDesc" data-tr="Kalıcı kurucu fiyat kilidi ve öncelikli onboarding. Başvurular sırayla değerlendirilir." data-en="Permanent founding price lock and priority onboarding. Applications are reviewed in order.">Kalıcı kurucu fiyat kilidi ve öncelikli onboarding. Başvurular sırayla değerlendirilir.</p>
         <ul class="founding-benefits" id="foundingBenefits"></ul>
       </div>
-      <span class="founding-badge" id="foundingBadge" data-tr="Başvuru açık" data-en="Applications open">Başvuru açık</span>
+      <span class="founding-badge" id="foundingBadge" data-tr="İlk 10 klinik · kurucu fiyat" data-en="First 10 clinics · founding price">İlk 10 klinik · kurucu fiyat</span>
     </div>
     <div class="price-grid reveal">
       <div class="p-card p-price-compact">
         <span class="p-tag" data-tr="Starter" data-en="Starter">Starter</span>
         <div class="p-desc" style="margin-bottom:.75rem" data-tr="Tek hekimli klinikler." data-en="Solo clinics.">Tek hekimli klinikler.</div>
-        <div class="p-price-old"><div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div><div class="p-price"><s id="wasStarter">$69</s></div></div>
-        <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
-        <div class="p-price-main"><span id="nowStarter">$45</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        <div class="p-price-old">
+          <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
+          <div class="p-price"><s id="wasStarter">$69</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        </div>
+        <div class="p-price-founding" id="starterFoundingBlock">
+          <div class="p-price-label founding" data-tr="Kurucu fiyat · ilk 10 klinik" data-en="Founding price · first 10 clinics">Kurucu fiyat · ilk 10 klinik</div>
+          <div class="p-price-main"><span id="nowStarter">$45</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        </div>
+        <div class="p-price-main-solo"><span id="nowStarterSolo">$69</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         <div class="p-yr" id="yrStarter"><s>$690</s> $450/yıl</div>
         <div class="p-divider"></div>
         <ul class="p-list">
@@ -470,9 +486,15 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
         <div class="hot-label" data-tr="ÖNERİLEN" data-en="Recommended">ÖNERİLEN</div>
         <span class="p-tag" data-tr="Professional" data-en="Professional">Professional</span>
         <div class="p-desc" style="margin-bottom:.75rem" data-tr="Satış ekibi olan klinikler." data-en="Clinics with a sales team.">Satış ekibi olan klinikler.</div>
-        <div class="p-price-old"><div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div><div class="p-price"><s id="wasPro">$119</s></div></div>
-        <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
-        <div class="p-price-main"><span id="nowPro">$79</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        <div class="p-price-old">
+          <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
+          <div class="p-price"><s id="wasPro">$119</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        </div>
+        <div class="p-price-founding" id="proFoundingBlock">
+          <div class="p-price-label founding" data-tr="Kurucu fiyat · ilk 10 klinik" data-en="Founding price · first 10 clinics">Kurucu fiyat · ilk 10 klinik</div>
+          <div class="p-price-main"><span id="nowPro">$79</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        </div>
+        <div class="p-price-main-solo"><span id="nowProSolo">$119</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         <div class="p-yr" id="yrPro"><s>$1,190</s> $790/yıl</div>
         <div class="p-divider"></div>
         <ul class="p-list">
