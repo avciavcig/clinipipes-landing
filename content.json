@@ -1,23 +1,27 @@
 {
-  "prices": {
-    "sm": 69,
-    "sy": 690,
-    "sm_f": 45,
-    "sy_f": 450,
-    "pm": 119,
-    "py": 1190,
-    "pm_f": 79,
-    "py_f": 790,
-    "setup": 149,
-    "setup_f": 99,
-    "bundle": 0
+  "pricing": {
+    "starter": {
+      "listPrice": 69,
+      "introductoryPrice": 45,
+      "introductoryPriceActive": true,
+      "remainingSlots": 10
+    },
+    "professional": {
+      "listPrice": 119,
+      "introductoryPrice": 79,
+      "introductoryPriceActive": true,
+      "remainingSlots": 10
+    },
+    "setup": {
+      "listPrice": 149,
+      "introductoryPrice": 99,
+      "introductoryPriceActive": true
+    },
+    "bundleDiscount": 0
   },
-  "promo": {
-    "active": true,
-    "strip_tr": "İlk 10 klinik için özel fiyat — Starter $45 · Pro $79",
-    "strip_en": "Special pricing for the first 10 clinics — Starter $45 · Pro $79",
-    "label_tr": "Özel fiyat",
-    "label_en": "Special price"
+  "introductoryCampaign": {
+    "strip_tr": "Tanıtım fiyatı geçerli — Starter $45 · Pro $79",
+    "strip_en": "Introductory pricing — Starter $45 · Pro $79"
   },
   "demo": {
     "version": 14,
@@ -81,8 +85,8 @@
       {
         "q_tr": "Ücretsiz deneme var mı?",
         "q_en": "Is there a free trial?",
-        "a_tr": "Şu an ücretsiz trial yok. İlk 10 klinik için Starter $45 / Pro $79 özel fiyat geçerli.",
-        "a_en": "No free trial yet. Special pricing for the first 10 clinics: Starter $45 / Pro $79."
+        "a_tr": "Şu an ücretsiz trial yok. Tanıtım döneminde Starter $45 / Pro $79 tanıtım fiyatı geçerlidir.",
+        "a_en": "No free trial yet. Introductory pricing: Starter $45 / Pro $79 during the launch period."
       },
       {
         "q_tr": "İptal edebilir miyim?",
@@ -98,8 +102,8 @@
         { "val": "KVKK", "lbl_tr": "& GDPR uyumlu", "lbl_en": "& GDPR compliant" }
       ],
       "cta": {
-        "eyebrow_tr": "İlk 10 klinik için özel fiyat",
-        "eyebrow_en": "Special pricing — first 10 clinics",
+        "eyebrow_tr": "Tanıtım fiyatı",
+        "eyebrow_en": "Introductory pricing",
         "title_tr": "Bugün <em>başlayın.</em>",
         "title_en": "Get started <em>today.</em>",
         "desc_tr": "Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz.",

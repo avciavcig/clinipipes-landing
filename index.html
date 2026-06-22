@@ -41,8 +41,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .nav-cta{background:var(--g);color:#fff;padding:.5rem 1.2rem;border-radius:7px;font-size:.83rem;font-weight:600;transition:background .2s}
 .nav-cta:hover{background:var(--g2)}
  
-/* ── PROMO STRIP ── */
-.promo-strip{background:var(--g);color:#fff;text-align:center;padding:.6rem 1rem;font-size:.8rem;font-weight:500}
+/* ── INTRO STRIP ── */
+.introductory-strip{background:var(--g);color:#fff;text-align:center;padding:.6rem 1rem;font-size:.8rem;font-weight:500}
+.p-price-compact .p-price-old.is-off{display:none}
+.p-remaining-slots{font-size:.72rem;color:var(--g2);font-weight:600;margin-top:.35rem}
+.p-card.hot .p-remaining-slots{color:var(--g)}
  
 /* ── HERO ── */
 .hero{background:var(--ink);min-height:78vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 4%}
@@ -165,12 +168,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-price-compact .p-price-old .p-price s{color:var(--muted)}
 .p-card.hot .p-price-compact .p-price-old .p-price s{color:rgba(255,255,255,.45)}
 .p-card.hot .p-price-compact .p-price-old .p-price-label{color:rgba(255,255,255,.4)}
-.p-price-compact .p-price-promo{margin-top:.15rem}
+.p-price-compact .p-price-introductory{margin-top:.15rem}
 .p-price-compact .p-price-main{display:flex;align-items:baseline;gap:.35rem;margin:.15rem 0 .45rem}
 .p-price-compact .p-price-main span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--g);line-height:1}
 .p-card.hot .p-price-compact .p-price-main span{color:var(--g)}
-.p-price-compact .p-price-promo.is-off{display:none}
-.p-price-compact .p-price-promo.is-off + .p-price-main-solo{display:flex}
+.p-price-compact .p-price-introductory.is-off{display:none}
+.p-price-compact .p-price-introductory.is-off + .p-price-main-solo{display:flex}
 .p-price-compact .p-price-main-solo{display:none;align-items:baseline;gap:.35rem;margin:.25rem 0 .5rem}
 .p-price-compact .p-price-main-solo span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
 .p-card.hot .p-price-compact .p-price-main-solo span{color:#fff}
@@ -247,9 +250,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .p-card.hot .p-btn:hover{background:var(--g2)}
 .p-note{text-align:center;margin-top:1.25rem;font-size:.78rem;color:var(--muted)}
 .p-price-label{font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem}
-.p-price-label.promo{color:var(--g2);margin-top:.5rem}
+.p-price-label.introductory{color:var(--g2);margin-top:.5rem}
 .p-card.hot .p-price-label{color:rgba(255,255,255,.35)}
-.p-card.hot .p-price-label.promo{color:var(--g)}
+.p-card.hot .p-price-label.introductory{color:var(--g)}
 .p-price-contact{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:700;color:var(--g);line-height:1.2;margin:.35rem 0 .5rem}
 a.p-price-contact{display:block;text-decoration:none;cursor:pointer}
 a.p-price-contact:hover{opacity:.85}
@@ -326,7 +329,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <body>
  
 <!-- PROMO STRIP -->
-<div class="promo-strip" id="promoStrip" data-tr="İlk 10 klinik için özel fiyat — Starter $45 · Pro $79" data-en="Special pricing for the first 10 clinics — Starter $45 · Pro $79">İlk 10 klinik için özel fiyat — Starter $45 · Pro $79</div>
+<div class="introductory-strip" id="introductoryStrip" style="display:none">Tanıtım fiyatı geçerli</div>
  
 <!-- NAV -->
 <nav>
@@ -439,19 +442,20 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     <div class="reveal text-center" style="text-align:center">
       <div class="eyebrow" style="justify-content:center;display:flex" data-tr="Fiyatlandırma" data-en="Pricing">Fiyatlandırma</div>
       <h2 class="section-h" data-tr="Planınızı seçin, hemen başlayın." data-en="Pick your plan and get started.">Planınızı seçin, hemen başlayın.</h2>
-      <p class="section-p" style="margin:0 auto 1.75rem;text-align:center" data-tr="USD · ilk 10 klinik için özel fiyat · yıllık ödemede 2 ay bedava" data-en="USD · special pricing for the first 10 clinics · save 2 months yearly">USD · ilk 10 klinik için özel fiyat · yıllık ödemede 2 ay bedava</p>
+      <p class="section-p" id="pricingIntroSubtitle" style="margin:0 auto 1.75rem;text-align:center" data-tr="USD · tanıtım fiyatı · yıllık ödemede 2 ay bedava" data-en="USD · introductory pricing · save 2 months yearly">USD · tanıtım fiyatı · yıllık ödemede 2 ay bedava</p>
     </div>
     <div class="price-grid reveal">
       <div class="p-card p-price-compact">
         <span class="p-tag" data-tr="Starter" data-en="Starter">Starter</span>
         <div class="p-desc" style="margin-bottom:.75rem" data-tr="Tek hekimli klinikler." data-en="Solo clinics.">Tek hekimli klinikler.</div>
         <div class="p-price-old">
-          <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
+          <div class="p-price-label" data-tr="Liste fiyatı" data-en="List price">Liste fiyatı</div>
           <div class="p-price"><s id="wasStarter">$69</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
-        <div class="p-price-promo" id="starterPromoBlock">
-          <div class="p-price-label promo" id="promoLabelStarter" data-tr="Özel fiyat" data-en="Special price">Özel fiyat</div>
+        <div class="p-price-introductory" id="starterIntroBlock">
+          <div class="p-price-label introductory" data-tr="Tanıtım fiyatı" data-en="Introductory price">Tanıtım fiyatı</div>
           <div class="p-price-main"><span id="nowStarter">$45</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+          <div class="p-remaining-slots" id="starterRemainingSlots" style="display:none"></div>
         </div>
         <div class="p-price-main-solo"><span id="nowStarterSolo">$69</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         <div class="p-yr" id="yrStarter"><s>$690</s> $450/yıl</div>
@@ -468,12 +472,13 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
         <span class="p-tag" data-tr="Professional" data-en="Professional">Professional</span>
         <div class="p-desc" style="margin-bottom:.75rem" data-tr="Satış ekibi olan klinikler." data-en="Clinics with a sales team.">Satış ekibi olan klinikler.</div>
         <div class="p-price-old">
-          <div class="p-price-label" data-tr="Normal fiyat" data-en="Regular price">Normal fiyat</div>
+          <div class="p-price-label" data-tr="Liste fiyatı" data-en="List price">Liste fiyatı</div>
           <div class="p-price"><s id="wasPro">$119</s><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         </div>
-        <div class="p-price-promo" id="proPromoBlock">
-          <div class="p-price-label promo" id="promoLabelPro" data-tr="Özel fiyat" data-en="Special price">Özel fiyat</div>
+        <div class="p-price-introductory" id="proIntroBlock">
+          <div class="p-price-label introductory" data-tr="Tanıtım fiyatı" data-en="Introductory price">Tanıtım fiyatı</div>
           <div class="p-price-main"><span id="nowPro">$79</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+          <div class="p-remaining-slots" id="proRemainingSlots" style="display:none"></div>
         </div>
         <div class="p-price-main-solo"><span id="nowProSolo">$119</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
         <div class="p-yr" id="yrPro"><s>$1,190</s> $790/yıl</div>
@@ -497,8 +502,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
         <a href="mailto:info@nodustrategy.com" class="p-btn" data-contact-mail data-tr="İletişime Geç" data-en="Contact Us" onclick="return openContactMail(event,this)">İletişime Geç</a>
       </div>
     </div>
-    <div class="setup-service-compact reveal">
-      <p data-tr="Opsiyonel kurulum — logo, form, eğitim dahil. Özel fiyat: " data-en="Optional setup — logo, forms, training. Special price: ">Opsiyonel kurulum — logo, form, eğitim dahil. Özel fiyat: <strong id="nowSetup">$99</strong> (<s id="wasSetup">$149</s>)</p>
+    <div class="setup-service-compact reveal" id="setupIntroLine">
+      <p data-tr="Opsiyonel kurulum — logo, form, eğitim dahil. Tanıtım fiyatı: " data-en="Optional setup — logo, forms, training. Introductory price: ">Opsiyonel kurulum — logo, form, eğitim dahil. Tanıtım fiyatı: <strong id="nowSetup">$99</strong> (<s id="wasSetup">$149</s>)</p>
       <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Kurulum Ekle" data-en="Add Setup">Kurulum Ekle</button>
     </div>
   </div>
@@ -522,7 +527,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)" data-tr="Ücretsiz deneme var mı?" data-en="Is there a free trial?">Ücretsiz deneme var mı?</div>
-        <div class="faq-a" data-tr="Şu an ücretsiz trial yok. İlk 10 klinik için Starter $45 / Pro $79 özel fiyat geçerli." data-en="No free trial yet. Special pricing for the first 10 clinics: Starter $45 / Pro $79.">Şu an ücretsiz trial yok. İlk 10 klinik için Starter $45 / Pro $79 özel fiyat geçerli.</div>
+        <div class="faq-a" data-tr="Şu an ücretsiz trial yok. Tanıtım döneminde Starter $45 / Pro $79 tanıtım fiyatı geçerlidir." data-en="No free trial yet. Introductory pricing: Starter $45 / Pro $79 during the launch period.">Şu an ücretsiz trial yok. Tanıtım döneminde Starter $45 / Pro $79 tanıtım fiyatı geçerlidir.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)" data-tr="İptal edebilir miyim?" data-en="Can I cancel?">İptal edebilir miyim?</div>
@@ -536,7 +541,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <!-- FINAL CTA -->
 <section class="cta-fin">
   <div class="wrap reveal">
-    <div class="eyebrow" style="color:var(--g);justify-content:center;display:flex;margin-bottom:1.25rem" data-tr="İlk 10 klinik için özel fiyat" data-en="Special pricing — first 10 clinics">İlk 10 klinik için özel fiyat</div>
+    <div class="eyebrow" id="ctaIntroEyebrow" style="color:var(--g);justify-content:center;display:flex;margin-bottom:1.25rem" data-tr="Tanıtım fiyatı" data-en="Introductory pricing">Tanıtım fiyatı</div>
     <h2 data-tr="Bugün <em>başlayın.</em>" data-en="Get started <em>today.</em>">Bugün <em>başlayın.</em></h2>
     <p data-tr="Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz." data-en="Pick your plan — we start onboarding within 1 business day.">Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz.</p>
     <div class="cta-group">
@@ -620,6 +625,7 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
   </div>
 </div>
 
+<script src="/lib/pricing-config.js"></script>
 <script src="/cart.js"></script>
 </body>
 </html>

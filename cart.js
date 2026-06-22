@@ -1,4 +1,5 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, promoActive = false, checkoutToken = '', contactEmail = '';
+var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '';
+var pricingState = null;
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
   pro: { monthly: 79, yearly: 790, recurring: true, tr: 'Professional Plan', en: 'Professional Plan' },
@@ -211,23 +212,27 @@ function fmtUsd(n) {
   return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function paintCard(id, listM, nowM, listY, nowY, promoOn) {
+function paintCard(id, listM, nowM, listY, nowY, introductoryOn) {
+  var card = id === 'Starter' ? document.querySelector('.p-card.p-price-compact')
+    : id === 'Pro' ? document.querySelector('.p-card.hot.p-price-compact') : null;
   var w = document.getElementById('was' + id);
   var n = document.getElementById('now' + id);
   var solo = document.getElementById('now' + id + 'Solo');
-  var block = id === 'Starter' ? document.getElementById('starterPromoBlock')
-    : id === 'Pro' ? document.getElementById('proPromoBlock') : null;
+  var block = id === 'Starter' ? document.getElementById('starterIntroBlock')
+    : id === 'Pro' ? document.getElementById('proIntroBlock') : null;
+  var oldBlock = card ? card.querySelector('.p-price-old') : null;
   var y = document.getElementById('yr' + id);
   if (n) n.textContent = fmtUsd(nowM);
-  if (solo) solo.textContent = fmtUsd(listM);
+  if (solo) solo.textContent = fmtUsd(introductoryOn ? nowM : listM);
   if (w) w.textContent = fmtUsd(listM);
-  if (block) block.classList.toggle('is-off', !promoOn);
+  if (block) block.classList.toggle('is-off', !introductoryOn);
+  if (oldBlock) oldBlock.classList.toggle('is-off', !introductoryOn);
   if (y) {
     var save = lang === 'en' ? ' — Save 2 months.' : ' — 2 ay bedava';
     var yrSuffix = lang === 'en' ? '/year' : '/yıl';
-    var showListY = promoOn ? listY : listY;
-    var showNowY = promoOn ? nowY : listY;
-    if (showListY !== showNowY) y.innerHTML = '<s>' + fmtUsd(showListY) + yrSuffix + '</s> ' + fmtUsd(showNowY) + yrSuffix + save;
+    var showListY = listY;
+    var showNowY = introductoryOn ? nowY : listY;
+    if (introductoryOn && showListY !== showNowY) y.innerHTML = '<s>' + fmtUsd(showListY) + yrSuffix + '</s> ' + fmtUsd(showNowY) + yrSuffix + save;
     else y.textContent = fmtUsd(showNowY) + yrSuffix + save;
   }
 }
@@ -356,60 +361,92 @@ function loadContactEmail() {
   }).catch(function () {});
 }
 
-function isPromoActive(promo, prices) {
-  if (promo && promo.active === false) return false;
-  if (promo && promo.active === true) return true;
-  var p = prices || {};
-  return p.sm_f != null && +p.sm_f < +p.sm;
-}
-
-function applyPromo(promo) {
-  if (!promo) return;
-  var strip = document.getElementById('promoStrip');
+function applyIntroductoryCampaign(pricing, campaign) {
+  introductoryVisible = PricingConfig.isIntroductoryVisible(pricing);
+  var strip = document.getElementById('introductoryStrip');
   if (strip) {
-    var txt = lang === 'en' ? (promo.strip_en || promo.strip_tr) : (promo.strip_tr || promo.strip_en);
-    if (txt) {
-      strip.setAttribute('data-tr', promo.strip_tr || txt);
-      strip.setAttribute('data-en', promo.strip_en || promo.strip_tr || txt);
-      strip.textContent = txt;
-      strip.style.display = isPromoActive(promo) ? '' : 'none';
+    if (!introductoryVisible) {
+      strip.style.display = 'none';
+    } else {
+      var base = lang === 'en'
+        ? (campaign.strip_en || 'Introductory pricing — Starter $' + pricing.starter.introductoryPrice + ' · Pro $' + pricing.professional.introductoryPrice)
+        : (campaign.strip_tr || 'Tanıtım fiyatı geçerli — Starter $' + pricing.starter.introductoryPrice + ' · Pro $' + pricing.professional.introductoryPrice);
+      var slots = PricingConfig.remainingSlotsDisplay(pricing);
+      if (slots != null && slots > 0) {
+        base += lang === 'en' ? ' · Remaining slots: ' + slots : ' · Kalan kontenjan: ' + slots;
+      }
+      strip.setAttribute('data-tr', base);
+      strip.setAttribute('data-en', base);
+      strip.textContent = base;
+      strip.style.display = '';
     }
   }
-  var labelTr = promo.label_tr || 'Özel fiyat';
-  var labelEn = promo.label_en || 'Special price';
-  ['promoLabelStarter', 'promoLabelPro'].forEach(function (id) {
+  ['pricingIntroSubtitle', 'ctaIntroEyebrow', 'setupIntroLine'].forEach(function (id) {
     var el = document.getElementById(id);
-    if (el) setBi(el, labelTr, labelEn);
+    if (el) el.style.display = introductoryVisible ? '' : 'none';
   });
+  var slotsStarter = document.getElementById('starterRemainingSlots');
+  var slotsPro = document.getElementById('proRemainingSlots');
+  if (slotsStarter) {
+    if (pricing.starter.introductoryPriceActive && pricing.starter.remainingSlots != null) {
+      slotsStarter.textContent = lang === 'en'
+        ? 'Remaining slots: ' + pricing.starter.remainingSlots
+        : 'Kalan kontenjan: ' + pricing.starter.remainingSlots;
+      slotsStarter.style.display = '';
+    } else slotsStarter.style.display = 'none';
+  }
+  if (slotsPro) {
+    if (pricing.professional.introductoryPriceActive && pricing.professional.remainingSlots != null) {
+      slotsPro.textContent = lang === 'en'
+        ? 'Remaining slots: ' + pricing.professional.remainingSlots
+        : 'Kalan kontenjan: ' + pricing.professional.remainingSlots;
+      slotsPro.style.display = '';
+    } else slotsPro.style.display = 'none';
+  }
+}
+
+function applyPricing(content) {
+  var normalized = PricingConfig.normalizePricing(content);
+  pricingState = normalized.pricing;
+  var p = normalized.pricing;
+  var starter = p.starter;
+  var pro = p.professional;
+  var setup = p.setup;
+  BUNDLE = +(p.bundleDiscount || 0);
+  PRICES.starter.monthly = PricingConfig.displayMonthly(starter);
+  PRICES.starter.yearly = PricingConfig.yearlyPrice(PRICES.starter.monthly);
+  PRICES.pro.monthly = PricingConfig.displayMonthly(pro);
+  PRICES.pro.yearly = PricingConfig.yearlyPrice(PRICES.pro.monthly);
+  PRICES.setup.oneoff = PricingConfig.displayMonthly(setup);
+  paintCard('Starter', starter.listPrice, PricingConfig.displayMonthly(starter),
+    PricingConfig.yearlyPrice(starter.listPrice), PricingConfig.yearlyPrice(starter.introductoryPrice),
+    starter.introductoryPriceActive);
+  paintCard('Pro', pro.listPrice, PricingConfig.displayMonthly(pro),
+    PricingConfig.yearlyPrice(pro.listPrice), PricingConfig.yearlyPrice(pro.introductoryPrice),
+    pro.introductoryPriceActive);
+  var setupOn = setup.introductoryPriceActive;
+  var wSetup = document.getElementById('wasSetup');
+  var nSetup = document.getElementById('nowSetup');
+  if (wSetup) wSetup.textContent = fmtUsd(setup.listPrice);
+  if (nSetup) nSetup.textContent = fmtUsd(PricingConfig.displayMonthly(setup));
+  var setupLine = document.getElementById('setupIntroLine');
+  if (setupLine) setupLine.style.display = setupOn ? '' : 'none';
+  applyIntroductoryCampaign(p, normalized.introductoryCampaign || {});
+}
+
+function refreshIntroductoryUi(content) {
+  if (!content || !pricingState) return;
+  var normalized = PricingConfig.normalizePricing(content);
+  applyIntroductoryCampaign(pricingState, normalized.introductoryCampaign || {});
 }
 
 function loadPrices() {
   fetch('/content.json').then(function (r) { return r.json(); }).then(function (c) {
     if (!c) return;
-    if (c.prices) {
-      var p = c.prices;
-      var sm = +p.sm, pm = +p.pm, su = +p.setup;
-      var sy = +(p.sy || sm * 10), py = +(p.py || pm * 10);
-      var smN = sm, syN = sy, pmN = pm, pyN = py, suN = su;
-      promoActive = isPromoActive(c.promo, p);
-      if (promoActive) {
-        smN = +(p.sm_f != null ? p.sm_f : sm);
-        syN = +(p.sy_f != null ? p.sy_f : sy);
-        pmN = +(p.pm_f != null ? p.pm_f : pm);
-        pyN = +(p.py_f != null ? p.py_f : py);
-        suN = +(p.setup_f != null ? p.setup_f : su);
-      }
-      BUNDLE = +(p.bundle || 0);
-      PRICES.starter.monthly = smN; PRICES.starter.yearly = syN;
-      PRICES.pro.monthly = pmN; PRICES.pro.yearly = pyN;
-      PRICES.setup.oneoff = suN;
-      paintCard('Starter', sm, smN, sy, syN, promoActive);
-      paintCard('Pro', pm, pmN, py, pyN, promoActive);
-      paintCard('Setup', su, suN, su, suN, promoActive);
-    }
-    if (c.promo) applyPromo(c.promo);
+    applyPricing(c);
     if (c.demo) applyDemo(c.demo);
     if (c.landing) applyLanding(c.landing);
+    refreshIntroductoryUi(c);
     loadDemoData();
   }).catch(function () { loadDemoData(); });
 }

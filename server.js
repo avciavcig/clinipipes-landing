@@ -161,6 +161,14 @@ function rebuildLegalPages(cb){
 function mergeContent(inc){
   var ex={};
   try{ex=JSON.parse(fs.readFileSync(path.join(__dirname,'content.json'),'utf-8'));}catch(e){}
+  if(inc.pricing){
+    ex.pricing=ex.pricing||{};
+    if(inc.pricing.starter)ex.pricing.starter=Object.assign(ex.pricing.starter||{},inc.pricing.starter);
+    if(inc.pricing.professional)ex.pricing.professional=Object.assign(ex.pricing.professional||{},inc.pricing.professional);
+    if(inc.pricing.setup)ex.pricing.setup=Object.assign(ex.pricing.setup||{},inc.pricing.setup);
+    if(inc.pricing.bundleDiscount!=null)ex.pricing.bundleDiscount=inc.pricing.bundleDiscount;
+  }
+  if(inc.introductoryCampaign)ex.introductoryCampaign=Object.assign(ex.introductoryCampaign||{},inc.introductoryCampaign);
   if(inc.prices)ex.prices=inc.prices;
   if(inc.promo)ex.promo=Object.assign(ex.promo||{},inc.promo);
   if(inc.founding&&!inc.promo){
@@ -701,6 +709,10 @@ http.createServer(function(req,res){
         else{jsonRes(res,200,{ok:true,github:false},req,true);}
       }}catch(e){jsonRes(res,400,{ok:false,error:e.message},req,true);}
     });return;
+  }
+  if(url==='/lib/pricing-config.js'){
+    try{const d=fs.readFileSync(path.join(__dirname,'lib/pricing-config.js'));res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end(d);}
+    catch(e){res.writeHead(404);res.end('');}return;
   }
   if(url==='/cart.js'){
     try{const d=fs.readFileSync(path.join(__dirname,'cart.js'));res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end(d);}

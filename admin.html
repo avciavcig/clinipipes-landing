@@ -172,11 +172,10 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <label>A&#231;&#305;klama (EN)</label><textarea id="h-de-en" rows="2"></textarea>
   </div>
   <div class="card">
-    <h2>&#128227; Promo &#350;erit</h2>
-    <label>&#220;st &#351;erit (TR)</label><input type="text" id="promo-strip-tr">
-    <label>&#220;st &#351;erit (EN)</label><input type="text" id="promo-strip-en">
-    <label>Fiyat etiketi (TR)</label><input type="text" id="promo-label-tr" placeholder="Özel fiyat">
-    <label>Fiyat etiketi (EN)</label><input type="text" id="promo-label-en" placeholder="Special price">
+    <h2>&#128227; Tan&#305;t&#305;m &#350;eridi</h2>
+    <label>&#220;st &#351;erit metni (TR)</label><input type="text" id="intro-strip-tr" placeholder="Tanıtım fiyatı geçerli — Starter $45 · Pro $79">
+    <label>&#220;st &#351;erit metni (EN)</label><input type="text" id="intro-strip-en" placeholder="Introductory pricing — Starter $45 · Pro $79">
+    <p style="font-size:.78rem;color:#888;margin:.35rem 0 0">Kalan kontenjan otomatik eklenir. Tan&#305;t&#305;m fiyat&#305; kapal&#305;yken &#351;erit g&#246;r&#252;nmez.</p>
   </div>
   <div class="card">
     <h2>&#128203; Landing B&#246;l&#252;mleri</h2>
@@ -195,34 +194,34 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 <!-- PANE 3: FİYAT -->
 <div class="pane" id="pane3">
   <div class="card">
-    <h2>&#128176; Fiyatlar (USD)</h2>
-    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Liste fiyatları üstü çizili gösterilir. Özel fiyatlar promo aktifken uygulanır. Yıllık = aylık × 10 (2 ay bedava).</p>
+    <h2>&#128176; Fiyatland&#305;rma (USD)</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:1rem">Y&#305;ll&#305;k fiyat = ayl&#305;k &#215; 10 (2 ay bedava). Tan&#305;t&#305;m fiyat&#305; kapal&#305;yken landing&#8217;de liste fiyatlar&#305; g&#246;sterilir.</p>
     <div class="g2">
       <div>
         <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Starter</h3>
-        <label>Liste / ay ($)</label><input type="number" id="p-sm">
-        <label>Özel / ay ($)</label><input type="number" id="p-sm-f">
-        <label>Liste / y&#305;l (otomatik)</label><input type="number" id="p-sy" readonly style="background:#f4f4f2">
-        <label>Özel / y&#305;l (otomatik)</label><input type="number" id="p-sy-f" readonly style="background:#f4f4f2">
+        <label>Liste Fiyat&#305; ($/ay)</label><input type="number" id="starter-list-price">
+        <label>Tan&#305;t&#305;m Fiyat&#305; ($/ay)</label><input type="number" id="starter-intro-price">
+        <label>Liste Fiyat&#305; ($/y&#305;l, otomatik)</label><input type="number" id="starter-list-yearly" readonly style="background:#f4f4f2">
+        <label>Tan&#305;t&#305;m Fiyat&#305; ($/y&#305;l, otomatik)</label><input type="number" id="starter-intro-yearly" readonly style="background:#f4f4f2">
+        <label style="display:flex;align-items:center;gap:.5rem;margin:.65rem 0 .35rem"><input type="checkbox" id="starter-intro-active" checked> Tan&#305;t&#305;m fiyat&#305;n&#305; etkinle&#351;tir</label>
+        <label>Kalan kontenjan</label><input type="number" id="starter-remaining-slots" min="0" step="1" placeholder="10">
       </div>
       <div>
         <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Professional</h3>
-        <label>Liste / ay ($)</label><input type="number" id="p-pm">
-        <label>Özel / ay ($)</label><input type="number" id="p-pm-f">
-        <label>Liste / y&#305;l (otomatik)</label><input type="number" id="p-py" readonly style="background:#f4f4f2">
-        <label>Özel / y&#305;l (otomatik)</label><input type="number" id="p-py-f" readonly style="background:#f4f4f2">
+        <label>Liste Fiyat&#305; ($/ay)</label><input type="number" id="pro-list-price">
+        <label>Tan&#305;t&#305;m Fiyat&#305; ($/ay)</label><input type="number" id="pro-intro-price">
+        <label>Liste Fiyat&#305; ($/y&#305;l, otomatik)</label><input type="number" id="pro-list-yearly" readonly style="background:#f4f4f2">
+        <label>Tan&#305;t&#305;m Fiyat&#305; ($/y&#305;l, otomatik)</label><input type="number" id="pro-intro-yearly" readonly style="background:#f4f4f2">
+        <label style="display:flex;align-items:center;gap:.5rem;margin:.65rem 0 .35rem"><input type="checkbox" id="pro-intro-active" checked> Tan&#305;t&#305;m fiyat&#305;n&#305; etkinle&#351;tir</label>
+        <label>Kalan kontenjan</label><input type="number" id="pro-remaining-slots" min="0" step="1" placeholder="10">
       </div>
     </div>
     <div class="g2" style="margin-top:.75rem">
       <div>
         <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Kurulum (tek seferlik)</h3>
-        <label>Liste ($)</label><input type="number" id="p-setup">
-        <label>Özel ($)</label><input type="number" id="p-setup-f">
-      </div>
-      <div>
-        <h3 style="font-size:.85rem;margin:0 0 .65rem;color:#333">Promo</h3>
-        <label style="display:flex;align-items:center;gap:.5rem;margin:.35rem 0"><input type="checkbox" id="promo-active" checked> Özel fiyat aktif</label>
-        <p style="font-size:.78rem;color:#888;margin:.5rem 0 0">10 klinik dolunca kutuyu kapatın — liste fiyatları gösterilir.</p>
+        <label>Liste Fiyat&#305; ($)</label><input type="number" id="setup-list-price">
+        <label>Tan&#305;t&#305;m Fiyat&#305; ($)</label><input type="number" id="setup-intro-price">
+        <label style="display:flex;align-items:center;gap:.5rem;margin:.65rem 0 0"><input type="checkbox" id="setup-intro-active" checked> Tan&#305;t&#305;m fiyat&#305;n&#305; etkinle&#351;tir</label>
       </div>
     </div>
   </div>
@@ -512,10 +511,48 @@ function disable2fa(){
 function legalShell(title,body){return '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+title+' — CliniPipes</title><style>'+LEGAL_CSS+'</style></head><body><div class="container">'+body+'</div></body></html>';}
 function pageTitle(name){var m={'hakkimizda.html':'Hakk\u0131m\u0131zda','gizlilik.html':'Gizlilik Politikas\u0131 ve KVKK','veri-rolu.html':'Veri Koruma ve Rol Ayr\u0131m\u0131','cerez-politikasi.html':'\u00c7erez Politikas\u0131','teslimat.html':'Teslimat ve \u0130ade Ko\u015fullar\u0131','mesafeli-satis.html':'Mesafeli Hizmet S\u00f6zle\u015fmesi','on-bilgilendirme.html':'\u00d6n Bilgilendirme Formu','sss.html':'S\u0131k\u00e7a Sorulan Sorular','kullanim-kosullari.html':'Kullan\u0131m Ko\u015fullar\u0131','etk.html':'ETK Metni'};return m[name]||'CliniPipes';}
 function syncYearly(){
-  var sm=+document.getElementById('p-sm').value||0,smf=+document.getElementById('p-sm-f').value||0;
-  var pm=+document.getElementById('p-pm').value||0,pmf=+document.getElementById('p-pm-f').value||0;
-  document.getElementById('p-sy').value=sm*10;document.getElementById('p-sy-f').value=smf*10;
-  document.getElementById('p-py').value=pm*10;document.getElementById('p-py-f').value=pmf*10;
+  var sm=+document.getElementById('starter-list-price').value||0;
+  var smi=+document.getElementById('starter-intro-price').value||0;
+  var pm=+document.getElementById('pro-list-price').value||0;
+  var pmi=+document.getElementById('pro-intro-price').value||0;
+  document.getElementById('starter-list-yearly').value=sm*10;
+  document.getElementById('starter-intro-yearly').value=smi*10;
+  document.getElementById('pro-list-yearly').value=pm*10;
+  document.getElementById('pro-intro-yearly').value=pmi*10;
+}
+function buildPricingPayload(){
+  syncYearly();
+  return {
+    pricing:{
+      starter:{
+        listPrice:+document.getElementById('starter-list-price').value,
+        introductoryPrice:+document.getElementById('starter-intro-price').value,
+        introductoryPriceActive:!!document.getElementById('starter-intro-active').checked,
+        remainingSlots:document.getElementById('starter-remaining-slots').value===''?null:+document.getElementById('starter-remaining-slots').value
+      },
+      professional:{
+        listPrice:+document.getElementById('pro-list-price').value,
+        introductoryPrice:+document.getElementById('pro-intro-price').value,
+        introductoryPriceActive:!!document.getElementById('pro-intro-active').checked,
+        remainingSlots:document.getElementById('pro-remaining-slots').value===''?null:+document.getElementById('pro-remaining-slots').value
+      },
+      setup:{
+        listPrice:+document.getElementById('setup-list-price').value,
+        introductoryPrice:+document.getElementById('setup-intro-price').value,
+        introductoryPriceActive:!!document.getElementById('setup-intro-active').checked
+      },
+      bundleDiscount:0
+    },
+    introductoryCampaign:{
+      strip_tr:document.getElementById('intro-strip-tr').value,
+      strip_en:document.getElementById('intro-strip-en').value
+    }
+  };
+}
+function savePrices(){
+  var payload=buildPricingPayload();
+  var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
+  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 
 function sw(i){
@@ -682,20 +719,10 @@ function saveContent(){
   var sections=null;
   try{sections=JSON.parse(document.getElementById('landing-sections-json').value);}catch(e){var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fee';el.textContent='Landing JSON gecersiz: '+e.message;return;}
   var payload={
-    promo:{active:!!document.getElementById('promo-active').checked,strip_tr:document.getElementById('promo-strip-tr').value,strip_en:document.getElementById('promo-strip-en').value,label_tr:document.getElementById('promo-label-tr').value,label_en:document.getElementById('promo-label-en').value},
+    introductoryCampaign:{strip_tr:document.getElementById('intro-strip-tr').value,strip_en:document.getElementById('intro-strip-en').value},
     landing:{hero:{eyebrow_tr:document.getElementById('h-ey-tr').value,eyebrow_en:document.getElementById('h-ey-en').value,title_tr:document.getElementById('h-ti-tr').value,title_en:document.getElementById('h-ti-en').value,desc_tr:document.getElementById('h-de-tr').value,desc_en:document.getElementById('h-de-en').value},faq:faqList,sections:sections}
   };
   var el=document.getElementById('st-content');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
-  api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
-}
-
-/* ── Pane 3: Fiyat ── */
-function savePrices(){
-  syncYearly();
-  var sm=+document.getElementById('p-sm').value,smf=+document.getElementById('p-sm-f').value;
-  var pm=+document.getElementById('p-pm').value,pmf=+document.getElementById('p-pm-f').value;
-  var payload={prices:{sm:sm,sy:sm*10,sm_f:smf,sy_f:smf*10,pm:pm,py:pm*10,pm_f:pmf,py_f:pmf*10,setup:+document.getElementById('p-setup').value,setup_f:+document.getElementById('p-setup-f').value,bundle:0},promo:{active:!!document.getElementById('promo-active').checked,strip_tr:document.getElementById('promo-strip-tr').value,strip_en:document.getElementById('promo-strip-en').value,label_tr:document.getElementById('promo-label-tr').value,label_en:document.getElementById('promo-label-en').value}};
-  var el=document.getElementById('st1');el.style.display='block';el.style.background='#fffbe0';el.textContent='Kaydediliyor...';
   api('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(r){el.style.background=r.ok?'#e0fce8':'#fee';el.textContent=r.github?'Kaydedildi + GitHub (~2dk)':'Yerel kaydedildi';}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});
 }
 
@@ -765,22 +792,37 @@ function testAdminMail(){
 function savePw(){var p0=document.getElementById('pw0').value,p1=document.getElementById('pw1').value,p2=document.getElementById('pw2').value,el=document.getElementById('st-pw');el.style.display='block';if(p1!==p2){el.style.background='#fee';el.textContent='Şifreler eşleşmiyor';return;}if(p1.length<8){el.style.background='#fee';el.textContent='En az 8 karakter';return;}el.style.background='#fffbe0';el.textContent='Kaydediliyor...';var body={currentPassword:p0,newKey:p1};if(TOTP_ENABLED)body.totp=document.getElementById('pw-totp').value.trim();api('/api/update-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(r){if(r.ok){el.style.background='#e0fce8';el.textContent='Şifre güncellendi.';document.getElementById('pw0').value='';document.getElementById('pw1').value='';document.getElementById('pw2').value='';document.getElementById('pw-totp').value='';}else{el.style.background='#fee';el.textContent='Hata: '+(r.error||'?');}}).catch(function(e){el.style.background='#fee';el.textContent='Hata: '+e.message;});}
 
 /* ── Init ── */
+function loadPricingAdmin(c){
+  var p=c.pricing||{};
+  var legacy=c.prices||{};
+  var promo=c.promo||{};
+  var st=p.starter||{};
+  var pr=p.professional||{};
+  var su=p.setup||{};
+  if(!p.starter&&legacy.sm){
+    st={listPrice:+legacy.sm,introductoryPrice:+(legacy.sm_f!=null?legacy.sm_f:legacy.sm),introductoryPriceActive:promo.active!==false&&legacy.sm_f!=null,remainingSlots:10};
+    pr={listPrice:+legacy.pm,introductoryPrice:+(legacy.pm_f!=null?legacy.pm_f:legacy.pm),introductoryPriceActive:promo.active!==false&&legacy.pm_f!=null,remainingSlots:10};
+    su={listPrice:+legacy.setup,introductoryPrice:+(legacy.setup_f!=null?legacy.setup_f:legacy.setup),introductoryPriceActive:promo.active!==false&&legacy.setup_f!=null};
+  }
+  document.getElementById('starter-list-price').value=st.listPrice||69;
+  document.getElementById('starter-intro-price').value=st.introductoryPrice!=null?st.introductoryPrice:45;
+  document.getElementById('starter-intro-active').checked=st.introductoryPriceActive!==false;
+  document.getElementById('starter-remaining-slots').value=st.remainingSlots!=null?st.remainingSlots:'';
+  document.getElementById('pro-list-price').value=pr.listPrice||119;
+  document.getElementById('pro-intro-price').value=pr.introductoryPrice!=null?pr.introductoryPrice:79;
+  document.getElementById('pro-intro-active').checked=pr.introductoryPriceActive!==false;
+  document.getElementById('pro-remaining-slots').value=pr.remainingSlots!=null?pr.remainingSlots:'';
+  document.getElementById('setup-list-price').value=su.listPrice||149;
+  document.getElementById('setup-intro-price').value=su.introductoryPrice!=null?su.introductoryPrice:99;
+  document.getElementById('setup-intro-active').checked=su.introductoryPriceActive!==false;
+  var camp=c.introductoryCampaign||promo||{};
+  document.getElementById('intro-strip-tr').value=camp.strip_tr||'';
+  document.getElementById('intro-strip-en').value=camp.strip_en||'';
+  syncYearly();
+}
 function bootAdmin(){
 fetch('/content.json?t='+Date.now()).then(function(r){return r.json();}).then(function(c){
-  if(c.prices){
-    var sm=+c.prices.sm,pm=+c.prices.pm;
-    document.getElementById('p-sm').value=sm;document.getElementById('p-sy').value=c.prices.sy||sm*10;
-    document.getElementById('p-sm-f').value=c.prices.sm_f||'';document.getElementById('p-sy-f').value=c.prices.sy_f||(c.prices.sm_f?c.prices.sm_f*10:'');
-    document.getElementById('p-pm').value=pm;document.getElementById('p-py').value=c.prices.py||pm*10;
-    document.getElementById('p-pm-f').value=c.prices.pm_f||'';document.getElementById('p-py-f').value=c.prices.py_f||(c.prices.pm_f?c.prices.pm_f*10:'');
-    document.getElementById('p-setup').value=c.prices.setup;document.getElementById('p-setup-f').value=c.prices.setup_f||'';
-  }
-  if(c.promo){
-    var pa=document.getElementById('promo-active');
-    if(pa)pa.checked=c.promo.active!==false;
-    if(c.promo.strip_tr){document.getElementById('promo-strip-tr').value=c.promo.strip_tr;document.getElementById('promo-strip-en').value=c.promo.strip_en||'';}
-    if(c.promo.label_tr){document.getElementById('promo-label-tr').value=c.promo.label_tr;document.getElementById('promo-label-en').value=c.promo.label_en||'';}
-  }
+  loadPricingAdmin(c);
   if(c.demo){
     demoData=c.demo;
     document.getElementById('d-ey-tr').value=c.demo.eyebrow_tr||'';document.getElementById('d-ey-en').value=c.demo.eyebrow_en||'';
@@ -805,10 +847,10 @@ renderLegalUrlList();
 loadDashboard();
 loadFile();
 }
-document.getElementById('p-sm').addEventListener('input',syncYearly);
-document.getElementById('p-sm-f').addEventListener('input',syncYearly);
-document.getElementById('p-pm').addEventListener('input',syncYearly);
-document.getElementById('p-pm-f').addEventListener('input',syncYearly);
+document.getElementById('starter-list-price').addEventListener('input',syncYearly);
+document.getElementById('starter-intro-price').addEventListener('input',syncYearly);
+document.getElementById('pro-list-price').addEventListener('input',syncYearly);
+document.getElementById('pro-intro-price').addEventListener('input',syncYearly);
 function logout(){if(confirm("Oturumu kapatmak istediginizden emin misiniz?")){api('/api/admin/logout',{method:'POST'}).finally(function(){location.href='/admin/login';});}}
 window.onbeforeunload=function(){if(dirty)return 'Kaydedilmemiş değişiklikler var.';};
 api('/api/admin/me').then(function(r){if(!r.ok){location.href='/admin/login';return null;}return r.json();}).then(function(me){
