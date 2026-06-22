@@ -384,10 +384,8 @@ function loadPrices() {
       paintCard('Starter', sm, smN, sy, syN);
       paintCard('Pro', pm, pmN, py, pyN);
       paintCard('Setup', su, suN, su, suN);
-      var slots = document.getElementById('foundingBannerSlots');
       var strip = document.getElementById('foundingStripSlots');
       var txt = rem + (lang === 'en' ? ' spots remaining' : ' slot kaldı');
-      if (slots) slots.textContent = txt;
       if (strip) strip.textContent = txt;
     }
     if (c.founding) {
@@ -395,12 +393,6 @@ function loadPrices() {
       if (stripEl) {
         var st = lang === 'en' ? (c.founding.strip_en || c.founding.strip_tr) : c.founding.strip_tr;
         if (st) stripEl.textContent = st;
-      }
-      var banner = document.querySelector('.founding-banner p');
-      if (banner && c.founding.banner_title_tr) {
-        var bt = lang === 'en' ? c.founding.banner_title_en : c.founding.banner_title_tr;
-        var bd = lang === 'en' ? c.founding.banner_desc_en : c.founding.banner_desc_tr;
-        banner.innerHTML = '🏆 <strong data-tr="' + c.founding.banner_title_tr + '" data-en="' + (c.founding.banner_title_en || '') + '">' + bt + '</strong> — <span data-tr="' + c.founding.banner_desc_tr + '" data-en="' + (c.founding.banner_desc_en || '') + '">' + bd + '</span>';
       }
     }
     if (c.demo) applyDemo(c.demo);
@@ -574,7 +566,7 @@ function applyLandingSections(s) {
       setBi(cta.querySelector('p'), ct.desc_tr, ct.desc_en);
       var btns = cta.querySelectorAll('.cta-group a');
       if (btns[0]) setBi(btns[0], ct.btn_tr, ct.btn_en);
-      if (btns[1]) setBi(btns[1], ct.btn2_tr, ct.btn2_en);
+      if (btns[1] && ct.btn2_tr) setBi(btns[1], ct.btn2_tr, ct.btn2_en);
     }
   }
 }

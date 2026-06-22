@@ -46,7 +46,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .strip-slots{background:rgba(0,0,0,.2);padding:.2rem .65rem;border-radius:12px;font-size:.75rem;font-weight:700}
  
 /* ── HERO ── */
-.hero{background:var(--ink);min-height:90vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5rem;padding:6rem 4%}
+.hero{background:var(--ink);min-height:78vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 4%}
 .h-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:var(--g-dim);border:1px solid rgba(29,158,117,.25);color:var(--g);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.32rem .85rem;border-radius:20px;margin-bottom:1.5rem}
 .h-eyebrow::before{content:'';width:5px;height:5px;background:var(--g);border-radius:50%;animation:blink 2.4s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
@@ -58,7 +58,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .btn-g:hover{background:var(--g2);transform:translateY(-1px)}
 .btn-ghost-w{color:rgba(255,255,255,.55);font-size:.86rem;display:inline-flex;align-items:center;gap:.35rem;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:.1rem;transition:color .2s}
 .btn-ghost-w:hover{color:#fff}
-.h-trust{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.25rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.07)}
+.h-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.25rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.07)}
 .h-trust-item{display:flex;flex-direction:column;gap:.2rem}
 .trust-val{color:var(--g);font-weight:700;font-size:.88rem;line-height:1.2}
 .trust-lbl{font-size:.72rem;color:rgba(255,255,255,.42);line-height:1.35}
@@ -93,7 +93,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:.85rem}
 .section-h{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;line-height:1.15;letter-spacing:-.025em;margin-bottom:.85rem}
 .section-h em{color:var(--g);font-style:italic}
-.section-p{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:520px;margin-bottom:3rem}
+.section-p{color:var(--muted);font-size:.95rem;line-height:1.75;max-width:520px;margin-bottom:2.25rem}
  
 /* ── BEFORE/AFTER ── */
 .compare{padding:6rem 0;background:var(--off)}
@@ -132,23 +132,25 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .feat p{font-size:.78rem;color:var(--muted);line-height:1.65}
  
 /* ── DEMO ── */
-.demo{background:var(--ink);padding:6rem 0}
-.demo .section-h{color:#fff}
-.demo .section-p{color:rgba(255,255,255,.45)}
-.demo-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:0}
-.demo-tab{padding:.6rem 1.1rem;font-size:.82rem;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
-.demo-tab.on{color:#fff;border-bottom-color:var(--g)}
-.demo-frame{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;background:#F8FAFC;max-height:min(640px,70vh);display:flex;flex-direction:column}
+.demo{background:var(--off);padding:4.5rem 0}
+.demo .section-h{color:var(--ink)}
+.demo .section-p{color:var(--muted)}
+.demo-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0;flex-wrap:wrap}
+.demo-tab{padding:.55rem 1rem;font-size:.82rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.demo-tab.on{color:var(--ink);border-bottom-color:var(--g);font-weight:600}
+.demo-frame{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:min(560px,65vh);display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(14,14,12,.06)}
 .demo-scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
 .demo-scroll::-webkit-scrollbar{width:8px}
 .demo-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:999px}
 .demo-panel{display:none}
 .demo-panel.on{display:block}
 .demo-panel img{width:100%;height:auto;display:block;border:0;background:#F8FAFC}
-.demo-cap{padding:.85rem 1.25rem;font-size:.78rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.15);flex-shrink:0}
+.demo-cap{padding:.75rem 1.25rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);background:var(--cream);flex-shrink:0}
  
 /* ── FAQ ── */
-.faq{padding:6rem 0;background:var(--off)}
+.faq{padding:4rem 0;background:var(--cream)}
+.faq-more{margin-top:1.5rem;font-size:.88rem}
+.faq-more a{color:var(--g);font-weight:600}
 .faq-list{margin-top:2.5rem;max-width:720px}
 .faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
 .faq-q{font-size:.95rem;font-weight:600;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:1rem}
@@ -158,7 +160,16 @@ nav{position:sticky;top:0;z-index:200;background:rgba(14,14,12,.97);backdrop-fil
 .faq-item.open .faq-a{max-height:200px;padding-top:.75rem}
  
 /* ── PRICING ── */
-.pricing{padding:6rem 0;background:var(--cream)}
+.pricing{padding:4.5rem 0;background:var(--off)}
+.p-price-compact .p-price-old{display:none}
+.p-price-compact .p-price-main{display:flex;align-items:baseline;gap:.35rem;margin:.25rem 0 .5rem}
+.p-price-compact .p-price-main span{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
+.p-card.hot .p-price-compact .p-price-main span{color:#fff}
+.p-price-compact .p-yr{font-size:.78rem;color:var(--muted);margin-bottom:.5rem}
+.p-card.hot .p-price-compact .p-yr{color:rgba(255,255,255,.45)}
+.setup-service-compact{margin-top:1.25rem;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.setup-service-compact p{font-size:.88rem;color:var(--muted);margin:0;flex:1;min-width:200px}
+.setup-service-compact .p-btn{width:auto;padding:.65rem 1.1rem;font-size:.82rem;margin:0}
 .founding-banner{background:#fff;border:1px solid rgba(29,158,117,.25);border-radius:var(--r);padding:1rem 1.5rem;margin-bottom:2.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .founding-banner p{font-size:.85rem;color:var(--ink)}
 .founding-banner strong{color:var(--g)}
@@ -254,7 +265,7 @@ a.p-price-contact:hover{opacity:.85}
 @media(max-width:700px){.setup-service-list{grid-template-columns:1fr}.setup-service-side{text-align:left;width:100%}.setup-service-prices .p-price-label,.setup-service-prices .p-price{justify-content:flex-start;text-align:left}}
  
 /* ── FINAL CTA ── */
-.cta-fin{background:var(--ink);padding:7rem 0;text-align:center}
+.cta-fin{background:var(--ink);padding:4.5rem 0;text-align:center}
 .cta-fin h2{font-family:'Playfair Display',serif;font-size:2.8rem;color:#fff;line-height:1.15;margin-bottom:1rem;letter-spacing:-.02em}
 .cta-fin h2 em{color:var(--g);font-style:italic}
 .cta-fin p{color:rgba(255,255,255,.45);font-size:.95rem;margin-bottom:2rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.75}
@@ -319,11 +330,9 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <nav>
   <div class="logo"><span class="logo-mark">✦</span> clini<span style="color:var(--g)">pipes</span></div>
   <div class="nav-mid">
-    <a href="#karsilastirma" data-tr="Neden CliniPipes?" data-en="Why CliniPipes?">Neden CliniPipes?</a>
-    <a href="#nasil-calisir" data-tr="Nasıl Çalışır" data-en="How It Works">Nasıl Çalışır</a>
-    <a href="#ozellikler" data-tr="Özellikler" data-en="Features">Özellikler</a>
-    <a href="#demo" data-tr="Canlı Sistem" data-en="Live Demo">Canlı Sistem</a>
+    <a href="#demo" data-tr="Sistem" data-en="Product">Sistem</a>
     <a href="#fiyat" data-tr="Fiyatlandırma" data-en="Pricing">Fiyatlandırma</a>
+    <a href="/sss" data-tr="SSS" data-en="FAQ">SSS</a>
   </div>
   <div class="nav-r">
     <button class="lang-btn" onclick="toggleLang()">EN</button>
@@ -338,18 +347,17 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     <h1 data-tr="Gelen her hasta talebini,<br><em>onaylı satışa</em> dönüştürün." data-en="Turn every patient inquiry<br>into an <em>approved sale.</em>">
       Gelen her hasta talebini,<br><em>onaylı satışa</em> dönüştürün.
     </h1>
-    <p class="hero-desc" data-tr="Yurt dışından gelen hasta başvurularını takip etmek için WhatsApp, Excel ve Word'e ihtiyacınız yok. Talep formundan nihai onaya kadar tüm süreç, tek bir sistemde." data-en="You don't need WhatsApp, Excel and Word to manage international patient inquiries. From intake form to signed approval — one system, end to end.">
-      Yurt dışından gelen hasta başvurularını takip etmek için WhatsApp, Excel ve Word'e ihtiyacınız yok. Talep formundan nihai onaya kadar tüm süreç, tek bir sistemde.
+    <p class="hero-desc" data-tr="Lead formundan PDF teklife — hasta takibi tek panelde. WhatsApp ve Excel karmaşasına gerek yok." data-en="From lead form to PDF quote — patient tracking in one panel. No WhatsApp and Excel chaos.">
+      Lead formundan PDF teklife — hasta takibi tek panelde. WhatsApp ve Excel karmaşasına gerek yok.
     </p>
     <div class="h-actions">
-      <a href="#fiyat" class="btn-g" data-tr="Hemen Başlayın →" data-en="Get Started →">Hemen Başlayın →</a>
-      <a href="#nasil-calisir" class="btn-ghost-w" data-tr="Nasıl çalışır? ↓" data-en="How it works? ↓">Nasıl çalışır? ↓</a>
+      <a href="#fiyat" class="btn-g" data-tr="Plan Seçin →" data-en="Choose a Plan →">Plan Seçin →</a>
+      <a href="#demo" class="btn-ghost-w" data-tr="Sistemi görün ↓" data-en="See the product ↓">Sistemi görün ↓</a>
     </div>
     <div class="h-trust">
       <div class="h-trust-item"><span class="trust-val">1 gün</span><span class="trust-lbl" data-tr="kurulum" data-en="setup">kurulum</span></div>
-      <div class="h-trust-item"><span class="trust-val">2 dil</span><span class="trust-lbl" data-tr="EN · DE form & PDF" data-en="EN · DE form & PDF">EN · DE form & PDF</span></div>
       <div class="h-trust-item"><span class="trust-val">KVKK</span><span class="trust-lbl" data-tr="& GDPR uyumlu" data-en="& GDPR compliant">& GDPR uyumlu</span></div>
-      <div class="h-trust-item"><span class="trust-val">AES-256</span><span class="trust-lbl" data-tr="hasta verisi şifreleme" data-en="patient data encryption">hasta verisi şifreleme</span></div>
+      <div class="h-trust-item"><span class="trust-val">EN · DE</span><span class="trust-lbl" data-tr="form & PDF" data-en="form & PDF">form & PDF</span></div>
     </div>
   </div>
   <div class="hero-mock reveal" style="transition-delay:.2s">
@@ -361,12 +369,9 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
     </div>
     <div class="mock-sidebar">
       <div class="mock-nav">
-        <div class="mock-nav-item active">📊 <span>Yönetim Paneli</span></div>
+        <div class="mock-nav-item active">📊 <span>Panel</span></div>
         <div class="mock-nav-item">🎯 <span>Satış</span></div>
         <div class="mock-nav-item">🩺 <span>Doktor</span></div>
-        <div class="mock-nav-item">👥 <span>Kullanıcılar</span></div>
-        <div class="mock-nav-item">📋 <span>Form Builder</span></div>
-        <div class="mock-nav-item">⚙️ <span>Kurulum</span></div>
       </div>
       <div class="mock-content">
         <div class="mock-kpi-row" id="hm-kpis">
@@ -390,100 +395,8 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
             <div><span class="mock-tag tag-p">Teklif Verildi</span></div>
             <div class="mock-amt">€2.800</div>
           </div>
-          <div class="mock-table-row">
-            <div><div class="patient-n">Sofia Andreou</div><div class="patient-c">🇬🇷 Rinoplasti</div></div>
-            <div><span class="mock-tag tag-w">Plan Bekleniyor</span></div>
-            <div class="mock-amt">—</div>
-          </div>
-          <div class="mock-table-row">
-            <div><div class="patient-n">M. Al-Rashid</div><div class="patient-c">🇦🇪 Veneer</div></div>
-            <div><span class="mock-tag tag-ok">Onaylandı</span></div>
-            <div class="mock-amt">€6.500</div>
-          </div>
-          <div class="mock-table-row">
-            <div><div class="patient-n">Lena Müller</div><div class="patient-c">🇩🇪 Estetik cerrahi</div></div>
-            <div><span class="mock-tag tag-f">Follow-up</span></div>
-            <div class="mock-amt">€3.100</div>
-          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
- 
-<!-- COMPARE -->
-<section class="compare" id="karsilastirma">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow" data-tr="Neden CliniPipes?" data-en="Why CliniPipes?">Neden CliniPipes?</div>
-      <h2 class="section-h" data-tr="Şu an <em>nasıl</em> çalışıyorsunuz?" data-en="How are you working <em>right now?</em>">Şu an <em>nasıl</em> çalışıyorsunuz?</h2>
-      <p class="section-p" data-tr="Sağlık turizmi kliniklerinin büyük çoğunluğu, aynı operasyonel açmazlarla karşı karşıya. CliniPipes bu açmazların her birini yapısal olarak çözer." data-en="Most health tourism clinics face the same operational bottlenecks. CliniPipes solves each one structurally.">Sağlık turizmi kliniklerinin büyük çoğunluğu, aynı operasyonel açmazlarla karşı karşıya. CliniPipes bu açmazların her birini yapısal olarak çözer.</p>
-    </div>
-    <div class="compare-grid reveal">
-      <div class="compare-col col-before">
-        <div class="compare-head" data-tr="✗ Mevcut Durum" data-en="✗ Current State">✗ Mevcut Durum</div>
-        <div class="compare-body">
-          <div class="compare-item"><span class="icon">💬</span><span data-tr="Lead talepleri WhatsApp, e-posta ve kişisel mesajlaşma kanallarına dağılır; merkezi bir kayıt olmadan yanıt süresi ve sorumluluk takibi zorlaşır. Geç verilen her yanıt, uluslararası hastanın alternatif klinik arayışına yönelme riskini artırır." data-en="Inquiries spread across WhatsApp, email and personal messaging channels; without a central log, response times and accountability become hard to track. Every delayed reply increases the risk that an international patient turns to a competitor clinic.">Lead talepleri WhatsApp, e-posta ve kişisel mesajlaşma kanallarına dağılır; merkezi bir kayıt olmadan yanıt süresi ve sorumluluk takibi zorlaşır. Geç verilen her yanıt, uluslararası hastanın alternatif klinik arayışına yönelme riskini artırır.</span></div>
-          <div class="compare-item"><span class="icon">📊</span><span data-tr="Pipeline görünürlüğü olmadan hangi hastanın hangi aşamada olduğu net biçimde izlenemez. Bu belirsizlik satış döngüsünü uzatır, ekip içi sorumluluk dağılır ve fırsat kayıpları fark edilmeden birikir." data-en="Without pipeline visibility, it is impossible to see clearly which patient is at which stage. This uncertainty lengthens the sales cycle, diffuses team accountability and lets lost opportunities pile up unnoticed.">Pipeline görünürlüğü olmadan hangi hastanın hangi aşamada olduğu net biçimde izlenemez. Bu belirsizlik satış döngüsünü uzatır, ekip içi sorumluluk dağılır ve fırsat kayıpları fark edilmeden birikir.</span></div>
-          <div class="compare-item"><span class="icon">📄</span><span data-tr="Hasta dosyası, klinik değerlendirme ve fiyatlandırma farklı araçlarda tutulduğunda teklif süreci manuel ve parçalı ilerler. Belge birleştirme saatler alır; tutarsızlık ve hata riski yükselir." data-en="When patient files, clinical assessments and pricing live in separate tools, the quote process becomes manual and fragmented. Document assembly takes hours; inconsistency and error risk increase.">Hasta dosyası, klinik değerlendirme ve fiyatlandırma farklı araçlarda tutulduğunda teklif süreci manuel ve parçalı ilerler. Belge birleştirme saatler alır; tutarsızlık ve hata riski yükselir.</span></div>
-          <div class="compare-item"><span class="icon">📈</span><span data-tr="Lead kaynağı, ülke bazlı dönüşüm ve tedavi performansı sistematik ölçülmediğinde pazarlama ve satış kararları sezgisel kalır. Yatırım getirisi görünür olmaz." data-en="When lead source, country conversion and treatment performance are not measured systematically, marketing and sales decisions stay intuitive. Return on investment stays invisible.">Lead kaynağı, ülke bazlı dönüşüm ve tedavi performansı sistematik ölçülmediğinde pazarlama ve satış kararları sezgisel kalır. Yatırım getirisi görünür olmaz.</span></div>
-          <div class="compare-item"><span class="icon">🔒</span><span data-tr="Özel nitelikli sağlık verilerinin birden fazla platformda dağınık biçimde saklanması, KVKK/GDPR uyumu ve hasta güveni açısından yapısal bir risk oluşturur." data-en="Storing sensitive health data across multiple platforms in a fragmented way creates structural risk for KVKK/GDPR compliance and patient trust.">Özel nitelikli sağlık verilerinin birden fazla platformda dağınık biçimde saklanması, KVKK/GDPR uyumu ve hasta güveni açısından yapısal bir risk oluşturur.</span></div>
-        </div>
-      </div>
-      <div class="compare-col col-after">
-        <div class="compare-head" data-tr="✓ CliniPipes ile" data-en="✓ With CliniPipes">✓ CliniPipes ile</div>
-        <div class="compare-body">
-          <div class="compare-item"><span class="icon">⚡</span><span data-tr="Her yeni başvuru anında satış ekibine iletilir. Yanıt süresi dakikalara iner; hasta henüz karar vermemişken sistem devreye girmiş olur." data-en="Every new inquiry is routed to the sales team instantly. Response time drops to minutes — the system is already in motion while the patient is still deciding.">Her yeni başvuru anında satış ekibine iletilir. Yanıt süresi dakikalara iner; hasta henüz karar vermemişken sistem devreye girmiş olur.</span></div>
-          <div class="compare-item"><span class="icon">🎯</span><span data-tr="Her hastanın durumu, sorumlusu, doktor değerlendirmesi ve teklif geçmişi tek bir görünümde izlenir. Belirsizlik ortadan kalkar, hesap verebilirlik yapısal hale gelir." data-en="Each patient's status, owner, doctor assessment and quote history are tracked in a single view. Uncertainty disappears; accountability becomes structural.">Her hastanın durumu, sorumlusu, doktor değerlendirmesi ve teklif geçmişi tek bir görünümde izlenir. Belirsizlik ortadan kalkar, hesap verebilirlik yapısal hale gelir.</span></div>
-          <div class="compare-item"><span class="icon">📋</span><span data-tr="Hasta bilgisi, klinik değerlendirme ve fiyatlandırma tek bir iş akışında birleşir. Markalı, profesyonel teklif belgeleri dakikalar içinde hazırlanır — manuel derleme sürecine son." data-en="Patient information, clinical assessment and pricing merge into one workflow. Branded, professional quote documents are ready in minutes — no more manual assembly.">Hasta bilgisi, klinik değerlendirme ve fiyatlandırma tek bir iş akışında birleşir. Markalı, profesyonel teklif belgeleri dakikalar içinde hazırlanır — manuel derleme sürecine son.</span></div>
-          <div class="compare-item"><span class="icon">📊</span><span data-tr="Operasyonel veriler gerçek zamanlı olarak izlenir. Hangi kaynakların lead ürettiği, hangi ülkelerin daha yüksek dönüşüm sağladığı ve aylık satış performansı her gün görünür hale gelir." data-en="Operational data is tracked in real time. Which sources generate leads, which countries convert better and monthly sales performance become visible every day.">Operasyonel veriler gerçek zamanlı olarak izlenir. Hangi kaynakların lead ürettiği, hangi ülkelerin daha yüksek dönüşüm sağladığı ve aylık satış performansı her gün görünür hale gelir.</span></div>
-          <div class="compare-item"><span class="icon">🔒</span><span data-tr="Hasta tıbbi verileri AES-256 şifrelemesiyle korunur. KVKK ve GDPR yükümlülükleri karşılanır. Her klinik, kendi veri alanında bağımsız ve izole biçimde çalışır." data-en="Patient medical data is protected with AES-256 encryption. KVKK and GDPR obligations are met. Each clinic operates independently and in isolation within its own data space.">Hasta tıbbi verileri AES-256 şifrelemesiyle korunur. KVKK ve GDPR yükümlülükleri karşılanır. Her klinik, kendi veri alanında bağımsız ve izole biçimde çalışır.</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
- 
-<!-- PIPELINE -->
-<section class="pipeline" id="nasil-calisir">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow" style="color:var(--g)" data-tr="Hasta Yolculuğu" data-en="Patient Journey">Hasta Yolculuğu</div>
-      <h2 class="section-h" data-tr="Talep gelir. Süreç başlar.<br>Satış tamamlanır." data-en="Inquiry arrives. Process starts.<br>Sale closes.">Talep gelir. Süreç başlar.<br>Satış tamamlanır.</h2>
-      <p class="section-p" data-tr="Bir hasta formu gönderdiği andan nihai onayı verdiği ana kadar her adım izlenir, hiçbir aşama atlanmaz." data-en="From the moment a patient submits a form to the moment they approve — every step is tracked, nothing is missed.">Bir hasta formu gönderdiği andan nihai onayı verdiği ana kadar her adım izlenir, hiçbir aşama atlanmaz.</p>
-    </div>
-    <div class="pipe-track reveal" id="pipe-track">
-      <div class="pipe-step"><div class="pipe-icon">📞</div><h4 data-tr="Lead Karşılama" data-en="Lead Intake">Lead Karşılama</h4><p data-tr="Satış ekibi gelen talebi karşılar ve süreci başlatır." data-en="Sales team receives the inquiry and starts the process.">Satış ekibi gelen talebi karşılar ve süreci başlatır.</p></div>
-      <div class="pipe-step"><div class="pipe-icon">🔗</div><h4 data-tr="Form Gönderimi" data-en="Form Sent">Form Gönderimi</h4><p data-tr="Hasta formu linki hastaya iletilir." data-en="Patient form link is sent to the patient.">Hasta formu linki hastaya iletilir.</p></div>
-      <div class="pipe-step"><div class="pipe-icon">📋</div><h4 data-tr="Hasta Formu" data-en="Patient Form">Hasta Formu</h4><p data-tr="Hasta sağlık geçmişi, fotoğraf ve röntgenini doldurur." data-en="Patient fills medical history, photos and X-rays.">Hasta sağlık geçmişi, fotoğraf ve röntgenini doldurur.</p></div>
-      <div class="pipe-step"><div class="pipe-icon">🩺</div><h4 data-tr="Doktor Değerlendirmesi" data-en="Doctor Assessment">Doktor Değerlendirmesi</h4><p data-tr="Doktor klinik değerlendirme ve tedavi planını panelde doldurur." data-en="Doctor completes clinical assessment and treatment plan.">Doktor klinik değerlendirme ve tedavi planını panelde doldurur.</p></div>
-      <div class="pipe-step"><div class="pipe-icon">🏨</div><h4 data-tr="Satış Tamamlama" data-en="Sales Completion">Satış Tamamlama</h4><p data-tr="Satışçı otel ve operasyon bilgilerini ekler, pipeline'da takip eder." data-en="Sales adds hotel and operation details, tracks in pipeline.">Satışçı otel ve operasyon bilgilerini ekler, pipeline'da takip eder.</p></div>
-      <div class="pipe-step"><div class="pipe-icon">📄</div><h4 data-tr="PDF Teklif" data-en="PDF Quote">PDF Teklif</h4><p data-tr="Markalı PDF teklif hastaya gönderilir. Onay ve follow-up takip edilir." data-en="Branded PDF quote sent to patient. Approval and follow-up tracked.">Markalı PDF teklif hastaya gönderilir. Onay ve follow-up takip edilir.</p></div>
-    </div>
-    <div style="margin-top:2.5rem;padding:1.25rem 1.75rem;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.18);border-radius:10px;display:flex;align-items:center;gap:1rem;font-size:.85rem;color:rgba(255,255,255,.6)" class="reveal">
-      <span style="font-size:1.25rem">⚡</span>
-      <span id="pipe-note" data-tr="5 adımlı <strong style='color:var(--g)'>kurulum sihirbazı</strong> ile kliniğinizi 15–30 dakikada yapılandırın. Opsiyonel kurulum hizmeti 1 iş gününde teslim edilir." data-en="Configure your clinic in 15–30 minutes with the 5-step <strong style='color:var(--g)'>setup wizard.</strong> Optional white-glove setup delivered in 1 business day.">5 adımlı <strong style="color:var(--g)">kurulum sihirbazı</strong> ile kliniğinizi 15–30 dakikada yapılandırın. Opsiyonel kurulum hizmeti 1 iş gününde teslim edilir.</span>
-    </div>
-  </div>
-</section>
- 
-<!-- FEATURES -->
-<section class="features" id="ozellikler">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow" data-tr="Özellikler" data-en="Features">Özellikler</div>
-      <h2 class="section-h" data-tr="Sağlık turizmi iş akışı için<br>tasarlandı." data-en="Built for health tourism<br>workflows.">Sağlık turizmi iş akışı için<br>tasarlandı.</h2>
-      <p class="section-p" data-tr="Genel amaçlı bir CRM değil. Uluslararası hasta kabul eden kliniklerin gerçek operasyonel ihtiyaçlarına özel araçlar." data-en="Not a generic CRM. Purpose-built tools for clinics that accept international patients.">Genel amaçlı bir CRM değil. Uluslararası hasta kabul eden kliniklerin gerçek operasyonel ihtiyaçlarına özel araçlar.</p>
-    </div>
-    <div class="feat-grid reveal">
-      <div class="feat"><div class="feat-ic">📋</div><h3 data-tr="Özelleştirilebilir Hasta Formu" data-en="Custom Patient Intake Form">Özelleştirilebilir Hasta Formu</h3><p data-tr="Klinik logosu, KVKK/GDPR onayı. Hasta formu ve PDF teklifte İngilizce veya Almanca dil seçeneği." data-en="Clinic logo, KVKK/GDPR consent. English or German language option for the patient form and PDF quote.">Klinik logosu, KVKK/GDPR onayı. Hasta formu ve PDF teklifte İngilizce veya Almanca dil seçeneği.</p></div>
-      <div class="feat"><div class="feat-ic">📊</div><h3 data-tr="Canlı Dashboard" data-en="Live Dashboard">Canlı Dashboard</h3><p data-tr="Günlük lead, funnel dönüşümü, SLA uyumu ve ekip performansı — Pro planda kanal/ülke kırılımları dahil." data-en="Daily leads, funnel conversion, SLA compliance and team performance — Pro includes channel/country breakdowns.">Günlük lead, funnel dönüşümü, SLA uyumu ve ekip performansı — Pro planda kanal/ülke kırılımları dahil.</p></div>
-      <div class="feat"><div class="feat-ic">⚡</div><h3 data-tr="E-posta Lead Bildirimi" data-en="Email Lead Alerts">E-posta Lead Bildirimi</h3><p data-tr="Yeni hasta formu geldiğinde bildirim e-postası anında iletilir. Kurulum ekranından test edilebilir." data-en="Instant notification email when a new patient form arrives. Testable from the setup screen.">Yeni hasta formu geldiğinde bildirim e-postası anında iletilir. Kurulum ekranından test edilebilir.</p></div>
-      <div class="feat"><div class="feat-ic">🩺</div><h3 data-tr="Doktor Paneli" data-en="Doctor Panel">Doktor Paneli</h3><p data-tr="Her doktor yalnızca atandığı hastaları görür. Klinik değerlendirme, tedavi planı ve takip notları dijital ortamda." data-en="Each doctor sees only their assigned patients. Clinical assessment, treatment plan and follow-up notes go digital.">Her doktor yalnızca atandığı hastaları görür. Klinik değerlendirme, tedavi planı ve takip notları dijital ortamda.</p></div>
-      <div class="feat"><div class="feat-ic">📄</div><h3 data-tr="Tek Tıkla PDF Teklif" data-en="One-Click PDF Quote">Tek Tıkla PDF Teklif</h3><p data-tr="5 adımlı teklif oluşturucu ile çok sayfalı, markalı PDF. Doktor mektubu, klinik plan, seyahat paketi ve fiyat özeti otomatik birleşir." data-en="Multi-page branded PDF via 5-step proposal builder. Doctor letter, clinical plan, travel package and price summary auto-merge.">5 adımlı teklif oluşturucu ile çok sayfalı, markalı PDF. Doktor mektubu, klinik plan, seyahat paketi ve fiyat özeti otomatik birleşir.</p></div>
-      <div class="feat"><div class="feat-ic">👥</div><h3 data-tr="Rol Bazlı Erişim Kontrolü" data-en="Role-Based Access Control">Rol Bazlı Erişim Kontrolü</h3><p data-tr="Satışçı, doktor, yönetici — her kullanıcı yalnızca kendi rolüyle ilgili verilere erişir. Hasta gizliliği yapısal." data-en="Sales, doctor, manager — each user accesses only data relevant to their role. Patient privacy is structural.">Satışçı, doktor, yönetici — her kullanıcı yalnızca kendi rolüyle ilgili verilere erişir. Hasta gizliliği yapısal.</p></div>
-      <div class="feat"><div class="feat-ic">🔒</div><h3 data-tr="KVKK & GDPR Uyumlu" data-en="KVKK & GDPR Compliant">KVKK & GDPR Uyumlu</h3><p data-tr="Hasta tıbbi verileri AES-256 ile şifrelenir. Her kliniğin verisi diğerlerinden teknik olarak izole edilir." data-en="Patient medical data encrypted with AES-256. Each clinic's data technically isolated from others.">Hasta tıbbi verileri AES-256 ile şifrelenir. Her kliniğin verisi diğerlerinden teknik olarak izole edilir.</p></div>
-      <div class="feat"><div class="feat-ic">💬</div><h3 data-tr="WhatsApp Business" data-en="WhatsApp Business">WhatsApp Business</h3><p data-tr="Teklif PDF'i klinik hattından gönderilir; satışçı hasta telefonunu görmez. Lead bildirimleri yapılandırılabilir." data-en="Quote PDF sent from the clinic line; sales staff never see the patient's phone. Lead alerts configurable.">Teklif PDF'i klinik hattından gönderilir; satışçı hasta telefonunu görmez. Lead bildirimleri yapılandırılabilir.</p></div>
     </div>
   </div>
 </section>
@@ -492,15 +405,13 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <section class="demo" id="demo">
   <div class="wrap">
     <div class="reveal">
-      <div class="eyebrow" style="color:var(--g)" data-tr="Canlı Sistem" data-en="Live System">Canlı Sistem</div>
-      <h2 class="section-h" data-tr="Gerçek bir klinik gibi görünüyor.<br>Çünkü öyle." data-en="Looks like a real clinic.<br>Because it is.">Gerçek bir klinik gibi görünüyor.<br>Çünkü öyle.</h2>
-      <p class="section-p" data-tr="Canlı CliniPipes ortamından alınan gerçek arayüz ekran görüntüleri." data-en="Real interface screenshots from the live CliniPipes environment.">Canlı CliniPipes ortamından alınan gerçek arayüz ekran görüntüleri.</p>
+      <div class="eyebrow" data-tr="Sistem" data-en="Product">Sistem</div>
+      <h2 class="section-h" data-tr="Tek panelde<br><em>lead → teklif</em>" data-en="One panel<br><em>lead → quote</em>">Tek panelde<br><em>lead → teklif</em></h2>
+      <p class="section-p" data-tr="Canlı CliniPipes arayüzünden ekran görüntüleri." data-en="Screenshots from the live CliniPipes interface.">Canlı CliniPipes arayüzünden ekran görüntüleri.</p>
     </div>
     <div class="demo-tabs reveal">
-      <div class="demo-tab on" data-demo="dashboard" onclick="setTab(this)" data-tr="Yönetim Paneli" data-en="Admin Panel">Yönetim Paneli</div>
-      <div class="demo-tab" data-demo="sales" onclick="setTab(this)" data-tr="Lead Akışı" data-en="Lead Pipeline">Lead Akışı</div>
-      <div class="demo-tab" data-demo="form" onclick="setTab(this)" data-tr="Hasta Formu" data-en="Patient Form">Hasta Formu</div>
-      <div class="demo-tab" data-demo="doctor" onclick="setTab(this)" data-tr="Doktor Paneli" data-en="Doctor Panel">Doktor Paneli</div>
+      <div class="demo-tab on" data-demo="dashboard" onclick="setTab(this)" data-tr="Panel" data-en="Dashboard">Panel</div>
+      <div class="demo-tab" data-demo="sales" onclick="setTab(this)" data-tr="Pipeline" data-en="Pipeline">Pipeline</div>
       <div class="demo-tab" data-demo="pdf" onclick="setTab(this)" data-tr="PDF Teklif" data-en="PDF Quote">PDF Teklif</div>
     </div>
     <div class="demo-frame reveal">
@@ -511,12 +422,6 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
       <div class="demo-panel" data-demo="sales">
         <img src="/demo/sales.png?v=14" alt="Satış Pipeline" loading="lazy">
       </div>
-      <div class="demo-panel" data-demo="form">
-        <img src="/demo/form.png?v=14" alt="Hasta Formu" loading="lazy">
-      </div>
-      <div class="demo-panel" data-demo="doctor">
-        <img src="/demo/doctor.png?v=14" alt="Doktor Paneli" loading="lazy">
-      </div>
       <div class="demo-panel" data-demo="pdf">
         <img src="/demo/pdf.png?v=14" alt="PDF Teklif" loading="lazy">
       </div>
@@ -526,152 +431,87 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
   </div>
 </section>
  
-<!-- FAQ -->
-<section class="faq" id="sss">
-  <div class="wrap">
-    <div class="reveal">
-      <div class="eyebrow" data-tr="Sıkça Sorulanlar" data-en="FAQ">Sıkça Sorulanlar</div>
-      <h2 class="section-h" data-tr="Aklınızdaki sorular." data-en="Questions you have.">Aklınızdaki sorular.</h2>
-    </div>
-    <div class="faq-list reveal">
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Kurulum ne kadar sürer ve teknik bilgi gerektirir mi?" data-en="How long does setup take? Is technical knowledge required?">Kurulum ne kadar sürer ve teknik bilgi gerektirir mi?</div>
-        <div class="faq-a" data-tr="Tek seferlik kurulum hizmeti opsiyoneldir. Satın alırsanız klinik bilgilerinizi, logo ve doktor profillerinizi bizimle paylaşırsınız; kliniğinizi 1 iş gününde sisteme entegre ederiz. Teknik bilgi gerekmez." data-en="One-time setup service is optional. If purchased, you share your clinic details, logo and doctor profiles with us — we integrate your clinic in 1 business day. No technical knowledge required.">Tek seferlik kurulum hizmeti opsiyoneldir. Satın alırsanız klinik bilgilerinizi, logo ve doktor profillerinizi bizimle paylaşırsınız; kliniğinizi 1 iş gününde sisteme entegre ederiz. Teknik bilgi gerekmez.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Hasta verileri güvende mi? KVKK uyumlu mu?" data-en="Is patient data secure? Is it KVKK compliant?">Hasta verileri güvende mi? KVKK uyumlu mu?</div>
-        <div class="faq-a" data-tr="Evet. Tüm tıbbi veriler AES-256 ile şifrelenir. Her klinik kendi şifreli veri alanında çalışır. Sistem KVKK ve GDPR gerekliliklerine uygun tasarlanmıştır. Hasta verilerine operatör erişimi teknik olarak kısıtlanmıştır." data-en="Yes. All medical data is encrypted with AES-256. Each clinic operates in its own encrypted data space. The system is designed in accordance with KVKK and GDPR requirements. Operator access to patient data is technically restricted.">Evet. Tüm tıbbi veriler AES-256 ile şifrelenir. Her klinik kendi şifreli veri alanında çalışır. Sistem KVKK ve GDPR gerekliliklerine uygun tasarlanmıştır. Hasta verilerine operatör erişimi teknik olarak kısıtlanmıştır.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Hangi klinik tipleri için uygundur?" data-en="Which clinic types is it suitable for?">Hangi klinik tipleri için uygundur?</div>
-        <div class="faq-a" data-tr="Yurt dışından hasta kabul eden her klinik için uygundur. Özellikle diş kliniği, saç ekimi merkezi ve estetik cerrahi kliniklerinin iş akışları için optimize edilmiştir." data-en="It's suitable for any clinic that accepts international patients. Especially optimized for the workflows of dental clinics, hair transplant centers and aesthetic surgery clinics.">Yurt dışından hasta kabul eden her klinik için uygundur. Özellikle diş kliniği, saç ekimi merkezi ve estetik cerrahi kliniklerinin iş akışları için optimize edilmiştir.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Aboneliği istediğim zaman iptal edebilir miyim?" data-en="Can I cancel my subscription anytime?">Aboneliği istediğim zaman iptal edebilir miyim?</div>
-        <div class="faq-a" data-tr="Evet. Uzun vadeli sözleşme veya bağlılık yok. İptal ettiğinizde mevcut dönem sonuna kadar sistemi kullanmaya devam edersiniz." data-en="Yes. No long-term contracts or lock-in. When you cancel, you continue using the system until the end of the current period.">Evet. Uzun vadeli sözleşme veya bağlılık yok. İptal ettiğinizde mevcut dönem sonuna kadar sistemi kullanmaya devam edersiniz.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Mevcut hasta verilerimi sisteme aktarabilir miyim?" data-en="Can I import my existing patient data?">Mevcut hasta verilerimi sisteme aktarabilir miyim?</div>
-        <div class="faq-a" data-tr="Mevcut kayıtlarınız için kurulum sürecinde destek veriyoruz. Verilerinizi birlikte değerlendirip en uygun aktarım yolunu belirleriz." data-en="We support you with existing records during setup. We review your data together and determine the best migration approach.">Mevcut kayıtlarınız için kurulum sürecinde destek veriyoruz. Verilerinizi birlikte değerlendirip en uygun aktarım yolunu belirleriz.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Destek nasıl sağlanıyor?" data-en="How is support provided?">Destek nasıl sağlanıyor?</div>
-        <div class="faq-a" data-tr="E-posta ve WhatsApp üzerinden destek sunuyoruz. Tüm planlarda aynı yanıt süresi — kurulum ayında tam destek dahildir." data-en="We offer support via email and WhatsApp. Same response time for all plans — full support included in the setup month.">E-posta ve WhatsApp üzerinden destek sunuyoruz. Tüm planlarda aynı yanıt süresi — kurulum ayında tam destek dahildir.</div>
-      </div>
-    </div>
-  </div>
-</section>
- 
 <!-- PRICING -->
 <section class="pricing" id="fiyat">
   <div class="wrap">
     <div class="reveal text-center" style="text-align:center">
       <div class="eyebrow" style="justify-content:center;display:flex" data-tr="Fiyatlandırma" data-en="Pricing">Fiyatlandırma</div>
-      <h2 class="section-h" data-tr="Şeffaf. Ölçeklenebilir." data-en="Transparent. Scalable.">Şeffaf. Ölçeklenebilir.</h2>
-      <p class="section-p" style="margin:0 auto 2rem;text-align:center" data-tr="Tüm fiyatlar USD ($) cinsindendir. Yıllık ödemede 2 ay bedava." data-en="All prices in USD ($). Save 2 months with annual billing.">Tüm fiyatlar USD ($) cinsindendir. Yıllık ödemede 2 ay bedava.</p>
-    </div>
-    <div class="founding-banner reveal">
-      <p>🏆 <strong data-tr="Kurucu Klinikler Programı" data-en="Founding Clinics Program">Kurucu Klinikler Programı</strong> — <span data-tr="İlk 10 klinikten biri olun ve kalıcı indirimli abonelik fiyatını kilitleyin." data-en="Become one of the first 10 clinics and lock in a permanent discounted subscription price.">İlk 10 klinikten biri olun ve kalıcı indirimli abonelik fiyatını kilitleyin.</span></p>
-      <span class="slots-badge" id="foundingBannerSlots">9 slot kaldı</span>
+      <h2 class="section-h" data-tr="Planınızı seçin." data-en="Pick your plan.">Planınızı seçin.</h2>
+      <p class="section-p" style="margin:0 auto 1.75rem;text-align:center" data-tr="USD · yıllık ödemede 2 ay bedava · istediğiniz zaman iptal" data-en="USD · save 2 months yearly · cancel anytime">USD · yıllık ödemede 2 ay bedava · istediğiniz zaman iptal</p>
     </div>
     <div class="price-grid reveal">
-      <div class="p-card">
-        <span class="p-tag" data-tr="Başlangıç" data-en="Starter">Başlangıç</span>
-        <div class="p-desc" style="margin-bottom:1rem" data-tr="Tek hekimli klinikler ve sağlık turizmine yeni başlayanlar için ideal." data-en="Perfect for solo dentists and clinics starting their health tourism journey.">Tek hekimli klinikler ve sağlık turizmine yeni başlayanlar için ideal.</div>
-        <div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div>
-        <div class="p-price"><s id="wasStarter">$69</s></div>
+      <div class="p-card p-price-compact">
+        <span class="p-tag" data-tr="Starter" data-en="Starter">Starter</span>
+        <div class="p-desc" style="margin-bottom:.75rem" data-tr="Tek hekimli klinikler." data-en="Solo clinics.">Tek hekimli klinikler.</div>
+        <div class="p-price-old"><div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div><div class="p-price"><s id="wasStarter">$69</s></div></div>
         <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
-        <div class="p-price"><span id="nowStarter">$45</span></div>
-        <div class="p-per" data-tr="/ ay" data-en="/ month">/ ay</div>
-        <div class="p-annual">
-          <div class="p-price-label" data-tr="Yıllık" data-en="Annual">Yıllık</div>
-          <span class="p-yr" id="yrStarter"><s>$690</s> $450/year — 2 ay bedava</span>
-        </div>
+        <div class="p-price-main"><span id="nowStarter">$45</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        <div class="p-yr" id="yrStarter"><s>$690</s> $450/yıl</div>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="1 Kullanıcı" data-en="1 User">1 Kullanıcı</li>
-          <li data-tr="1 Klinik" data-en="1 Clinic">1 Klinik</li>
-          <li data-tr="50'e kadar hasta lead'i" data-en="Up to 50 Patient Leads">50'e kadar hasta lead'i</li>
-          <li data-tr="Hasta Yönetimi" data-en="Patient Management">Hasta Yönetimi</li>
-          <li data-tr="Tedavi Planlama" data-en="Treatment Planning">Tedavi Planlama</li>
-          <li data-tr="PDF Tedavi Teklifi" data-en="PDF Treatment Proposal">PDF Tedavi Teklifi</li>
-          <li data-tr="Temel Dashboard" data-en="Basic Dashboard">Temel Dashboard</li>
-          <li data-tr="E-posta Destek" data-en="Email Support">E-posta Destek</li>
+          <li data-tr="1 kullanıcı · 50 lead" data-en="1 user · 50 leads">1 kullanıcı · 50 lead</li>
+          <li data-tr="Hasta formu & PDF teklif" data-en="Patient form & PDF quote">Hasta formu & PDF teklif</li>
+          <li data-tr="Temel dashboard" data-en="Basic dashboard">Temel dashboard</li>
         </ul>
-        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Starter ile Başla" data-en="Start with Starter">Starter ile Başla</button>
+        <button type="button" class="p-btn" onclick="addToCart('starter')" data-tr="Starter Seç" data-en="Choose Starter">Starter Seç</button>
       </div>
-      <div class="p-card hot">
-        <div class="hot-label" data-tr="⭐ ÖNERİLEN" data-en="⭐ Recommended">⭐ ÖNERİLEN</div>
+      <div class="p-card hot p-price-compact">
+        <div class="hot-label" data-tr="ÖNERİLEN" data-en="Recommended">ÖNERİLEN</div>
         <span class="p-tag" data-tr="Professional" data-en="Professional">Professional</span>
-        <div class="p-desc" style="margin-bottom:1rem" data-tr="Koordinatör ve satış ekibi olan büyüyen klinikler için tasarlandı." data-en="Designed for growing clinics with dedicated coordinators and sales teams.">Koordinatör ve satış ekibi olan büyüyen klinikler için tasarlandı.</div>
-        <div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div>
-        <div class="p-price"><s id="wasPro">$119</s></div>
+        <div class="p-desc" style="margin-bottom:.75rem" data-tr="Satış ekibi olan klinikler." data-en="Clinics with a sales team.">Satış ekibi olan klinikler.</div>
+        <div class="p-price-old"><div class="p-price-label" data-tr="Normal Fiyat" data-en="Regular Price">Normal Fiyat</div><div class="p-price"><s id="wasPro">$119</s></div></div>
         <div class="p-price-label founding" data-tr="Kurucu Klinik" data-en="Founding Clinic">Kurucu Klinik</div>
-        <div class="p-price"><span id="nowPro">$79</span></div>
-        <div class="p-per" data-tr="/ ay" data-en="/ month">/ ay</div>
-        <div class="p-annual">
-          <div class="p-price-label" data-tr="Yıllık" data-en="Annual">Yıllık</div>
-          <span class="p-yr" id="yrPro"><s>$1,190</s> $790/year — 2 ay bedava</span>
-        </div>
+        <div class="p-price-main"><span id="nowPro">$79</span><span class="p-per" data-tr="/ ay" data-en="/ mo">/ ay</span></div>
+        <div class="p-yr" id="yrPro"><s>$1,190</s> $790/yıl</div>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="5'e kadar Kullanıcı" data-en="Up to 5 Users">5'e kadar Kullanıcı</li>
-          <li data-tr="Sınırsız Hasta Lead'i" data-en="Unlimited Patient Leads">Sınırsız Hasta Lead'i</li>
-          <li data-tr="Satış Pipeline" data-en="Sales Pipeline">Satış Pipeline</li>
-          <li data-tr="Doktor İş Akışı" data-en="Doctor Workflow">Doktor İş Akışı</li>
-          <li data-tr="Görev Yönetimi" data-en="Task Management">Görev Yönetimi</li>
-          <li data-tr="SLA Takibi" data-en="SLA Tracking">SLA Tracking</li>
-          <li data-tr="WhatsApp Bildirimleri" data-en="WhatsApp Notifications">WhatsApp Bildirimleri</li>
-          <li data-tr="Gelişmiş Dashboard'lar" data-en="Advanced Dashboards">Gelişmiş Dashboard'lar</li>
-          <li data-tr="Performans Raporları" data-en="Performance Reports">Performans Raporları</li>
-          <li data-tr="Öncelikli Destek" data-en="Priority Support">Öncelikli Destek</li>
+          <li data-tr="5 kullanıcı · sınırsız lead" data-en="5 users · unlimited leads">5 kullanıcı · sınırsız lead</li>
+          <li data-tr="Pipeline & doktor iş akışı" data-en="Pipeline & doctor workflow">Pipeline & doktor iş akışı</li>
+          <li data-tr="WhatsApp & gelişmiş raporlar" data-en="WhatsApp & advanced reports">WhatsApp & gelişmiş raporlar</li>
         </ul>
         <button type="button" class="p-btn" onclick="addToCart('pro')" data-tr="Professional Seç" data-en="Choose Professional">Professional Seç</button>
       </div>
-      <div class="p-card">
+      <div class="p-card p-price-compact">
         <span class="p-tag" data-tr="Enterprise" data-en="Enterprise">Enterprise</span>
-        <div class="p-desc" style="margin-bottom:1rem" data-tr="Çok lokasyonlu klinik grupları ve özel entegrasyon ihtiyaçları." data-en="Multi-location clinic groups and custom integration needs.">Çok lokasyonlu klinik grupları ve özel entegrasyon ihtiyaçları.</div>
-        <a href="mailto:info@nodustrategy.com" class="p-price-contact" data-contact-mail data-tr="Satış Ekibiyle İletişim" data-en="Contact Sales" onclick="return openContactMail(event,this)">Satış Ekibiyle İletişim</a>
+        <div class="p-desc" style="margin-bottom:.75rem" data-tr="Çok lokasyonlu gruplar." data-en="Multi-location groups.">Çok lokasyonlu gruplar.</div>
+        <a href="mailto:info@nodustrategy.com" class="p-price-contact" data-contact-mail data-tr="Özel teklif" data-en="Custom quote" onclick="return openContactMail(event,this)">Özel teklif</a>
         <div class="p-divider"></div>
         <ul class="p-list">
-          <li data-tr="Sınırsız Kullanıcı" data-en="Unlimited Users">Sınırsız Kullanıcı</li>
-          <li data-tr="Birden Fazla Klinik" data-en="Multiple Clinics">Birden Fazla Klinik</li>
-          <li data-tr="Özel İş Akışları" data-en="Custom Workflows">Özel İş Akışları</li>
-          <li data-tr="API Erişimi" data-en="API Access">API Erişimi</li>
-          <li data-tr="White Label Seçenekleri" data-en="White Label Options">White Label Seçenekleri</li>
-          <li data-tr="Özel Entegrasyonlar" data-en="Custom Integrations">Özel Entegrasyonlar</li>
-          <li data-tr="Özel Onboarding" data-en="Dedicated Onboarding">Özel Onboarding</li>
-          <li data-tr="Premium Destek" data-en="Premium Support">Premium Support</li>
+          <li data-tr="Sınırsız kullanıcı & klinik" data-en="Unlimited users & clinics">Sınırsız kullanıcı & klinik</li>
+          <li data-tr="API & özel entegrasyon" data-en="API & custom integration">API & özel entegrasyon</li>
         </ul>
-        <a href="mailto:info@nodustrategy.com" class="p-btn" data-contact-mail data-tr="Satış Ekibiyle İletişim" data-en="Contact Sales" onclick="return openContactMail(event,this)">Satış Ekibiyle İletişim</a>
+        <a href="mailto:info@nodustrategy.com" class="p-btn" data-contact-mail data-tr="İletişime Geç" data-en="Contact Us" onclick="return openContactMail(event,this)">İletişime Geç</a>
       </div>
     </div>
-    <div class="setup-service reveal">
-      <div class="setup-service-inner">
-        <div class="setup-service-main">
-          <h3 data-tr="Tek Seferlik Kurulum Hizmeti" data-en="One-Time Setup Service">Tek Seferlik Kurulum Hizmeti</h3>
-          <ul class="setup-service-list">
-            <li data-tr="Klinik Yapılandırması" data-en="Clinic Configuration">Klinik Yapılandırması</li>
-            <li data-tr="Marka & Logo Kurulumu" data-en="Branding & Logo Setup">Marka & Logo Kurulumu</li>
-            <li data-tr="Doktor Profilleri" data-en="Doctor Profiles">Doktor Profilleri</li>
-            <li data-tr="PDF Şablon Yapılandırması" data-en="PDF Template Configuration">PDF Şablon Yapılandırması</li>
-            <li data-tr="Form Yapılandırması" data-en="Form Configuration">Form Yapılandırması</li>
-            <li data-tr="Kullanıcı Oluşturma" data-en="User Creation">Kullanıcı Oluşturma</li>
-            <li data-tr="İlk Eğitim" data-en="Initial Training">İlk Eğitim</li>
-          </ul>
-        </div>
-        <div class="setup-service-side">
-          <div class="setup-service-prices">
-            <div class="p-price-label" data-tr="Normal" data-en="Regular">Normal</div>
-            <div class="p-price"><s id="wasSetup">$149</s></div>
-            <div class="p-price-label founding" data-tr="Kurucu Klinikler" data-en="Founding Clinics">Kurucu Klinikler</div>
-            <div class="p-price"><span id="nowSetup">$99</span></div>
-          </div>
-          <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Kurulumu Sepete Ekle" data-en="Add Setup Service">Kurulumu Sepete Ekle</button>
-        </div>
+    <div class="setup-service-compact reveal">
+      <p data-tr="Opsiyonel kurulum — logo, form, eğitim dahil. Kurucu fiyat: " data-en="Optional setup — logo, forms, training. Founding price: ">Opsiyonel kurulum — logo, form, eğitim dahil. Kurucu fiyat: <strong id="nowSetup">$99</strong> (<s id="wasSetup">$149</s>)</p>
+      <button type="button" class="p-btn" onclick="addToCart('setup')" data-tr="Kurulum Ekle" data-en="Add Setup">Kurulum Ekle</button>
+    </div>
+  </div>
+</section>
+ 
+<!-- FAQ -->
+<section class="faq" id="sss">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow" data-tr="SSS" data-en="FAQ">SSS</div>
+      <h2 class="section-h" data-tr="Kısa cevaplar." data-en="Quick answers.">Kısa cevaplar.</h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Kurulum ne kadar sürer?" data-en="How long does setup take?">Kurulum ne kadar sürer?</div>
+        <div class="faq-a" data-tr="Kendi başınıza 15–30 dakika. Opsiyonel kurulum hizmetiyle 1 iş gününde hazır." data-en="15–30 minutes on your own. Optional white-glove setup in 1 business day.">Kendi başınıza 15–30 dakika. Opsiyonel kurulum hizmetiyle 1 iş gününde hazır.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-tr="Veriler güvende mi?" data-en="Is data secure?">Veriler güvende mi?</div>
+        <div class="faq-a" data-tr="Evet. AES-256 şifreleme, KVKK/GDPR uyumlu yapı, klinik başına izole veri." data-en="Yes. AES-256 encryption, KVKK/GDPR-ready, isolated data per clinic.">Evet. AES-256 şifreleme, KVKK/GDPR uyumlu yapı, klinik başına izole veri.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-tr="İptal edebilir miyim?" data-en="Can I cancel?">İptal edebilir miyim?</div>
+        <div class="faq-a" data-tr="Evet. Taahhüt yok; dönem sonuna kadar kullanmaya devam edersiniz." data-en="Yes. No lock-in; use until the end of your billing period.">Evet. Taahhüt yok; dönem sonuna kadar kullanmaya devam edersiniz.</div>
       </div>
     </div>
-    <p class="p-note reveal" data-tr="Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin." data-en="Save 2 months with annual billing. · Cancel anytime.">Yıllık ödemede 2 ay bedava. · İstediğiniz zaman iptal edin.</p>
+    <p class="faq-more reveal"><a href="/sss" data-tr="Tüm sorular →" data-en="All questions →">Tüm sorular →</a></p>
   </div>
 </section>
  
@@ -679,11 +519,10 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 <section class="cta-fin">
   <div class="wrap reveal">
     <div class="eyebrow" style="color:var(--g);justify-content:center;display:flex;margin-bottom:1.25rem" data-tr="Başlamak için doğru zaman" data-en="The right time to start">Başlamak için doğru zaman</div>
-    <h2 data-tr="Her geçen gün,<br><em>takip edilmeyen</em> bir hastadır." data-en="Every day that passes<br>is a patient <em>left untracked.</em>">Her geçen gün,<br><em>takip edilmeyen</em> bir hastadır.</h2>
-    <p data-tr="Kurulum 1 iş günü sürer. İlk hastanızı aynı gün kaydedin." data-en="Setup takes 1 business day. Register your first patient the same day.">Kurulum 1 iş günü sürer. İlk hastanızı aynı gün kaydedin.</p>
+    <h2 data-tr="Hazırsanız <em>başlayalım.</em>" data-en="Ready to <em>get started?</em>">Hazırsanız <em>başlayalım.</em></h2>
+    <p data-tr="Plan seçin, sepetten sipariş verin — aynı gün başlayın." data-en="Pick a plan, checkout — start the same day.">Plan seçin, sepetten sipariş verin — aynı gün başlayın.</p>
     <div class="cta-group">
-      <a href="#fiyat" class="btn-w" data-tr="Hemen Başlayın →" data-en="Get Started →">Hemen Başlayın →</a>
-      <a href="mailto:info@nodustrategy.com" class="btn-outline-w" data-contact-mail data-tr="Sorularınız için yazın" data-en="Send us a message" onclick="return openContactMail(event,this)">Sorularınız için yazın</a>
+      <a href="#fiyat" class="btn-w" data-tr="Plan Seçin →" data-en="Choose a Plan →">Plan Seçin →</a>
     </div>
   </div>
 </section>
