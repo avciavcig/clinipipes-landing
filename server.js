@@ -3,7 +3,7 @@ const{createAdminAuth}=require('./lib/admin-auth');
 const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
-const{provisionClinic,isPortalIntegrationEnabled}=require('./lib/portal-bridge');
+const{provisionClinic,isPortalIntegrationEnabled,getProvisioningMode}=require('./lib/portal-bridge');
 const demoCaptureEnv=require('./lib/demo-capture-env');
 (function loadEnvFile(){
   var envPath=path.join(__dirname,'.env');
@@ -514,7 +514,7 @@ http.createServer(function(req,res){
   if(url==='/api/checkout-token'&&req.method==='GET'){
     auth.setSecurityHeaders(res);
     var token=pubSec.createCheckoutToken();
-    return jsonRes(res,200,{token:token,expiresIn:1800},req,false);
+    return jsonRes(res,200,{token:token,expiresIn:1800,provisioningMode:getProvisioningMode()},req,false);
   }
   if(url==='/api/checkout'&&req.method==='POST'){
     return auth.readBody(req,function(err,body){
@@ -561,8 +561,8 @@ http.createServer(function(req,res){
         try{ordersStore.saveOrder(order);}catch(saveErr){
           return jsonRes(res,500,{ok:false,error:'order_save_failed'},req,false);
         }
-        console.log('[order] '+orderId+' '+clinicName+' <'+ownerEmail+'> plan='+plan+' ('+(isPortalIntegrationEnabled()?'portal':'manuel')+')');
-        if(!isPortalIntegrationEnabled()){
+        console.log('[order] '+orderId+' '+clinicName+' <'+ownerEmail+'> plan='+plan+' ('+getProvisioningMode()+')');
+        if(getProvisioningMode()==='manual'){
           return jsonRes(res,200,{ok:true,mode:'manual',orderId:orderId,message:'Sipariş alındı. Ödeme bağlantısı e-posta ile iletilecek.'},req,false);
         }
         return provisionClinic(order).then(function(pr){
@@ -598,7 +598,7 @@ http.createServer(function(req,res){
   if(url==='/api/orders'&&req.method==='GET'){
     if(!requireAdmin(req,res,qs,false))return;
     var limit=Math.min(100,Math.max(1,parseInt(qs.limit,10)||50));
-    return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:isPortalIntegrationEnabled()},req,true);
+    return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:getProvisioningMode()==='auto'},req,true);
   }
   if(url==='/api/rebuild-legal'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;
@@ -768,10 +768,13 @@ http.createServer(function(req,res){
   });
 }).listen(PORT,function(){
   console.log('Port: '+PORT);
-  if(isPortalIntegrationEnabled()){
-    console.log('[deploy] Portal entegrasyonu AÇIK — clinic-portal provisioning aktif');
+  var provMode=getProvisioningMode();
+  if(provMode==='auto'){
+    console.log('[deploy] Başvuru modu: otomatik — checkout sonrası portal provisioning');
+  }else if(isPortalIntegrationEnabled()){
+    console.log('[deploy] Başvuru modu: manuel — ENABLE_PORTAL_INTEGRATION açık ama secret/URL eksik');
   }else{
-    console.log('[deploy] Mod: landing-only — portal/iyzico entegrasyonu kapalı');
+    console.log('[deploy] Mod: landing-only — portal entegrasyonu kapalı');
     console.log('[deploy] Siparişler orders/ klasörüne kaydedilir; admin panelden görüntülenir');
   }
 });

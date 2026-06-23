@@ -1,4 +1,4 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '';
+var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '', provisioningMode = 'manual';
 var pricingState = null;
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
@@ -23,6 +23,7 @@ function toggleLang() {
   });
   renderCart();
   loadPrices();
+  updateCheckoutFlowHint();
   if (contactEmail) applyContactEmail(contactEmail);
 }
 
@@ -109,8 +110,24 @@ function renderCart() {
   if (bundle) f += '<div class="cart-line discount"><span>' + t('Paket indirimi', 'Bundle discount') + '</span><span>−' + eur(bundle) + '</span></div>';
   f += '<div class="cart-total"><span>' + t('Toplam', 'Total') + '</span><span>' + eur(total) + '</span></div>';
   f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Devam Et', 'Continue') + '</button>';
-  f += '<div class="cart-note">' + t('1 iş günü içinde kurulum ve ödeme adımları için dönüş yapılır.', 'We respond within 1 business day with onboarding and payment steps.') + '</div>';
+  f += '<div class="cart-note">' + (provisioningMode === 'auto'
+    ? t('Gönderimden sonra hesabınız otomatik açılır.', 'Your account is created automatically after submit.')
+    : t('1 iş günü içinde kurulum ve ödeme adımları için dönüş yapılır.', 'We respond within 1 business day with onboarding and payment steps.')) + '</div>';
   footEl.innerHTML = f;
+}
+
+function updateCheckoutFlowHint() {
+  var el = document.getElementById('coFlowHint');
+  if (!el) return;
+  if (provisioningMode === 'auto') {
+    el.textContent = lang === 'en'
+      ? 'After you submit, your clinic account is created automatically and login details are emailed to you.'
+      : 'Gönderimden sonra klinik hesabınız otomatik açılır; giriş bilgileri e-postanıza iletilir.';
+  } else {
+    el.textContent = lang === 'en'
+      ? 'This is an application — not instant payment. We contact you within 1 business day with onboarding and payment steps.'
+      : 'Bu bir başvurudur — anında ödeme değildir. Onboarding ve ödeme adımları için 1 iş günü içinde sizinle iletişime geçeriz.';
+  }
 }
 
 function openCheckout() {
@@ -132,6 +149,7 @@ function openCheckout() {
   document.getElementById('coKvkk').checked = false;
   document.getElementById('coTerms').checked = false;
   updateCheckoutConfirm();
+  updateCheckoutFlowHint();
   closeCart();
   document.getElementById('coOverlay').classList.add('open');
   document.getElementById('coModal').classList.add('open');
@@ -205,6 +223,8 @@ function confirmPurchase() {
 function refreshCheckoutToken() {
   fetch('/api/checkout-token').then(function (r) { return r.json(); }).then(function (d) {
     if (d.token) checkoutToken = d.token;
+    if (d.provisioningMode === 'auto' || d.provisioningMode === 'manual') provisioningMode = d.provisioningMode;
+    updateCheckoutFlowHint();
   }).catch(function () {});
 }
 

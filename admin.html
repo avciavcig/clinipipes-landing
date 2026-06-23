@@ -116,7 +116,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   </div>
   <div class="card">
     <h2>&#128230; Son Sipari&#351;ler <span id="orders-mode" style="font-size:.72rem;font-weight:500;color:#888;margin-left:.5rem"></span></h2>
-    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Portal entegrasyonu açıksa siparişler otomatik provision edilir. Onay kutuları kayıt altına alınır.</p>
+    <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Başvuru modu: <strong id="orders-mode-detail">—</strong>. Otomatik mod için landing’de <code>ENABLE_PORTAL_INTEGRATION=true</code>, <code>CLINIC_PORTAL_URL</code> ve portal’da aynı <code>CLINIPIPES_WEBHOOK_SECRET</code> gerekir.</p>
     <div style="overflow-x:auto">
       <table class="recent-tbl">
         <thead><tr><th>Tarih</th><th>Klinik</th><th>E-posta</th><th>Plan</th><th>D&#246;nem</th><th>Durum</th><th>Onaylar</th></tr></thead>
@@ -589,7 +589,9 @@ function loadDashboard(){
 
 function renderOrders(orders, integrationEnabled){
   var modeEl=document.getElementById('orders-mode');
-  if(modeEl)modeEl.textContent=integrationEnabled?'(portal bağlı)':'(manuel mod)';
+  if(modeEl)modeEl.textContent=integrationEnabled?'(otomatik provisioning)':'(manuel başvuru)';
+  var detailEl=document.getElementById('orders-mode-detail');
+  if(detailEl)detailEl.textContent=integrationEnabled?'Otomatik — checkout sonrası portal hesabı açılır':'Manuel — 1 iş günü içinde iletişim; siparişler orders/ klasöründe';
   var tb=document.getElementById('orders-body');
   if(!tb)return;
   if(!orders.length){tb.innerHTML='<tr><td colspan="7" style="color:#aaa;padding:1rem">Henüz sipariş yok</td></tr>';return;}
