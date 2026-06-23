@@ -4,6 +4,7 @@ const mailer=require('./lib/admin-mailer');
 const pubSec=require('./lib/public-security');
 const ordersStore=require('./lib/orders-store');
 const{provisionClinic,isPortalIntegrationEnabled,getProvisioningMode}=require('./lib/portal-bridge');
+const{getPlatformSyncInfo}=require('./lib/platform-sync');
 const demoCaptureEnv=require('./lib/demo-capture-env');
 (function loadEnvFile(){
   var envPath=path.join(__dirname,'.env');
@@ -598,7 +599,7 @@ http.createServer(function(req,res){
   if(url==='/api/orders'&&req.method==='GET'){
     if(!requireAdmin(req,res,qs,false))return;
     var limit=Math.min(100,Math.max(1,parseInt(qs.limit,10)||50));
-    return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:getProvisioningMode()==='auto'},req,true);
+    return jsonRes(res,200,{ok:true,orders:ordersStore.listOrders(limit),integrationEnabled:getProvisioningMode()==='auto',platformSync:getPlatformSyncInfo({provisioningMode:getProvisioningMode()})},req,true);
   }
   if(url==='/api/rebuild-legal'&&req.method==='POST'){
     if(!requireAdmin(req,res,qs))return;

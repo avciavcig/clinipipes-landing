@@ -115,6 +115,10 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     </div>
   </div>
   <div class="card">
+    <h2>&#128279; Portal &#8596; Landing senkron</h2>
+    <div id="platform-sync-body" style="font-size:.82rem;line-height:1.65;color:#444">Y&#252;kleniyor...</div>
+  </div>
+  <div class="card">
     <h2>&#128230; Son Sipari&#351;ler <span id="orders-mode" style="font-size:.72rem;font-weight:500;color:#888;margin-left:.5rem"></span></h2>
     <p style="font-size:.82rem;color:#888;margin-bottom:.75rem">Başvuru modu: <strong id="orders-mode-detail">—</strong>. Otomatik mod için landing’de <code>ENABLE_PORTAL_INTEGRATION=true</code>, <code>CLINIC_PORTAL_URL</code> ve portal’da aynı <code>CLINIPIPES_WEBHOOK_SECRET</code> gerekir.</p>
     <div style="overflow-x:auto">
@@ -583,15 +587,31 @@ function loadDashboard(){
     }).catch(function(e){document.getElementById('s-total').textContent='Hata';});
   api('/api/orders?t='+Date.now())
     .then(function(r){return r.json();})
-    .then(function(d){renderOrders(d.orders||[], d.integrationEnabled);})
+    .then(function(d){renderOrders(d.orders||[], d.integrationEnabled); if(d.platformSync) renderPlatformSync(d.platformSync);})
     .catch(function(){renderOrders([], false);});
+}
+
+function renderPlatformSync(info){
+  var el=document.getElementById('platform-sync-body');
+  if(!el||!info)return;
+  var p=info.pricing||{};
+  var st=p.starter||{}; var pr=p.pro||{}; var su=p.setup||{};
+  var portalEnv=info.portalEnv||{};
+  var steps=(info.setupWizardLabels||[]).join(' → ');
+  el.innerHTML='<p><strong>Provisioning:</strong> '+info.provisioningMode+(info.integrationEnabled?' (entegrasyon açık)':' (entegrasyon kapalı)')+'</p>'
+    +'<p><strong>Portal URL:</strong> '+(info.portalUrl?'<a href="'+info.portalUrl+'" target="_blank" rel="noopener">'+info.portalUrl+'</a>':'<span style="color:#c44">CLINIC_PORTAL_URL tanımlı değil</span>')+'</p>'
+    +'<p><strong>Webhook secret:</strong> '+(info.webhookConfigured?'✓ yapılandırıldı':'✗ eksik')+'</p>'
+    +'<p><strong>Fiyat senkron (landing ↔ portal):</strong> Starter $'+st.intro+'/$'+st.list+', Pro $'+pr.intro+'/$'+pr.list+', Kurulum $'+su.intro+'/$'+su.list+'</p>'
+    +'<p><strong>Portal env:</strong> <code>PRO_PLAN_PRICE='+portalEnv.proPlanPrice+'</code>, <code>PRO_PLAN_LIST_PRICE='+portalEnv.proPlanListPrice+'</code></p>'
+    +'<p><strong>Kurulum sihirbazı:</strong> '+info.setupWizardSteps+' adım — '+steps+' (<code>/setup</code>)</p>'
+    +'<p style="color:#888;margin-top:.75rem">'+ (info.emailHint||'') +'</p>';
 }
 
 function renderOrders(orders, integrationEnabled){
   var modeEl=document.getElementById('orders-mode');
   if(modeEl)modeEl.textContent=integrationEnabled?'(otomatik provisioning)':'(manuel başvuru)';
   var detailEl=document.getElementById('orders-mode-detail');
-  if(detailEl)detailEl.textContent=integrationEnabled?'Otomatik — checkout sonrası portal hesabı açılır':'Manuel — 1 iş günü içinde iletişim; siparişler orders/ klasöründe';
+  if(detailEl)detailEl.textContent=integrationEnabled?'Otomatik — checkout sonrası portal hesabı açılır; 5 adımlı kurulum sihirbazı (/setup)':'Manuel — 1 iş günü içinde iletişim; siparişler orders/ klasöründe';
   var tb=document.getElementById('orders-body');
   if(!tb)return;
   if(!orders.length){tb.innerHTML='<tr><td colspan="7" style="color:#aaa;padding:1rem">Henüz sipariş yok</td></tr>';return;}

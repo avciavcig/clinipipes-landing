@@ -111,7 +111,7 @@ function renderCart() {
   f += '<div class="cart-total"><span>' + t('Toplam', 'Total') + '</span><span>' + eur(total) + '</span></div>';
   f += '<button class="cart-checkout" onclick="openCheckout()">' + t('Devam Et', 'Continue') + '</button>';
   f += '<div class="cart-note">' + (provisioningMode === 'auto'
-    ? t('Gönderimden sonra hesabınız otomatik açılır.', 'Your account is created automatically after submit.')
+    ? t('Gönderimden sonra hesabınız otomatik açılır; ardından 5 adımlı kurulum sihirbazını tamamlayın.', 'Your account is created automatically; then complete the 5-step setup wizard.')
     : t('1 iş günü içinde kurulum ve ödeme adımları için dönüş yapılır.', 'We respond within 1 business day with onboarding and payment steps.')) + '</div>';
   footEl.innerHTML = f;
 }
@@ -121,8 +121,8 @@ function updateCheckoutFlowHint() {
   if (!el) return;
   if (provisioningMode === 'auto') {
     el.textContent = lang === 'en'
-      ? 'After you submit, your clinic account is created automatically and login details are emailed to you.'
-      : 'Gönderimden sonra klinik hesabınız otomatik açılır; giriş bilgileri e-postanıza iletilir.';
+      ? 'After you submit, your clinic account is created automatically. Log in and complete the 5-step setup wizard (clinic, form, team, notifications, test).'
+      : 'Gönderimden sonra klinik hesabınız otomatik açılır. Giriş yapın ve 5 adımlı kurulum sihirbazını tamamlayın (klinik, form, ekip, bildirim, test).';
   } else {
     el.textContent = lang === 'en'
       ? 'This is an application — not instant payment. We contact you within 1 business day with onboarding and payment steps.'
@@ -210,7 +210,7 @@ function confirmPurchase() {
       }
       closeCheckout();
       alert(res.data.mode === 'provisioned'
-        ? (lang === 'en' ? 'Account created! Check your email for login details.' : 'Hesabınız oluşturuldu! Giriş bilgileri e-postanıza gönderildi.')
+        ? (lang === 'en' ? 'Account created! Check your email, then complete the 5-step setup wizard in the portal.' : 'Hesabınız oluşturuldu! E-postanızdaki giriş bilgileriyle portala girin ve 5 adımlı kurulum sihirbazını tamamlayın.')
         : (lang === 'en' ? 'Application received. We will contact you within 1 business day with onboarding and payment details.' : 'Başvurunuz alındı. Onboarding ve ödeme adımları için 1 iş günü içinde sizinle iletişime geçeceğiz.'));
       refreshCheckoutToken();
     })

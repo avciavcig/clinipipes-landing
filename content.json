@@ -73,8 +73,8 @@
       {
         "q_tr": "Kurulum ne kadar sürer?",
         "q_en": "How long does setup take?",
-        "a_tr": "Başvurunuzdan sonra 1 iş günü içinde hesabınız açılır ve birlikte kuruluma başlarız. Kurulum paketi alan kliniklerde logo, hasta formu ve ekip eğitimi dahil — çoğu klinik aynı gün canlıya geçer.",
-        "a_en": "Your account is opened within 1 business day after you apply, and we start onboarding together. With the optional setup package (logo, patient form, team training), most clinics go live the same day."
+        "a_tr": "Başvurunuzdan sonra 1 iş günü içinde hesabınız açılır. Portalda 5 adımlı kurulum sihirbazı sizi yönlendirir: klinik bilgileri ve görseller (logo, klinik/doktor/rehber fotoğrafları), çok dilli hasta formu (EN/TR/DE), ekip, bildirimler ve test. Zorunlu alanlar tamamlanmadan sonraki adıma geçilemez. Kurulum paketinde logo, rehber fotoğrafları ve ekip eğitimi dahildir.",
+        "a_en": "Your account opens within 1 business day. The portal guides you through a 5-step setup wizard: clinic details and photos (logo, clinic/doctor/guide images), multilingual patient form (EN/TR/DE), team, notifications, and testing. Required fields must be completed before advancing. The optional setup package includes logo, guide photos, and team training."
       },
       {
         "q_tr": "Veriler güvende mi?",
@@ -98,7 +98,7 @@
     "sections": {
       "trust": [
         { "val": "1 gün", "lbl_tr": "kurulum", "lbl_en": "setup" },
-        { "val": "2 dil", "lbl_tr": "EN · DE form & PDF", "lbl_en": "EN · DE form & PDF" },
+        { "val": "3 dil", "lbl_tr": "EN · TR · DE form & PDF", "lbl_en": "EN · TR · DE form & PDF" },
         { "val": "KVKK", "lbl_tr": "& GDPR uyumlu", "lbl_en": "& GDPR compliant" }
       ],
       "cta": {
@@ -106,8 +106,8 @@
         "eyebrow_en": "Introductory pricing",
         "title_tr": "Bugün <em>başlayın.</em>",
         "title_en": "Get started <em>today.</em>",
-        "desc_tr": "Planınızı seçin — 1 iş günü içinde kuruluma başlıyoruz.",
-        "desc_en": "Pick your plan — we start onboarding within 1 business day.",
+        "desc_tr": "Planınızı seçin — hesabınız açıldıktan sonra 5 adımlı kurulum sihirbazı sizi yönlendirir.",
+        "desc_en": "Pick your plan — after your account opens, a 5-step setup wizard guides you through onboarding.",
         "btn_tr": "Plan Seçin →",
         "btn_en": "Choose Your Plan →"
       }

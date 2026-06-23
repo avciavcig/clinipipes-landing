@@ -48,10 +48,18 @@ POST /api/save?key=Y     → Dosya kaydet + GitHub commit
   Body: {prices, gallery}    → content.json güncelle
 
 --- ADMIN PANELİ ---
-URL: clinipipes.com/admin?key=klinik2026
-Tab 1 — Fiyat & Galeri: 6 fiyat inputu, 4 galeri görseli upload
-Tab 2 — Sayfa & İçerik Editörü: tüm HTML + content.json düzenlenebilir
-Kaydet → /api/save → GitHub commit → Railway deploy (~2dk)
+URL: clinipipes.com/admin?key=<ADMIN_KEY>
+Tab 0 — Analytics + Portal↔Landing senkron paneli (fiyat, webhook, kurulum sihirbazı)
+Tab 1 — Demo ekran görüntüleri
+Tab 2 — Fiyat & Galeri
+Tab 3 — Sayfa & İçerik Editörü
+
+--- LANDING ↔ PORTAL SENKRON (Haziran 2026) ---
+lib/platform-sync.js — fiyat ($45/$69, $79/$119, kurulum $99/$149), 5 adımlı kurulum FAQ metni
+Portal kurulum sihirbazı (/setup): Klinik → Form (EN/TR/DE) → Ekip → Bildirim → Test
+Checkout: manuel (başvuru) veya otomatik (ENABLE_PORTAL_INTEGRATION + webhook)
+Portal prod: clinic-portal-production-3068.up.railway.app
+Landing prod: clinipipes.com
 
 --- INDEX.HTML ÖNEMLİ NOTLAR ---
 - Dil: TR/EN bilingual (data-tr / data-en attribute + setLang() fonksiyonu)
@@ -87,10 +95,14 @@ PROJE 2: CLİNİPİPES KLİNİK PORTAL
 ========================================
 
 REPO     : https://github.com/avciavcig/dental-portal
-Prod URL : dental-portal-production-31d7.up.railway.app
-DB       : PostgreSQL — turntable.proxy.rlwy.net:55913
+Prod URL : clinic-portal-production-3068.up.railway.app
 Local    : ~/clinic-portal/
 Stack    : Node.js + Express + EJS + PostgreSQL
+
+--- KURULUM SİHİRBAZI (/setup) ---
+5 adım: klinik bilgileri+görseller, form dili+link, ekip, bildirimler, test
+lib/setup-wizard.js, lib/setup-wizard-validation.js, lib/clinic-setup-save.js
+public/js/setup-wizard.js — adım kilidi, kırmızı border, Kaydet ve İleri
 
 --- ORTAM DEĞİŞKENLERİ ---
 PORT              = Railway atar
