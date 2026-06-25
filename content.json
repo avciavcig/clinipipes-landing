@@ -79,8 +79,8 @@
       {
         "q_tr": "Veriler güvende mi?",
         "q_en": "Is data secure?",
-        "a_tr": "Evet. AES-256 şifreleme, KVKK/GDPR uyumlu yapı, klinik başına izole veri.",
-        "a_en": "Yes. AES-256 encryption, KVKK/GDPR-ready, isolated data per clinic."
+        "a_tr": "Evet. AES-256 şifreleme, KVKK/GDPR uyumlu yapı, klinik başına izole veri. Portal V4.1.1 ile kurulum ve teklif yedekleme, günlük veritabanı yedeği ve canlı sistem izleme dahildir.",
+        "a_en": "Yes. AES-256 encryption, KVKK/GDPR-ready, isolated data per clinic. Portal V4.1.1 adds setup and proposal backups, daily database backups, and live health monitoring."
       },
       {
         "q_tr": "Ücretsiz deneme var mı?",

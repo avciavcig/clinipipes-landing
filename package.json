@@ -1,7 +1,7 @@
 {
   "name": "clinipipes-landing",
-  "version": "2.0.0",
-  "description": "CliniPipes landing page — clinipipes.v2",
+  "version": "2.3.0",
+  "description": "CliniPipes landing — clinipipes.v2.3 (Portal V4.1.1 sync)",
   "scripts": {
     "start": "node server.js",
     "sync:legal": "node scripts/sync-legal-from-live.mjs",

@@ -67,7 +67,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
 </head>
 <body>
 <header>
-  <span class="logo">&#9881; CliniPipes Admin</span>
+  <span class="logo">&#9881; CliniPipes Admin <span style="font-weight:400;color:#888;font-size:.78rem">· clinipipes.v2.3</span></span>
   <span class="hint" id="hint">Kaydet &rarr; GitHub commit &rarr; Railway ~2 dk</span>
   <a href="javascript:void(0)" onclick="logout()" style="margin-left:1.5rem;color:#888;font-size:.82rem;text-decoration:none;border:1px solid #333;padding:.28rem .75rem;border-radius:5px" onmouseover="this.style.color='#fff';this.style.borderColor='#888'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#10005; &#199;&#305;k&#305;&#351;</a>
 </header>
@@ -597,13 +597,18 @@ function renderPlatformSync(info){
   var p=info.pricing||{};
   var st=p.starter||{}; var pr=p.pro||{}; var su=p.setup||{};
   var portalEnv=info.portalEnv||{};
+  var rel=info.portalRelease||{};
   var steps=(info.setupWizardLabels||[]).join(' → ');
-  el.innerHTML='<p><strong>Provisioning:</strong> '+info.provisioningMode+(info.integrationEnabled?' (entegrasyon açık)':' (entegrasyon kapalı)')+'</p>'
+  var hi=(rel.highlights||[]).slice(0,4).map(function(h){return '<li>'+h+'</li>';}).join('');
+  el.innerHTML='<p><strong>Landing:</strong> '+(info.landingVersion||'clinipipes.v2.3')+' · <strong>Portal:</strong> '+(rel.label||rel.version||'?')+(info.portalReleaseLive?' <span style="color:#1D9E75">(canlı)</span>':' <span style="color:#888">(statik)</span>')+'</p>'
+    +'<p><strong>Provisioning:</strong> '+info.provisioningMode+(info.integrationEnabled?' (entegrasyon açık)':' (entegrasyon kapalı)')+'</p>'
     +'<p><strong>Portal URL:</strong> '+(info.portalUrl?'<a href="'+info.portalUrl+'" target="_blank" rel="noopener">'+info.portalUrl+'</a>':'<span style="color:#c44">CLINIC_PORTAL_URL tanımlı değil</span>')+'</p>'
     +'<p><strong>Webhook secret:</strong> '+(info.webhookConfigured?'✓ yapılandırıldı':'✗ eksik')+'</p>'
     +'<p><strong>Fiyat senkron (landing ↔ portal):</strong> Starter $'+st.intro+'/$'+st.list+', Pro $'+pr.intro+'/$'+pr.list+', Kurulum $'+su.intro+'/$'+su.list+'</p>'
     +'<p><strong>Portal env:</strong> <code>PRO_PLAN_PRICE='+portalEnv.proPlanPrice+'</code>, <code>PRO_PLAN_LIST_PRICE='+portalEnv.proPlanListPrice+'</code></p>'
     +'<p><strong>Kurulum sihirbazı:</strong> '+info.setupWizardSteps+' adım — '+steps+' (<code>/setup</code>)</p>'
+    +(hi?'<p><strong>Portal V4.1.1:</strong></p><ul style="margin:.35rem 0 .75rem 1.1rem">'+hi+'</ul>':'')
+    +(info.resilienceMarketing?'<p><strong>Pazarlama:</strong> '+info.resilienceMarketing+'</p>':'')
     +'<p style="color:#888;margin-top:.75rem">'+ (info.emailHint||'') +'</p>';
 }
 
