@@ -668,6 +668,19 @@ footer p{font-size:.82rem;color:rgba(255,255,255,.35);margin:0}
 
 <script src="/lib/pricing-config.js"></script>
 <script src="/cart.js"></script>
+<script>
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  var payment=p.get('payment');
+  if(payment==='success'){
+    alert('Ödemeniz alındı! Hesabınız oluşturuldu. Giriş bilgileriniz e-posta adresinize gönderildi.');
+    history.replaceState(null,'',window.location.pathname);
+  } else if(payment==='fail'){
+    alert('Ödeme tamamlanamadı. Lütfen tekrar deneyin veya info@nodustrategy.com adresine yazın.');
+    history.replaceState(null,'',window.location.pathname);
+  }
+})();
+</script>
 </body>
 </html>
 </user_query>

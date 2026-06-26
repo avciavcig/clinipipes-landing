@@ -516,7 +516,65 @@ http.createServer(function(req,res){
   if(url==='/api/checkout-token'&&req.method==='GET'){
     auth.setSecurityHeaders(res);
     var token=pubSec.createCheckoutToken();
-    return jsonRes(res,200,{token:token,expiresIn:1800,provisioningMode:getProvisioningMode()},req,false);
+    var iyzicoEnabled=process.env.IYZICO_ENABLED==='true';
+    return jsonRes(res,200,{token:token,expiresIn:1800,provisioningMode:getProvisioningMode(),iyzicoEnabled:iyzicoEnabled},req,false);
+  }
+  if(url==='/api/iyzico-start'&&req.method==='POST'){
+    return auth.readBody(req,function(err,body){
+      if(err){return jsonRes(res,413,{ok:false,error:'payload_too_large'},req,false);}
+      var ip=pubSec.getClientIp(req);
+      var allowed=pubSec.checkCheckoutAllowed(ip);
+      if(!allowed.ok){return jsonRes(res,429,{ok:false,error:'rate_limited',retryAfter:allowed.retryAfter},req,false);}
+      try{
+        var data=JSON.parse(body||'{}');
+        if(data.website){return jsonRes(res,200,{ok:true},req,false);}
+        if(!pubSec.consumeCheckoutToken(data.checkoutToken)){
+          return jsonRes(res,403,{ok:false,error:'invalid_checkout_token'},req,false);
+        }
+        var portalBase=(process.env.CLINIC_PORTAL_URL||'').replace(/\/$/,'');
+        if(!portalBase){return jsonRes(res,503,{ok:false,error:'portal_not_configured'},req,false);}
+        var integration=require('./lib/integration-auth');
+        var payload={
+          orderId:data.orderId||('ord_'+require('crypto').randomBytes(12).toString('hex')),
+          clinicName:pubSec.sanitizeText(data.clinicName,120),
+          ownerEmail:pubSec.sanitizeEmail(data.ownerEmail),
+          ownerName:pubSec.sanitizeText(data.ownerName||data.clinicName,120),
+          phone:pubSec.sanitizeText(data.phone,32),
+          plan:data.plan==='pro'?'pro':'starter',
+          period:data.period==='yearly'?'yearly':'monthly',
+          items:Array.isArray(data.items)?data.items.slice(0,5):[],
+          consents:data.consents||{}
+        };
+        if(!payload.clinicName||!payload.ownerEmail){
+          return jsonRes(res,400,{ok:false,error:'invalid_order'},req,false);
+        }
+        var headers=integration.buildSignedHeaders(payload);
+        var httpsLib=require('https'),httpLib=require('http');
+        var urlParsed=require('url').parse(portalBase+'/internal/webhooks/clinipipes/iyzico-start');
+        var rawBody=JSON.stringify(payload);
+        var lib2=urlParsed.protocol==='https:'?httpsLib:httpLib;
+        var preq=lib2.request({
+          hostname:urlParsed.hostname,port:urlParsed.port||(urlParsed.protocol==='https:'?443:80),
+          path:urlParsed.path,method:'POST',
+          headers:Object.assign({'Content-Length':Buffer.byteLength(rawBody)},headers),
+          timeout:20000
+        },function(pres){
+          var d='';
+          pres.on('data',function(c){d+=c;});
+          pres.on('end',function(){
+            try{
+              auth.setSecurityHeaders(res);
+              res.writeHead(pres.statusCode,{'Content-Type':'application/json; charset=utf-8'});
+              res.end(d);
+            }catch(e){jsonRes(res,502,{ok:false,error:'portal_response_invalid'},req,false);}
+          });
+        });
+        preq.on('error',function(){jsonRes(res,502,{ok:false,error:'portal_unreachable'},req,false);});
+        preq.on('timeout',function(){preq.destroy();jsonRes(res,504,{ok:false,error:'portal_timeout'},req,false);});
+        preq.write(rawBody);
+        preq.end();
+      }catch(e){return jsonRes(res,400,{ok:false,error:'bad_request'},req,false);}
+    });
   }
   if(url==='/api/checkout'&&req.method==='POST'){
     return auth.readBody(req,function(err,body){

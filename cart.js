@@ -1,4 +1,4 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '', provisioningMode = 'manual';
+var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '', provisioningMode = 'manual', iyzicoEnabled = false;
 var pricingState = null;
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
@@ -182,30 +182,38 @@ function confirmPurchase() {
   }
   var btn = document.getElementById('coConfirm');
   if (btn) { btn.disabled = true; btn.textContent = lang === 'en' ? 'Sending…' : 'Gönderiliyor…'; }
-  fetch('/api/checkout', {
+  var orderPayload = {
+    checkoutToken: checkoutToken,
+    website: honeypot,
+    clinicName: clinicName.trim(),
+    ownerEmail: ownerEmail.trim(),
+    ownerName: clinicName.trim(),
+    phone: phone.trim(),
+    items: keys,
+    period: period,
+    consents: {
+      preInfo: document.getElementById('coPreInfo').checked,
+      agree: document.getElementById('coAgree').checked,
+      terms: document.getElementById('coTerms').checked,
+      digital: document.getElementById('coDigital').checked,
+      kvkk: document.getElementById('coKvkk').checked
+    }
+  };
+  var endpoint = iyzicoEnabled ? '/api/iyzico-start' : '/api/checkout';
+  fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      checkoutToken: checkoutToken,
-      website: honeypot,
-      clinicName: clinicName.trim(),
-      ownerEmail: ownerEmail.trim(),
-      phone: phone.trim(),
-      items: keys,
-      period: period,
-      consents: {
-        preInfo: document.getElementById('coPreInfo').checked,
-        agree: document.getElementById('coAgree').checked,
-        terms: document.getElementById('coTerms').checked,
-        digital: document.getElementById('coDigital').checked,
-        kvkk: document.getElementById('coKvkk').checked
-      }
-    })
+    body: JSON.stringify(orderPayload)
   }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
     .then(function (res) {
       if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit' : 'Gönder'; }
       if (!res.data.ok) {
         alert((lang === 'en' ? 'Application failed: ' : 'Başvuru gönderilemedi: ') + (res.data.error || '?'));
+        return;
+      }
+      if (iyzicoEnabled && res.data.paymentPageUrl) {
+        // iyzico ödeme sayfasına yönlendir
+        window.location.href = res.data.paymentPageUrl;
         return;
       }
       closeCheckout();
@@ -224,6 +232,7 @@ function refreshCheckoutToken() {
   fetch('/api/checkout-token').then(function (r) { return r.json(); }).then(function (d) {
     if (d.token) checkoutToken = d.token;
     if (d.provisioningMode === 'auto' || d.provisioningMode === 'manual') provisioningMode = d.provisioningMode;
+    if (typeof d.iyzicoEnabled === 'boolean') iyzicoEnabled = d.iyzicoEnabled;
     updateCheckoutFlowHint();
   }).catch(function () {});
 }
