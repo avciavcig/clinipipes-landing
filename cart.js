@@ -1,4 +1,4 @@
-var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '', provisioningMode = 'manual', iyzicoEnabled = false;
+var lang = 'tr', period = 'monthly', BUNDLE = 20, introductoryVisible = false, checkoutToken = '', contactEmail = '', provisioningMode = 'manual', iyzicoEnabled = false, buyNowMode = false;
 var pricingState = null;
 var PRICES = {
   starter: { monthly: 45, yearly: 450, recurring: true, tr: 'Başlangıç Planı', en: 'Starter Plan' },
@@ -162,6 +162,16 @@ function updateCheckoutConfirm() {
     && document.getElementById('coDigital').checked
     && document.getElementById('coKvkk').checked;
   document.getElementById('coConfirm').disabled = !ok;
+  var buyNowBtn = document.getElementById('coBuyNow');
+  if (buyNowBtn) {
+    buyNowBtn.disabled = !ok;
+    buyNowBtn.style.display = iyzicoEnabled ? '' : 'none';
+  }
+}
+
+function buyNowPurchase() {
+  buyNowMode = true;
+  confirmPurchase();
 }
 
 function closeCheckout() {
@@ -199,7 +209,8 @@ function confirmPurchase() {
       kvkk: document.getElementById('coKvkk').checked
     }
   };
-  var endpoint = iyzicoEnabled ? '/api/iyzico-start' : '/api/checkout';
+  // buyNowMode: iyzico ödeme akışı. false: trial hesap aç akışı.
+  var endpoint = (buyNowMode && iyzicoEnabled) ? '/api/iyzico-start' : '/api/checkout';
   fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -209,13 +220,14 @@ function confirmPurchase() {
       if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit' : 'Gönder'; }
       if (!res.data.ok) {
         alert((lang === 'en' ? 'Application failed: ' : 'Başvuru gönderilemedi: ') + (res.data.error || '?'));
+        buyNowMode = false;
         return;
       }
-      if (iyzicoEnabled && res.data.paymentPageUrl) {
-        // iyzico ödeme sayfasına yönlendir
+      if (buyNowMode && res.data.paymentPageUrl) {
         window.location.href = res.data.paymentPageUrl;
         return;
       }
+      buyNowMode = false;
       closeCheckout();
       alert(res.data.mode === 'provisioned'
         ? (lang === 'en' ? 'Account created! Check your email, then complete the 5-step setup wizard in the portal.' : 'Hesabınız oluşturuldu! E-postanızdaki giriş bilgileriyle portala girin ve 5 adımlı kurulum sihirbazını tamamlayın.')
@@ -224,6 +236,7 @@ function confirmPurchase() {
     })
     .catch(function () {
       if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? 'Submit' : 'Gönder'; }
+      buyNowMode = false;
       alert(lang === 'en' ? 'Connection error. Please try again.' : 'Bağlantı hatası. Lütfen tekrar deneyin.');
     });
 }
@@ -233,6 +246,7 @@ function refreshCheckoutToken() {
     if (d.token) checkoutToken = d.token;
     if (d.provisioningMode === 'auto' || d.provisioningMode === 'manual') provisioningMode = d.provisioningMode;
     if (typeof d.iyzicoEnabled === 'boolean') iyzicoEnabled = d.iyzicoEnabled;
+    if (typeof d.buyNowEnabled === 'boolean') buyNowMode = false; // buyNow always triggered explicitly
     updateCheckoutFlowHint();
   }).catch(function () {});
 }
