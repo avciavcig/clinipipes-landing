@@ -483,6 +483,8 @@ function refreshIntroductoryUi(content) {
   applyIntroductoryCampaign(pricingState, normalized.introductoryCampaign || {});
 }
 
+var PORTAL_PRICING_URL = 'https://app.clinipipes.com/api/pricing';
+
 function loadPrices() {
   fetch('/content.json').then(function (r) { return r.json(); }).then(function (c) {
     if (!c) return;
@@ -491,6 +493,18 @@ function loadPrices() {
     if (c.landing) applyLanding(c.landing);
     refreshIntroductoryUi(c);
     loadDemoData();
+    // Override with live pricing from portal
+    fetch(PORTAL_PRICING_URL).then(function (r) { return r.json(); }).then(function (p) {
+      if (!p || !p.starter || !p.pro) return;
+      PRICES.starter.monthly = p.starter.monthly;
+      PRICES.starter.yearly = p.starter.yearly;
+      PRICES.pro.monthly = p.pro.monthly;
+      PRICES.pro.yearly = p.pro.yearly;
+      paintCard('Starter', p.starter.listMonthly, p.starter.monthly,
+        p.starter.yearly * 12, p.starter.yearly * 12, false);
+      paintCard('Pro', p.pro.listMonthly, p.pro.monthly,
+        p.pro.yearly * 12, p.pro.yearly * 12, false);
+    }).catch(function () {});
   }).catch(function () { loadDemoData(); });
 }
 
