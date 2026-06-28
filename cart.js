@@ -501,9 +501,9 @@ function loadPrices() {
       PRICES.pro.monthly = p.pro.monthly;
       PRICES.pro.yearly = p.pro.yearly;
       paintCard('Starter', p.starter.listMonthly, p.starter.monthly,
-        p.starter.yearly * 12, p.starter.yearly * 12, false);
+        p.starter.yearly * 12, p.starter.yearly * 12, true);
       paintCard('Pro', p.pro.listMonthly, p.pro.monthly,
-        p.pro.yearly * 12, p.pro.yearly * 12, false);
+        p.pro.yearly * 12, p.pro.yearly * 12, true);
     }).catch(function () {});
   }).catch(function () { loadDemoData(); });
 }
