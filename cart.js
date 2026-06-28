@@ -480,7 +480,7 @@ function applyPricing(content) {
 function refreshIntroductoryUi(content) {
   if (!content || !pricingState) return;
   var normalized = PricingConfig.normalizePricing(content);
-  applyIntroductoryCampaign(pricingState, normalized.introductoryCampaign || {});
+  applyIntroductoryCampaign(normalized.pricing, normalized.introductoryCampaign || {});
 }
 
 var PORTAL_PRICING_URL = 'https://app.clinipipes.com/api/pricing';
