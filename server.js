@@ -610,7 +610,7 @@ http.createServer(function(req,res){
           period:period,
           items:items,
           consents:{preInfo:!!data.consents&&!!data.consents.preInfo,agree:!!data.consents&&!!data.consents.agree,terms:!!data.consents&&!!data.consents.terms,digital:!!data.consents&&!!data.consents.digital,kvkk:!!data.consents&&!!data.consents.kvkk},
-          active:false,
+          active:true,
           status:'pending_payment',
           createdAt:new Date().toISOString(),
           sourceIp:ip
