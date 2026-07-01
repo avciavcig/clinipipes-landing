@@ -224,7 +224,7 @@ function confirmPurchase() {
     }
   };
   // buyNowMode: iyzico ödeme akışı. false: trial hesap aç akışı.
-  var endpoint = (buyNowMode && iyzicoEnabled) ? '/api/iyzico-start' : '/api/checkout';
+  var endpoint = buyNowMode ? '/api/iyzico-start' : '/api/checkout';
   fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
