@@ -179,7 +179,7 @@ function updateCheckoutConfirm() {
     if (buyNowBtn) { buyNowBtn.style.display = 'none'; }
   } else {
     confirmBtn.style.display = 'none';
-    if (buyNowBtn) { buyNowBtn.disabled = !ok; buyNowBtn.style.display = iyzicoEnabled ? '' : 'none'; }
+    if (buyNowBtn) { buyNowBtn.disabled = !ok; buyNowBtn.style.display = ''; }
   }
 }
 
