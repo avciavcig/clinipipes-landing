@@ -249,9 +249,9 @@ function commitAnalytics(){
 function geoLookup(ip,cb){
   if(!ip||ip==='127.0.0.1'||ip==='::1'){cb(null);return;}
   if(geoCache[ip]){cb(geoCache[ip]);return;}
-  https.get({hostname:'ip-api.com',path:'/json/'+ip+'?fields=city,regionName,country,countryCode,status'},function(r){
+  https.get({hostname:'ipinfo.io',path:'/'+ip+'/json'},function(r){
     let d='';r.on('data',function(c){d+=c;});r.on('end',function(){
-      try{const g=JSON.parse(d);if(g.status==='success'){geoCache[ip]=g;cb(g);}else cb(null);}catch(e){cb(null);}
+      try{const g=JSON.parse(d);if(g.city){const norm={city:g.city,regionName:g.region,country:g.country==='TR'?'Turkey':g.country};geoCache[ip]=norm;cb(norm);}else cb(null);}catch(e){cb(null);}
     });
   }).on('error',function(){cb(null);});
 }
@@ -741,7 +741,7 @@ http.createServer(function(req,res){
     if(name==='index.html'){c=c.replace(/data:image\/[a-z]+;base64,[A-Za-z0-9+/=]+/g,'[BASE64_IMAGE]');}
     if(name==='legal-seller.json'){try{c=JSON.stringify(JSON.parse(c),null,2);}catch(e){}}
     if(name==='demo-data.json'){try{c=JSON.stringify(JSON.parse(c),null,2);}catch(e){}}
-    res.writeHead(200,{'Content-Type':'text/plain; charset=utf-8'});auth.setSecurityHeaders(res,{admin:true});res.end(c);}
+    auth.setSecurityHeaders(res,{admin:true});res.writeHead(200,{'Content-Type':'text/plain; charset=utf-8'});res.end(c);}
     catch(e){res.writeHead(404);auth.setSecurityHeaders(res,{admin:true});res.end('Not found');}return;
   }
   if(url==='/api/save'&&req.method==='POST'){
