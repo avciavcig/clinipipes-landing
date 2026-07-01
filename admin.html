@@ -97,7 +97,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
   </div>
   <div class="g2">
     <div class="card">
-      <h2>&#128205; &#350;ehir / &#304;l Da&#287;&#305;l&#305;m&#305;</h2>
+      <h2>&#128205; &#304;l Da&#287;&#305;l&#305;m&#305;</h2>
       <div id="city-chart"><div style="color:#aaa;font-size:.85rem">Y&#252;kleniyor...</div></div>
     </div>
     <div class="card">
@@ -109,7 +109,7 @@ textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;
     <h2>&#128337; Son Ziyaretler</h2>
     <div style="overflow-x:auto">
       <table class="recent-tbl">
-        <thead><tr><th>Tarih</th><th>Saat</th><th>&#350;ehir</th><th>&#304;l</th><th>&#220;lke</th><th>Cihaz</th></tr></thead>
+        <thead><tr><th>Tarih</th><th>Saat</th><th>&#304;l</th><th>&#220;lke</th><th>Cihaz</th></tr></thead>
         <tbody id="recent-body"><tr><td colspan="6" style="color:#aaa;padding:1rem">Y&#252;kleniyor...</td></tr></tbody>
       </table>
     </div>
@@ -581,7 +581,7 @@ function loadDashboard(){
       document.getElementById('s-week').textContent=weekV.toLocaleString('tr-TR');
       var mob=(d.devices&&d.devices['Mobil'])||0;var desk=(d.devices&&d.devices['Masaüstü'])||0;
       document.getElementById('s-device').textContent=mob+' / '+desk;
-      renderBars('city-chart', d.provinces||d.cities||{}, 10);
+      renderBars('city-chart', d.provinces||{}, 10);
       renderBars('country-chart', d.countries||{}, 8);
       renderRecent(d.recent||[]);
     }).catch(function(e){document.getElementById('s-total').textContent='Hata';});
@@ -646,7 +646,7 @@ function renderRecent(recent){
   if(!recent.length){tb.innerHTML='<tr><td colspan="6" style="color:#aaa;padding:1rem">Henüz ziyaret yok</td></tr>';return;}
   tb.innerHTML=recent.slice(0,100).map(function(r){
     var dt=r.date||'';var parts=dt.split(' ');
-    return '<tr><td>'+parts[0]+'</td><td>'+( parts[1]||'')+'</td><td>'+(r.city||'?')+'</td><td>'+(r.province||'?')+'</td><td>'+(r.country||'?')+'</td><td>'+(r.device||'?')+'</td></tr>';
+    return '<tr><td>'+parts[0]+'</td><td>'+( parts[1]||'')+'</td><td>'+(r.province||'?')+'</td><td>'+(r.country||'?')+'</td><td>'+(r.device||'?')+'</td></tr>';
   }).join('');
 }
 
