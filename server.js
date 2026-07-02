@@ -540,7 +540,7 @@ http.createServer(function(req,res){
           ownerEmail:pubSec.sanitizeEmail(data.ownerEmail),
           ownerName:pubSec.sanitizeText(data.ownerName||data.clinicName,120),
           phone:pubSec.sanitizeText(data.phone,32),
-          plan:data.plan==='pro'?'pro':data.plan==='trial'?'pro':'starter',
+          plan:(data.items&&data.items.indexOf('pro')>=0)?'pro':(data.plan==='pro'||data.plan==='trial')?'pro':'starter',
           period:data.period==='yearly'?'yearly':'monthly',
           items:Array.isArray(data.items)?data.items.slice(0,5):[],
           consents:data.consents||{}
