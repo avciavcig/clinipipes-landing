@@ -214,6 +214,7 @@ function confirmPurchase() {
     ownerName: clinicName.trim(),
     phone: phone.trim(),
     items: keys,
+    plan: trialMode ? 'trial' : undefined,
     period: period,
     consents: {
       preInfo: document.getElementById('coPreInfo').checked,

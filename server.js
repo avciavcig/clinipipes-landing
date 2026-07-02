@@ -540,7 +540,7 @@ http.createServer(function(req,res){
           ownerEmail:pubSec.sanitizeEmail(data.ownerEmail),
           ownerName:pubSec.sanitizeText(data.ownerName||data.clinicName,120),
           phone:pubSec.sanitizeText(data.phone,32),
-          plan:(data.items&&data.items.indexOf('pro')>=0)?'pro':(data.plan==='pro'||data.plan==='trial')?'pro':'starter',
+          plan:(data.items&&data.items.indexOf('trial')>=0)?'trial':(data.items&&data.items.indexOf('pro')>=0)?'pro':(data.plan==='trial')?'trial':(data.plan==='pro')?'pro':'starter',
           period:data.period==='yearly'?'yearly':'monthly',
           items:Array.isArray(data.items)?data.items.slice(0,5):[],
           consents:data.consents||{}
@@ -598,7 +598,7 @@ http.createServer(function(req,res){
           return jsonRes(res,400,{ok:false,error:'invalid_order'},req,false);
         }
         var plan='starter';
-        items.forEach(function(it){if(it==='pro')plan='pro';if(it==='trial')plan='pro';});
+        items.forEach(function(it){if(it==='pro')plan='pro';if(it==='trial')plan='trial';});if(data.plan==='trial')plan='trial';
         var orderId='ord_'+require('crypto').randomBytes(12).toString('hex');
         var order={
           orderId:orderId,
