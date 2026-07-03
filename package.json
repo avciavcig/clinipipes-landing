@@ -1,6 +1,6 @@
 {
   "name": "clinipipes-landing",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "CliniPipes landing — clinipipes.v2.3 (Portal V4.1.1 sync)",
   "scripts": {
     "start": "node server.js",
