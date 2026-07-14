@@ -269,7 +269,7 @@ function trackVisit(req){
   const entry={date:new Date().toISOString().slice(0,16).replace('T',' '),device:device,city:'...',province:'...',country:'?'};
   d.recent.unshift(entry);if(d.recent.length>500)d.recent=d.recent.slice(0,500);
   saveAnalytics(d);
-  visitBatch++;if(visitBatch>=50){visitBatch=0;commitAnalytics();}
+  visitBatch++;if(visitBatch>=5){visitBatch=0;commitAnalytics();}
   geoLookup(ip,function(geo){
     if(!geo)return;
     const d2=getAnalytics();
@@ -841,6 +841,16 @@ http.createServer(function(req,res){
   });
 }).listen(PORT,function(){
   console.log('Port: '+PORT);
+  // Periyodik analytics commit (5dk)
+  setInterval(function(){commitAnalytics();},5*60*1000);
+  // Graceful shutdown — Railway SIGTERM gönderir
+  function shutdown(sig){
+    console.log('[shutdown] '+sig+' — analytics commit');
+    commitAnalytics();
+    setTimeout(function(){process.exit(0);},2000);
+  }
+  process.on('SIGTERM',function(){shutdown('SIGTERM');});
+  process.on('SIGINT',function(){shutdown('SIGINT');});
   var provMode=getProvisioningMode();
   if(provMode==='auto'){
     console.log('[deploy] Başvuru modu: otomatik — checkout sonrası portal provisioning');
