@@ -31,6 +31,8 @@ button:disabled{opacity:.6;cursor:not-allowed}
   <h1>Yönetim Paneli</h1>
   <p class="sub">Şifre ve e-posta doğrulama kodu ile giriş yapın.</p>
   <form id="login-form">
+    <label for="email">E-posta</label>
+    <input type="email" id="email" name="email" autocomplete="username" required>
     <label for="password">Şifre</label>
     <input type="password" id="password" name="password" autocomplete="current-password" required>
     <div id="totp-wrap">
@@ -73,6 +75,7 @@ document.getElementById('login-form').addEventListener('submit', function(e){
   e.preventDefault();
   var btn=document.getElementById('btn');
   var msg=document.getElementById('msg');
+  var email=document.getElementById('email').value.trim();
   var password=document.getElementById('password').value;
   var totp=document.getElementById('totp').value.trim();
   btn.disabled=true;
@@ -83,7 +86,7 @@ document.getElementById('login-form').addEventListener('submit', function(e){
   msg.style.color='#fff';
   msg.style.border='1px solid #444';
 
-  var payload={password:password};
+  var payload={email:email,password:password};
   if(totp) payload.totp=totp;
   if(pendingToken) payload.pending=pendingToken;
 

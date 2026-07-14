@@ -322,11 +322,18 @@ http.createServer(function(req,res){
       if(!allowed.ok){return jsonRes(res,429,{ok:false,error:'locked',retryAfter:allowed.retryAfter},req,true);}
       try{
         var data=JSON.parse(body||'{}');
+        var email=String(data.email||'').trim().toLowerCase();
         var password=String(data.password||'');
         var totp=String(data.totp||'').trim();
         var pending=String(data.pending||'');
         var method=auth.getTwoFactorMethod(cfg);
+        var adminEmail=mailer.getAdmin2faEmail();
+        if(!email){return jsonRes(res,400,{ok:false,error:'email_required'},req,true);}
         if(!password){return jsonRes(res,400,{ok:false,error:'password_required'},req,true);}
+        if(adminEmail&&email!==adminEmail){
+          var retry=auth.recordFailedLogin(cfg,ip);
+          return jsonRes(res,401,{ok:false,error:'invalid_credentials',retryAfter:retry||undefined},req,true);
+        }
         if(!auth.verifyPassword(password,auth.getStoredPasswordHash(cfg))){
           var retry=auth.recordFailedLogin(cfg,ip);
           return jsonRes(res,401,{ok:false,error:'invalid_credentials',retryAfter:retry||undefined},req,true);
