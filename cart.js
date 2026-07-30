@@ -429,10 +429,7 @@ function applyIntroductoryCampaign(pricing, campaign) {
       var base = lang === 'en'
         ? (campaign.strip_en || 'Introductory pricing — Starter $' + pricing.starter.introductoryPrice + ' · Pro $' + pricing.professional.introductoryPrice)
         : (campaign.strip_tr || 'Tanıtım fiyatı geçerli — Starter $' + pricing.starter.introductoryPrice + ' · Pro $' + pricing.professional.introductoryPrice);
-      var slots = PricingConfig.remainingSlotsDisplay(pricing);
-      if (slots != null && slots > 0) {
-        base += lang === 'en' ? ' · Remaining slots: ' + slots : ' · Kalan kontenjan: ' + slots;
-      }
+      /* kontenjan sayısı kaldırıldı — sadece tanıtım fiyatı yeterli */
       strip.setAttribute('data-tr', base);
       strip.setAttribute('data-en', base);
       strip.textContent = base;
@@ -443,24 +440,11 @@ function applyIntroductoryCampaign(pricing, campaign) {
     var el = document.getElementById(id);
     if (el) el.style.display = introductoryVisible ? '' : 'none';
   });
+  /* kontenjan elementleri gizlendi */
   var slotsStarter = document.getElementById('starterRemainingSlots');
   var slotsPro = document.getElementById('proRemainingSlots');
-  if (slotsStarter) {
-    if (pricing.starter.introductoryPriceActive && pricing.starter.remainingSlots != null) {
-      slotsStarter.textContent = lang === 'en'
-        ? 'Remaining slots: ' + pricing.starter.remainingSlots
-        : 'Kalan kontenjan: ' + pricing.starter.remainingSlots;
-      slotsStarter.style.display = '';
-    } else slotsStarter.style.display = 'none';
-  }
-  if (slotsPro) {
-    if (pricing.professional.introductoryPriceActive && pricing.professional.remainingSlots != null) {
-      slotsPro.textContent = lang === 'en'
-        ? 'Remaining slots: ' + pricing.professional.remainingSlots
-        : 'Kalan kontenjan: ' + pricing.professional.remainingSlots;
-      slotsPro.style.display = '';
-    } else slotsPro.style.display = 'none';
-  }
+  if (slotsStarter) slotsStarter.style.display = 'none';
+  if (slotsPro) slotsPro.style.display = 'none';
 }
 
 function applyPricing(content) {
